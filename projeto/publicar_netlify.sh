@@ -8,4 +8,4 @@ ZIP="$(mktemp -d)/site.zip"
 python3 "$RAIZ/projeto/gerar_site.py" >/dev/null
 (cd "$RAIZ/docs" && zip -qr "$ZIP" . -x "requisitos.md")
 curl -s -X POST -H "Content-Type: application/zip" --data-binary @"$ZIP" \
-  "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" | python3 -c "import sys,json;d=json.load(sys.stdin);print(d.get('state'), d.get('ssl_url'))"
+  "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" | python3 -c "import sys,json;d=json.load(sys.stdin);print(d.get('state'), d.get('ssl_url')) if not d.get('error') else sys.exit('ERRO da Netlify: ' + d['error'])"
