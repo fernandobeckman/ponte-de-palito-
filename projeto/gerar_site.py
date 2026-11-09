@@ -11,7 +11,7 @@ import json, math, os, re, shutil, sys
 D = os.path.dirname(os.path.abspath(__file__))
 R = os.path.join(D, "..")
 OUT = os.path.join(R, "docs")
-URL = "https://fernandobeckman.github.io/ponte-de-palito-/"
+URL = "https://ponte-de-palito.netlify.app/"   # endereço principal (Netlify)
 os.makedirs(os.path.join(OUT, "img"), exist_ok=True)
 sys.path.insert(0, D)
 from estudo_geometrias import gerar, avaliar, VAO  # noqa: E402
