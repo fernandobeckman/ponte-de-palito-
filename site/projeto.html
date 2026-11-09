@@ -187,15 +187,60 @@ footer a { color: var(--tension); }
   </footer>
 </div>
 
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
+/* Carrega o Three.js pelo endereço completo (sem import map) e define um controle de órbita próprio. */
+async function carregaThree() {
+  const urls = ["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+                "https://unpkg.com/three@0.160.0/build/three.module.min.js"];
+  let erro;
+  for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
+  throw erro;
+}
+function criaOrbita(THREE) {
+  return class Orbita {
+    constructor(cam, el) {
+      this.cam = cam; this.el = el; this.target = new THREE.Vector3();
+      this.minDistance = 0; this.maxDistance = Infinity; this.minPolarAngle = .02; this.maxPolarAngle = Math.PI;
+      this.autoRotate = false; this.autoRotateSpeed = 2; this.enableDamping = true; this.dampingFactor = .1;
+      this.dT = 0; this.dP = 0; this.esc = 1; this.ptr = new Map(); this.pin = 0; this.ouv = { start: [], end: [] };
+      const dist = () => { const [a, b] = [...this.ptr.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+      el.addEventListener("pointerdown", e => {
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (this.ptr.size === 1) this.ouv.start.forEach(f => f());
+        if (this.ptr.size === 2) this.pin = dist();
+      });
+      el.addEventListener("pointermove", e => {
+        const q = this.ptr.get(e.pointerId); if (!q) return;
+        const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY;
+        if (this.ptr.size === 1) { const k = 2 * Math.PI / Math.max(240, el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
+        else if (this.ptr.size === 2) { const d = dist(); if (this.pin > 0 && d > 0) this.esc *= this.pin / d; this.pin = d; }
+      });
+      const solta = e => { if (!this.ptr.delete(e.pointerId)) return; this.pin = this.ptr.size === 2 ? dist() : 0;
+        if (this.ptr.size === 0) this.ouv.end.forEach(f => f()); };
+      for (const ev of ["pointerup", "pointercancel", "lostpointercapture"]) el.addEventListener(ev, solta);
+      el.addEventListener("wheel", e => { e.preventDefault(); this.esc *= Math.exp(e.deltaY * .0012); }, { passive: false });
+    }
+    addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
+    update() {
+      const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
+      if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
+      const f = this.enableDamping ? Math.min(1, this.dampingFactor * 2.5) : 1;
+      s.theta += this.dT * f; s.phi += this.dP * f; this.dT *= 1 - f; this.dP *= 1 - f;
+      s.phi = Math.min(this.maxPolarAngle, Math.max(this.minPolarAngle, s.phi));
+      s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius * this.esc)); this.esc = 1;
+      s.makeSafe(); off.setFromSpherical(s); this.cam.position.copy(this.target).add(off); this.cam.lookAt(this.target);
+    }
+  };
+}
+
 const B = [{"id": "b0-b1", "a": [0.0, 0.0, 0.0], "b": [62.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 0.0], "b": [125.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 0.0], "b": [187.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 0.0], "b": [250.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 0.0], "b": [312.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 0.0], "b": [375.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 0.0], "b": [437.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 0.0], "b": [500.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 0.0], "b": [125.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 0.0], "b": [250.0, 90.0, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 0.0], "b": [312.5, 67.5, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 0.0], "b": [375.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 0.0], "b": [437.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 0.0], "b": [500.0, 0.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 0.0], "b": [125.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 0.0], "b": [250.0, 90.0, 0.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 0.0], "b": [312.5, 67.5, 0.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 0.0], "b": [375.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 0.0], "b": [437.5, 22.5, 0.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 0.0], "b": [125.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 0.0], "b": [187.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 0.0], "b": [312.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 0.0], "b": [375.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "b0-b1", "a": [0.0, 0.0, 80.0], "b": [62.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 80.0], "b": [125.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 80.0], "b": [187.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 80.0], "b": [250.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 80.0], "b": [312.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 80.0], "b": [375.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 80.0], "b": [437.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 80.0], "b": [500.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 80.0], "b": [125.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 80.0], "b": [250.0, 90.0, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 80.0], "b": [312.5, 67.5, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 80.0], "b": [375.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 80.0], "b": [437.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 80.0], "b": [500.0, 0.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 80.0], "b": [125.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 80.0], "b": [250.0, 90.0, 80.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 80.0], "b": [312.5, 67.5, 80.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 80.0], "b": [375.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 80.0], "b": [437.5, 22.5, 80.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 80.0], "b": [125.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 80.0], "b": [187.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 80.0], "b": [312.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 80.0], "b": [375.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "transversina b0", "a": [0.0, 0, 0], "b": [0.0, 0, 80.0], "N": null}, {"id": "transversina b1", "a": [62.5, 0, 0], "b": [62.5, 0, 80.0], "N": null}, {"id": "transversina b2", "a": [125.0, 0, 0], "b": [125.0, 0, 80.0], "N": null}, {"id": "transversina b3", "a": [187.5, 0, 0], "b": [187.5, 0, 80.0], "N": null}, {"id": "transversina b4", "a": [250.0, 0, 0], "b": [250.0, 0, 80.0], "N": null}, {"id": "transversina b5", "a": [312.5, 0, 0], "b": [312.5, 0, 80.0], "N": null}, {"id": "transversina b6", "a": [375.0, 0, 0], "b": [375.0, 0, 80.0], "N": null}, {"id": "transversina b7", "a": [437.5, 0, 0], "b": [437.5, 0, 80.0], "N": null}, {"id": "transversina b8", "a": [500.0, 0, 0], "b": [500.0, 0, 80.0], "N": null}, {"id": "escora t1", "a": [62.5, 22.5, 0], "b": [62.5, 22.5, 80.0], "N": null}, {"id": "escora t2", "a": [125.0, 45.0, 0], "b": [125.0, 45.0, 80.0], "N": null}, {"id": "escora t3", "a": [187.5, 67.5, 0], "b": [187.5, 67.5, 80.0], "N": null}, {"id": "escora t4", "a": [250.0, 90.0, 0], "b": [250.0, 90.0, 80.0], "N": null}, {"id": "escora t5", "a": [312.5, 67.5, 0], "b": [312.5, 67.5, 80.0], "N": null}, {"id": "escora t6", "a": [375.0, 45.0, 0], "b": [375.0, 45.0, 80.0], "N": null}, {"id": "escora t7", "a": [437.5, 22.5, 0], "b": [437.5, 22.5, 80.0], "N": null}];
 const out = document.getElementById("barra");
 const canvas = document.getElementById("cena");
 const fmt = v => (v + 0).toFixed(5).replace(".", ",");
 try {
-  const THREE = await import("three");
-  const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+  const THREE = await carregaThree();
+  const OrbitControls = criaOrbita(THREE);
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));

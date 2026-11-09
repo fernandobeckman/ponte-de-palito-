@@ -187,15 +187,60 @@ footer a { color: var(--tension); }
   </footer>
 </div>
 
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
+/* Carrega o Three.js pelo endereço completo (sem import map) e define um controle de órbita próprio. */
+async function carregaThree() {
+  const urls = ["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+                "https://unpkg.com/three@0.160.0/build/three.module.min.js"];
+  let erro;
+  for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
+  throw erro;
+}
+function criaOrbita(THREE) {
+  return class Orbita {
+    constructor(cam, el) {
+      this.cam = cam; this.el = el; this.target = new THREE.Vector3();
+      this.minDistance = 0; this.maxDistance = Infinity; this.minPolarAngle = .02; this.maxPolarAngle = Math.PI;
+      this.autoRotate = false; this.autoRotateSpeed = 2; this.enableDamping = true; this.dampingFactor = .1;
+      this.dT = 0; this.dP = 0; this.esc = 1; this.ptr = new Map(); this.pin = 0; this.ouv = { start: [], end: [] };
+      const dist = () => { const [a, b] = [...this.ptr.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+      el.addEventListener("pointerdown", e => {
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (this.ptr.size === 1) this.ouv.start.forEach(f => f());
+        if (this.ptr.size === 2) this.pin = dist();
+      });
+      el.addEventListener("pointermove", e => {
+        const q = this.ptr.get(e.pointerId); if (!q) return;
+        const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY;
+        if (this.ptr.size === 1) { const k = 2 * Math.PI / Math.max(240, el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
+        else if (this.ptr.size === 2) { const d = dist(); if (this.pin > 0 && d > 0) this.esc *= this.pin / d; this.pin = d; }
+      });
+      const solta = e => { if (!this.ptr.delete(e.pointerId)) return; this.pin = this.ptr.size === 2 ? dist() : 0;
+        if (this.ptr.size === 0) this.ouv.end.forEach(f => f()); };
+      for (const ev of ["pointerup", "pointercancel", "lostpointercapture"]) el.addEventListener(ev, solta);
+      el.addEventListener("wheel", e => { e.preventDefault(); this.esc *= Math.exp(e.deltaY * .0012); }, { passive: false });
+    }
+    addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
+    update() {
+      const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
+      if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
+      const f = this.enableDamping ? Math.min(1, this.dampingFactor * 2.5) : 1;
+      s.theta += this.dT * f; s.phi += this.dP * f; this.dT *= 1 - f; this.dP *= 1 - f;
+      s.phi = Math.min(this.maxPolarAngle, Math.max(this.minPolarAngle, s.phi));
+      s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius * this.esc)); this.esc = 1;
+      s.makeSafe(); off.setFromSpherical(s); this.cam.position.copy(this.target).add(off); this.cam.lookAt(this.target);
+    }
+  };
+}
+
 const B = __BARS__;
 const out = document.getElementById("barra");
 const canvas = document.getElementById("cena");
 const fmt = v => (v + 0).toFixed(5).replace(".", ",");
 try {
-  const THREE = await import("three");
-  const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+  const THREE = await carregaThree();
+  const OrbitControls = criaOrbita(THREE);
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
