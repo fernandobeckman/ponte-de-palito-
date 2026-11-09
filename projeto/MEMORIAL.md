@@ -1,5 +1,6 @@
 # Memorial de cálculo: Ponte de palito Parker, 8 painéis
 
+> Versão 2, de 2026-11-09. Mudanças em relação à v1: todas as barras passaram a ter 3 camadas, as chapas ganharam 2 faixas sobre as pontas das barras e a transversina central foi para consolos (ver seção 9).
 > Versão 1, de 2026-11-09. Cálculo reproduzível: `python3 projeto/calculo_ponte.py` (saída completa em `projeto/saida_calculo.txt`).
 > Todos os números estão com 5 casas decimais. Unidades: mm, N, MPa, g.
 
@@ -65,10 +66,10 @@ Reações: 110,32481 N em cada apoio. O equilíbrio fecha com resíduo de 1e-06 
 |---|---|---|---|---|---|---|---|
 | Banzo inferior (b0…b8) | 62.50000 | +306.45781 | +383.07227 | 3 contínuas (2 efetivas) | 1765.68000 | 5.76158 | tração |
 | Banzo superior (b0-t1…t7-b8) | 66.42665 | −325.71146 | −407.13932 | 3 contínuas (2 efetivas) | 736.51294 | **2.26124** | flambagem fora do plano |
-| Montante central b4-t4 | 90.00000 | +220.64962 | +165.48722 | 2 | 1765.68000 | 8.00219 | tração |
-| Diagonais centrais t3-b4, t5-b4 | 91.99185 | 0.00000 | −225.53296 | 2 | ver nota | ≥ 1,5 | flambagem |
-| Montantes b3-t3, b5-t5 | 67.50000 | 0.00000 | +220.64962 | 2 | 1765.68000 | — | tração |
-| Demais barras de alma | 22.5 a 77.0 | 0.00000 | 0.00000 | 2 | — | — | contraventamento |
+| Montante central b4-t4 | 90.00000 | +220.64962 | +165.48722 | 3 | 2648.52000 | 12.00328 | tração |
+| Diagonais centrais t3-b4, t5-b4 | 91.99185 | 0.00000 | −225.53296 | 3 | 1296.10495 | 5,74685 (carga deslocada) | flambagem |
+| Montantes b3-t3, b5-t5 | 67.50000 | 0.00000 | +220.64962 | 3 | 2648.52000 | 12,00328 (carga deslocada) | tração |
+| Demais barras de alma | 22.5 a 77.0 | 0.00000 | 0.00000 | 3 | — | — | contraventamento |
 
 Nota: as barras com esforço zero e carga central são indispensáveis. Elas travam os nós do banzo superior contra a flambagem e recebem esforço quando a carga sai do centro. O detalhamento barra a barra está em `projeto/saida_calculo.txt`.
 
@@ -91,38 +92,45 @@ Nota: as barras com esforço zero e carga central são indispensáveis. Elas tra
 - Por isso o cálculo considera apenas 2 camadas efetivas.
 
 ### 6.2 Ligações das barras de alma
-- Uma chapa de ligação (pedaço de palito) em cada face do nó, colada em diagonais, montantes e banzo.
-- Sobreposição mínima calculada: 13,42458 mm. **Adote 20 mm.**
+- Todas as barras, inclusive diagonais e montantes, têm **3 camadas (6 mm)**. Assim as chapas das duas faces ficam planas, encostando nos banzos e nas barras ao mesmo tempo.
+- Em cada nó e em cada face vai uma peça de chapa sobre o banzo e **duas faixas** de 8,4 mm sobre as pontas das barras.
+- Sobreposição necessária: 13,42458 mm. Adotado: 16,80000 mm (2 faixas), FS = 2,50287.
+- Nos nós t1 e t7, onde a treliça é baixa, as faixas do nó de baixo cobrem o montante inteiro e servem para os dois nós.
 
 ### 6.3 Nó do apoio (encontro dos banzos)
-- O banzo superior chega ao inferior num ângulo de 19,79°. Nesse nó, intercale as camadas dos dois banzos (laminação cruzada) e cubra com chapas nas duas faces.
+- O banzo superior chega ao inferior num ângulo de 19,79°. Nesse nó, intercale as camadas dos dois banzos: nas camadas 1 e 3 o banzo inferior passa inteiro, e na camada 2 passa o superior. Cubra com chapas nas duas faces.
 - Sobreposição mínima: 24,23448 mm para 407,13932 N. **Adote 40 mm.**
 
 ### 6.4 Transversina central (onde a carga é pendurada)
-- Vão de 80 mm entre as treliças. Momento M = P·L/4 = 8825,98500 N·mm.
-- Seção: 2 palitos lado a lado × 10 camadas deitadas, ou seja 16,8 × 20 mm.
-  - σ = 7,88034 MPa, FS = 5,12668
-  - τ na cola = 0,98504 MPa, FS = 2,03037 **[depende do ensaio da cola]**
-- Apoie a transversina **sobre** o banzo inferior, no nó b4, e não apenas colada na lateral. Assim a carga passa por contato direto, e não por cisalhamento na cola.
+- Ela **não pode ficar em cima do banzo inferior**, porque ali passam o montante b4-t4 e as diagonais t3-b4 e t5-b4.
+- Fica apoiada em **consolos**: 3 camadas de 30 mm coladas na face interna das chapas do nó b4, de cada treliça, com o topo na altura do topo do banzo.
+- Seção: 2 palitos lado a lado × 10 camadas, ou seja 16,8 × 20 mm, com 70 mm de comprimento e 64 mm de vão entre os apoios.
+  - Flexão: M = 7060,78800 N·mm, σ = 6,30427 MPa, FS = 6,40835.
+  - Cola entre camadas: τ = 0,98504 MPa, FS = 2,03037 **[depende do ensaio da cola]**.
+  - Apoio no consolo (compressão normal às fibras): σ = 2,18898 MPa, FS = 4,61401, com f_c90 = 0,25 × f_c0 = 10,1 MPa (NBR 7190).
+  - Cola do consolo na chapa: τ = 0,87559 MPa, FS = 2,28416.
 
 ### 6.5 Contraventamento
-- Transversinas inferiores em todos os nós b1 a b7.
-- Escoras superiores ligando os nós t1 a t7 das duas treliças.
-- Diagonais em X nos planos superior e inferior.
+- Transversinas inferiores (2 camadas, 90 mm) por baixo dos banzos, em todos os nós do banzo inferior menos o central (b4, que tem a transversina central).
+- Escoras superiores (2 camadas, 90 mm) por cima dos banzos superiores, ligando os nós t1 a t7 das duas treliças.
+- Uma diagonal por painel, alternando a direção (zigue-zague): 8 painéis embaixo e 6 em cima. Cada diagonal fica a 12 mm dos nós para não bater nas transversinas e escoras.
 - **Isso é obrigatório:** o cálculo de flambagem fora do plano supõe que cada nó do banzo superior esteja travado lateralmente.
 
-## 7. Quantitativo
-| item | palitos |
-|---|---|
-| Banzos (2 treliças) | 62 |
-| Alma (2 treliças) | 52 |
-| Chapas de ligação | 64 |
-| Transversinas (inclui a central) | 36 |
-| Escoras superiores | 14 |
-| Contraventamento | 32 |
-| **Total** | **≈ 260 (compre ≈ 312, com 20% de perda)** |
+## 7. Quantitativo (do modelo físico, peça por peça)
+Gerado por `projeto/gerar_montagem.py`. O plano de corte encaixa as peças em palitos de 101,6 mm úteis.
 
-Massa estimada: 309,42912 g (madeira mais 15% de cola). O peso próprio corresponde a 0,69% da carga (0,30943 kg ÷ 45 kg) e foi desprezado.
+| item | valor |
+|---|---|
+| Peças cortadas e coladas | 404 |
+| Palitos usados na ponte | 254 |
+| Palitos para os ensaios de material | 50 |
+| **Palitos a comprar (+15% de perda)** | **350** |
+| Área colada | 1275,50756 cm² |
+| Cola que fica nas juntas (200 g/m²) | 25,51015 g |
+| Cola a reservar, com perdas (×3) | 76,53045 g |
+| Massa estimada da ponte | 222,61836 g |
+
+A lista de corte completa e o orçamento estão na página de montagem. O consumo de 160 a 200 g/m² e o fato de a cola não aderir a polietileno vêm da ficha técnica da Cascola Cascorez Extra (Henkel).
 
 ## 8. Pendências antes de construir
 1. **[PENDENTE]** Medir 20 palitos (largura, espessura, comprimento e massa) e atualizar as constantes `B`, `T` e `L_PAL` em `estudo_geometrias.py`.
@@ -136,3 +144,10 @@ Massa estimada: 309,42912 g (madeira mais 15% de cola). O peso próprio correspo
 - USDA Forest Products Laboratory. *Wood Handbook* (FPL-GTR-282), 2021.
 - AVILA (2009), ensaio de tração em palitos, citado em [trabalhos de ponte de palito](https://www.studocu.com/pt-br/document/universidade-federal-de-mato-grosso/materiais-de-construcao/projeto-de-ponte-de-palito-calculos-usando-software/6605970). Fonte secundária: precisa ser confirmada pelo ensaio do lote.
 - [Unicruz: análise estrutural-experimental em pontes de palito de picolé](https://home.unicruz.edu.br/mercosul/pagina/anais/2018/3%20-Mostra%20de%20Trabalhos%20da%20Gradua%C3%A7%C3%A3o%20e%20P%C3%B3s-Gradua%C3%A7%C3%A3o/Resumos%20Expandidos/AN%C3%81LISE%20ESTRUTURAL%20%E2%80%93%20EXPERIMENTAL%20EM%20PONTES%20DE%20PALITO%20DE%20PICOL%C3%89.pdf)
+
+## 9. Histórico de revisões
+- **v2**: a montagem detalhada palito por palito mostrou três problemas da v1, todos registrados no `ERROS.md`:
+  1. Diagonais e montantes com 2 camadas (4 mm) e banzos com 3 (6 mm) deixavam as chapas tortas. Agora todas as barras têm 3 camadas.
+  2. Uma faixa de chapa só cobria 8,4 mm da ponta das barras, menos que os 13,42 mm calculados. Agora são 2 faixas (16,8 mm).
+  3. A transversina central em cima do banzo inferior batia no montante e nas diagonais do nó b4. Agora ela fica sobre consolos.
+  - O FS mínimo da ponte não mudou (2,26124, no banzo superior). O peso próprio, 0,22262 kg, equivale a 0,49% da carga e continua desprezado.

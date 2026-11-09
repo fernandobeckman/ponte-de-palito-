@@ -33,10 +33,10 @@ rows = "".join(
     for n, L, cl, Nc, Nd, cam, fs, modo in [
         ("Banzo inferior", "62,50000", "tr", "+306,45781", "+383,07227", "3 (2 efet.)", "5,76158", "tração"),
         ("Banzo superior", "66,42665", "co", "−325,71146", "−407,13932", "3 (2 efet.)", "<b>2,26124</b>", "flambagem"),
-        ("Montante central", "90,00000", "tr", "+220,64962", "+165,48722", "2", "8,00219", "tração"),
-        ("Diagonais centrais", "91,99185", "", "0,00000", "−225,53296", "2", "≥ 1,5*", "flambagem"),
-        ("Montantes b3-t3, b5-t5", "67,50000", "", "0,00000", "+220,64962", "2", "≥ 1,5*", "tração"),
-        ("Demais barras da alma", "22,5 a 77,0", "", "0,00000", "0,00000", "2", "—", "travamento"),
+        ("Montante central", "90,00000", "tr", "+220,64962", "+165,48722", "3", "12,00328", "tração"),
+        ("Diagonais centrais", "91,99185", "", "0,00000", "−225,53296", "3", "5,74685*", "flambagem"),
+        ("Montantes b3-t3, b5-t5", "67,50000", "", "0,00000", "+220,64962", "3", "12,00328*", "tração"),
+        ("Demais barras da alma", "22,5 a 77,0", "", "0,00000", "0,00000", "3", "—", "travamento"),
     ])
 html = open(os.path.join(d, "pagina_modelo.html")).read()
 html = (html.replace("__BARS__", json.dumps(bars)).replace("__SVG__", svg).replace("__ROWS__", rows)
