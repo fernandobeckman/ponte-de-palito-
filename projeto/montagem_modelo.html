@@ -461,6 +461,9 @@ const cam = new THREE.PerspectiveCamera(42, 1, 1, 12000);
 cam.position.set(-260, 520, 820);
 const ctl = new Navegador(cam, canvas);
 ctl.target.set(250, 60, 250); ctl.autoRotateSpeed = 2.2;
+ctl.limites = { min: [-800, 8, -650], max: [1300, 1800, 1150],   // câmera: chão 8 mm acima da mesa e caixa em volta da bancada
+  alvo: { min: [-150, 0, -200], max: [800, 600, 650] } };          // ponto de foco: sempre na área da ponte e da mesa
+ctl.maxDistance = 1700;
 
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.6));
 const sol = new THREE.DirectionalLight(0xfff4e6, 2.2);
@@ -933,13 +936,18 @@ function vista(v) {
   const emPe = tMostrado >= idx.levantaA + 1;
   const C = emPe ? new V3(250, Y0 + 30, 40) : new V3(250, 0, 330);
   const off = { tudo: emPe ? [-330, 300, 720] : [-200, 620, 560], lado: [0, 30, 900], frente: [-950, 60, 0],
-    cima: [0, 1000, 1], baixo: [0, -650, 1] }[v];
+    cima: [0, 1000, 1], baixo: [0, 0, 0] }[v];
   if (v === "dentro") {
     if (emPe) { if (ctl.modo !== "voar") setModo("voar"); ctl.irPara(new V3(-30, Y0 + 24, 40), new V3(120, Y0 + 24, 40)); }
     else ctl.irPara(new V3(250, 70, 430), new V3(250, 0, 300));
     return;
   }
   if (ctl.modo !== "orbitar") setModo("orbitar");
+  if (v === "baixo") {   // por baixo da ponte, mas acima da mesa, olhando para cima
+    if (emPe) ctl.irPara(new V3(250, 30, 190), new V3(250, Y0, 40));
+    else ctl.irPara(new V3(250, 25, 470), new V3(250, 0, 300));
+    return;
+  }
   ctl.irPara(C.clone().add(new V3(...off)), C);
 }
 document.querySelectorAll("[data-v]").forEach(b => b.addEventListener("click", () => vista(b.dataset.v)));

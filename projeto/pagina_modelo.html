@@ -238,6 +238,7 @@ try {
     cam.position.copy(c).addScaledVector(dir, dist); cam.updateProjectionMatrix();
   };
   const ctl = new Navegador(cam, canvas); ctl.target.copy(c);
+  ctl.limites = { min: [c.x - 1600, 2, c.z - 1600], max: [c.x + 1600, 1600, c.z + 1600] };
   ctl.pick = (x, y) => { const r = canvas.getBoundingClientRect();
     ray.setFromCamera(new THREE.Vector2((x - r.left) / r.width * 2 - 1, -(y - r.top) / r.height * 2 + 1), cam);
     const h = ray.intersectObjects(meshes)[0]; return h ? h.point : null; };

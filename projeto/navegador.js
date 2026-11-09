@@ -12,6 +12,7 @@ function criaNavegador(THREE) {
       this.joy = { f: 0, r: 0, u: 0 }; this.teclas = new Set(); this.rapido = false;
       this.ultToque = { t: 0, x: 0, y: 0 }; this.anim = null; this.antes = performance.now();
       this.pick = null;   // função (x, y) -> ponto 3D sob o cursor, definida pela página
+      this.limites = null; // { min: [x, y, z], max: [x, y, z] }: a câmera não sai desta caixa (min[1] = chão)
       el.addEventListener("contextmenu", e => e.preventDefault());
       el.addEventListener("pointerdown", e => this._down(e));
       el.addEventListener("pointermove", e => this._move(e));
@@ -98,6 +99,11 @@ function criaNavegador(THREE) {
     }
     zoomEm(x, y, s) {
       if (this.modo === "voar") { this.andar((1 - s) * 220, 0, 0); return; }
+      if (s > 1) {   // afastar: recua a câmera mantendo o ponto de foco
+        const off = this.cam.position.clone().sub(this.target);
+        const d = Math.min(this.maxDistance, off.length() * s);
+        this.cam.position.copy(this.target).add(off.setLength(d)); return;
+      }
       const ray = this._raio(x, y), d = this.cam.position.distanceTo(this.target);
       let P = this.pick ? this.pick(x, y) : null;
       if (!P) P = ray.origin.clone().addScaledVector(ray.direction, d);
@@ -118,13 +124,23 @@ function criaNavegador(THREE) {
       this.anim = { t: 0, dur, p0: this.cam.position.clone(), a0: this.target.clone(), p1: pos.clone(), a1: alvo.clone() };
       this.dT = this.dP = 0;
     }
+    _limita() {
+      const L = this.limites; if (!L) return;
+      const c = this.cam.position, t = this.target;
+      for (let i = 0; i < 3; i++) {
+        const k = "xyz"[i];
+        c[k] = Math.min(L.max[i], Math.max(L.min[i], c[k]));
+        const A = L.alvo || L;
+        t[k] = Math.min(A.max[i], Math.max(A === L && i === 1 ? 0 : A.min[i], t[k]));
+      }
+    }
     update() {
       const agora = performance.now(), dt = Math.min(.05, (agora - this.antes) / 1000); this.antes = agora;
       if (this.anim) {
         const a = this.anim; a.t += dt / a.dur; const k = Math.min(1, a.t), e = k * k * (3 - 2 * k);
         this.cam.position.lerpVectors(a.p0, a.p1, e); this.target.lerpVectors(a.a0, a.a1, e);
         if (k >= 1) this.anim = null;
-        this.cam.lookAt(this.target); return;
+        this._limita(); this.cam.lookAt(this.target); return;
       }
       const T = this.teclas;
       const f = (T.has("w") ? 1 : 0) - (T.has("s") ? 1 : 0) + this.joy.f;
@@ -147,6 +163,7 @@ function criaNavegador(THREE) {
         const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
         s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed; this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
       }
+      this._limita();
       this.cam.lookAt(this.target);
     }
   };
