@@ -66,24 +66,24 @@ def resolver(m):
     for b, L, c, EA, dofs in info:
         du = [U[dofs[dim + a]] - U[dofs[a]] for a in range(dim)]
         N = EA / L * sum(c[a] * du[a] for a in range(dim))
-        barras.append({"id": b["id"], "i": b["i"], "j": b["j"], "L_mm": round(L, 2),
-                       "N": round(N, 3), "tipo": "tração" if N > 1e-9 else ("compressão" if N < -1e-9 else "nula")})
+        barras.append({"id": b["id"], "i": b["i"], "j": b["j"], "L_mm": round(L, 6),
+                       "N": round(N, 6), "tipo": "tração" if N > 1e-9 else ("compressão" if N < -1e-9 else "nula")})
     reacoes = {}
     for g, v in R.items():
-        reacoes.setdefault(nos[g // dim], [0.0] * dim)[g % dim] = round(v, 3)
-    desloc = {nos[i]: [round(U[dim * i + a], 5) for a in range(dim)] for i in range(len(nos))}
+        reacoes.setdefault(nos[g // dim], [0.0] * dim)[g % dim] = round(v, 6)
+    desloc = {nos[i]: [round(U[dim * i + a], 6) for a in range(dim)] for i in range(len(nos))}
     soma_c = [sum(f[a] for f in m.get("cargas", {}).values()) for a in range(dim)]
     soma_r = [sum(r[a] for r in reacoes.values()) for a in range(dim)]
     return {"barras": barras, "reacoes_N": reacoes, "deslocamentos_mm": desloc,
-            "verificacao_equilibrio": [round(soma_c[a] + soma_r[a], 6) for a in range(dim)]}
+            "verificacao_equilibrio": [round(soma_c[a] + soma_r[a], 9) for a in range(dim)]}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2: print(__doc__); sys.exit(1)
     m = json.load(open(sys.argv[1]))
     r = resolver(m)
-    print(f"{'barra':>6} {'i':>4} {'j':>4} {'L(mm)':>9} {'N(N)':>11}  tipo")
+    print(f"{'barra':>6} {'i':>4} {'j':>4} {'L(mm)':>12} {'N(N)':>14}  tipo")
     for b in r["barras"]:
-        print(f"{b['id']:>6} {b['i']:>4} {b['j']:>4} {b['L_mm']:>9} {b['N']:>11}  {b['tipo']}")
+        print(f"{b['id']:>6} {b['i']:>4} {b['j']:>4} {b['L_mm']:>12.5f} {b['N'] + 0.0:>14.5f}  {b['tipo']}")
     print("reações (N):", r["reacoes_N"])
     print("equilíbrio (deve ser ~0):", r["verificacao_equilibrio"])
     if "--json" in sys.argv: print(json.dumps(r, ensure_ascii=False, indent=2))

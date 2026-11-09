@@ -1,0 +1,57 @@
+====================================================================================================
+PONTE PARKER 8 PAINÉIS, VÃO 500 mm, ALTURA 90 mm, LARGURA 80 mm
+Carga: 45.0 kg x 9.80665 = 441.29925 N  |  por treliça = 220.64962 N
+Reações por treliça = 110.32481 N e 110.32481 N  |  equilíbrio = [0.0, 1e-06]
+====================================================================================================
+barra          L (mm)   N centro (N)   N desloc (N) camadas         R (N)  FS centro         modo
+b0-b1        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b1-b2        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b2-b3        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b3-b4        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b4-b5        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b5-b6        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b6-b7        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+b7-b8        62.50000      306.45781      383.07227       2    1765.68000    5.76158       tração
+t1-t2        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+t2-t3        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+t3-t4        66.42665     -325.71146     -244.28359       2     736.51294    2.26124    flambagem
+t4-t5        66.42665     -325.71146     -244.28359       2     736.51294    2.26124    flambagem
+t5-t6        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+t6-t7        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+b0-t1        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+t7-b8        66.42665     -325.71146     -407.13932       2     736.51294    2.26124    flambagem
+b1-t1        22.50000        0.00000        0.00000       2             - barra nula         nula
+b2-t2        45.00000        0.00000        0.00000       2             - barra nula         nula
+b3-t3        67.50000        0.00000      220.64962       2             - barra nula         nula
+b4-t4        90.00000      220.64962      165.48722       2    1765.68000    8.00219       tração
+b5-t5        67.50000        0.00000      220.64962       2             - barra nula         nula
+b6-t6        45.00000        0.00000        0.00000       2             - barra nula         nula
+b7-t7        22.50000        0.00000        0.00000       2             - barra nula         nula
+t1-b2        66.42665        0.00000        0.00000       2             - barra nula         nula
+t2-b3        77.01461        0.00000        0.00000       2             - barra nula         nula
+t3-b4        91.99185        0.00000     -225.53296       2             - barra nula         nula
+t5-b4        91.99185        0.00000     -225.53296       2             - barra nula         nula
+t6-b5        77.01461        0.00000        0.00000       2             - barra nula         nula
+t7-b6        66.42665        0.00000        0.00000       2             - barra nula         nula
+----------------------------------------------------------------------------------------------------
+FS mínimo (carga central) = 2.26124  ->  carga de ruptura prevista ≈ 101.75596 kg
+Flecha no meio do vão (elástica, 45 kg) = 1.97675 mm
+
+TRANSVERSINA CENTRAL (onde a carga é pendurada)
+ seção 16.80000 x 20.00000 mm | M = 8825.98500 N·mm | σ = 7.88034 MPa (FS = 5.12668 usando f_c como limite)
+ V = 220.64962 N | τ (cola entre camadas) = 0.98504 MPa (FS = 2.03037 com τ_cola,k estimado 2.0 MPa)
+
+BANZOS CONTÍNUOS (3 camadas, emendas desencontradas; resistência conta só 2 camadas)
+ banzo superior: 2 trechos retos de 265.70661 mm | banzo inferior: 500.00000 mm
+
+LIGAÇÕES DAS BARRAS DE ALMA — sobreposição mínima dentro da chapa (2 faces coladas, largura 8,4 mm)
+ t3-b4      N = 225.53296 N -> sobreposição ≥ 13.42458 mm (adote 20 mm)
+ t5-b4      N = 225.53296 N -> sobreposição ≥ 13.42458 mm (adote 20 mm)
+ b3-t3      N = 220.64962 N -> sobreposição ≥ 13.13391 mm (adote 20 mm)
+ b4-t4      N = 220.64962 N -> sobreposição ≥ 13.13391 mm (adote 20 mm)
+ b5-t5      N = 220.64962 N -> sobreposição ≥ 13.13391 mm (adote 20 mm)
+
+QUANTITATIVO (palitos inteiros)
+ banzos = 62 | alma = 52 | chapas = 64 | transversinas = 36 | escoras superiores = 14 | contraventamento = 32
+ TOTAL ≈ 260 palitos (+20% de perda: compre 312)
+ massa estimada = 309.42912 g (madeira + 15% de cola) — peso próprio desprezível frente a 45 kg
