@@ -48,6 +48,8 @@ p { margin: 0; max-width: 66ch; }
 .caixa b { font: 700 .95rem var(--mono); }
 .foto { position: relative; background: #fff; border-block: 1px solid var(--line); }
 .foto img { display: block; width: 100%; height: auto; }
+.guias { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.guias line { stroke: #1b211e; stroke-width: 2.5; opacity: .75; } .guias circle { fill: #1b211e; }
 .et { position: absolute; transform: translate(-50%, -50%); font: 700 11px/1 var(--mono); color: #fff; border: 1.5px solid #fff; border-radius: 6px; padding: 4px 5px;
   cursor: pointer; box-shadow: 0 1px 3px #0007; min-width: 26px; min-height: 22px; }
 .et.apaga { opacity: .25; }
@@ -117,8 +119,11 @@ $("capitulos").innerHTML = caps.map(c => `<a href="#passo-${c.n}">${c.nome}</a>`
 $("passos").innerHTML = D.passos.map(s => {
   const caixa = s.caixa.length ? `<div class="caixa"><h3>Peças deste passo</h3><ul>${s.caixa.map(([c, q]) =>
     `<li><button type="button" data-cod="${c}" data-n="${s.n}" aria-pressed="false">${svgPeca(D.tipos[c])}<span><b>${q}×</b> <span class="cod" style="background:${corCod(c)}">${c}</span></span></button></li>`).join("")}</ul></div>` : "";
-  const foto = s.img ? `<div class="foto"><img src="${s.img}" width="1200" height="800" alt="Passo ${s.n}: ${s.titulo}" loading="lazy">${s.rotulos.map(([k, x, y]) => {
-    const pc = D.pecas[k]; return `<button type="button" class="et" data-k="${k}" data-cod="${pc.cod}" style="left:${(x * 100).toFixed(2)}%;top:${(y * 100).toFixed(2)}%;background:${corCod(pc.cod)}" aria-label="Peça ${pc.num}, ${pc.cod}">${pc.num}</button>`; }).join("")}</div>` : "";
+  const linhas = s.rotulos.filter(r => Math.hypot(r[3] - r[1], r[4] - r[2]) > .01).map(([k, x, y, lx, ly]) =>
+    `<line x1="${x * 1200}" y1="${y * 800}" x2="${lx * 1200}" y2="${ly * 800}"/><circle cx="${x * 1200}" cy="${y * 800}" r="5"/>`).join("");
+  const foto = s.img ? `<div class="foto"><img src="${s.img}" width="1200" height="800" alt="Passo ${s.n}: ${s.titulo}" loading="lazy">
+    <svg class="guias" viewBox="0 0 1200 800" aria-hidden="true">${linhas}</svg>${s.rotulos.map(([k, x, y, lx, ly]) => {
+    const pc = D.pecas[k]; return `<button type="button" class="et" data-k="${k}" data-cod="${pc.cod}" style="left:${(lx * 100).toFixed(2)}%;top:${(ly * 100).toFixed(2)}%;background:${corCod(pc.cod)}" aria-label="Peça ${pc.num}, ${pc.cod}">${pc.num}</button>`; }).join("")}</div>` : "";
   return `<article class="passo${feitos[s.n] ? " feito" : ""}" id="passo-${s.n}">
     <header><span class="numero">${s.n}</span><div><span class="cap">${s.titulo}</span><p class="txt">${s.texto}</p></div>
       <label class="feito-l"><input type="checkbox" data-n="${s.n}" ${feitos[s.n] ? "checked" : ""}>Feito</label></header>

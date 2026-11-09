@@ -95,8 +95,21 @@ def pagina():
     sys.path.insert(0, D)
     import gerar_site as gs   # reaproveita cabeçalho, menu e estilos de navegação
     pecas = {k: dict(num=P[k]["num"], cod=P[k]["cod"], nome=P[k]["nome"], passo=k + 1) for s in passos for k in s["pecas"]}
+    def espalha(rot, dx=.075, dy=.06):
+        """Afasta etiquetas que ficariam uma sobre a outra (em coordenadas 0-1 da imagem).
+        Cada item vira [peça, x da peça, y da peça, x da etiqueta, y da etiqueta]."""
+        out = []
+        for k, x, y in sorted(rot, key=lambda r: (r[2], r[1])):
+            lx, ly = x, y
+            for _ in range(40):
+                choque = [o for o in out if abs(o[3] - lx) < dx and abs(o[4] - ly) < dy]
+                if not choque: break
+                ly = max(o[4] for o in choque) + dy
+                if ly > .96: ly, lx = y, lx + dx
+            out.append([k, x, y, round(min(.97, max(.03, lx)), 4), round(min(.97, max(.03, ly)), 4)])
+        return out
     for s in passos:
-        s["rotulos"] = pos.get(str(s["n"]), [])
+        s["rotulos"] = espalha(pos.get(str(s["n"]), []))
         cont = {}
         for k in s["pecas"]: cont[P[k]["cod"]] = cont.get(P[k]["cod"], 0) + 1
         s["caixa"] = sorted(cont.items(), key=lambda x: (-x[1], x[0]))
