@@ -428,7 +428,11 @@ function laco(agora) {
   if (quadro3D) quadro3D();
   requestAnimationFrame(laco);
 }
-atualiza(0); requestAnimationFrame(laco);
+// link direto para um passo: montagem.html#passo-57 abre com o passo 57 concluído
+const passoDoLink = () => { const m = /^#passo-(\d+)$/.exec(location.hash); return m ? Math.min(N, Math.max(1, +m[1])) : null; };
+if (passoDoLink()) t = passoDoLink();
+atualiza(t); requestAnimationFrame(laco);
+addEventListener("hashchange", () => { const k = passoDoLink(); if (k) { setPlay(false); alvoT = null; t = k; atualiza(t); } });
 
 /* ---------------- 3D ---------------- */
 /* Carrega o Three.js pelo endereço completo (sem import map) e define um controle de órbita próprio. */
@@ -494,7 +498,8 @@ const matAtivo = new THREE.MeshStandardMaterial({ map: texMadeira, color: 0xffff
 const matsFam = Object.fromEntries(Object.entries(COR_FAM).map(([k, c]) => [k, new THREE.MeshStandardMaterial({ map: texMadeira, color: new THREE.Color(c).lerp(new THREE.Color(0xffffff), .25), roughness: .8 })]));
 const matDestaque = new THREE.MeshStandardMaterial({ map: texMadeira, color: 0xffe066, roughness: .6, emissive: 0x8a6a00, emissiveIntensity: .55 });
 let coresFam = false, destaque = null;
-const baseMat = o => destaque && o.p.cod === destaque ? matDestaque : coresFam ? matsFam[o.p.tipo] : o.mat;
+let destaqueNums = null;   // conjunto de números de peça destacados (usado pelo manual)
+const baseMat = o => (destaqueNums && destaqueNums.has(o.p.num)) || (destaque && o.p.cod === destaque) ? matDestaque : coresFam ? matsFam[o.p.tipo] : o.mat;
 const matSobra = new THREE.MeshStandardMaterial({ map: texMadeira, roughness: .85, transparent: true, opacity: 1 });
 const matCorte = new THREE.MeshBasicMaterial({ color: 0xd2382b });
 const matColaUmida = new THREE.MeshStandardMaterial({ color: 0xfbfbf6, roughness: .22, metalness: 0, polygonOffset: true, polygonOffsetFactor: -2 });
@@ -952,6 +957,20 @@ function vista(v) {
 }
 document.querySelectorAll("[data-v]").forEach(b => b.addEventListener("click", () => vista(b.dataset.v)));
 window.__foco = () => focoAlvo.toArray();
+// ganchos usados para gerar as imagens do manual
+const centroPeca = j => objs[j].fixoRot.localToWorld(objs[j].centro.clone());
+window.__destaque = idxs => { destaqueNums = idxs && idxs.length ? new Set(idxs.map(j => P[j].num)) : null; for (const o of objs) if (o && o.estado && o.estado[0] === "f") o.mesh.material = baseMat(o); };
+window.__enquadra = (idxs, dir, folga = 1.15, alvoExtra) => {
+  seguir = false; const b = new THREE.Box3();
+  for (const j of idxs) b.expandByPoint(centroPeca(j));
+  if (alvoExtra) for (const q of alvoExtra) b.expandByPoint(new V3(...q));
+  const c = b.getCenter(new V3()), r = Math.max(70, b.getSize(new V3()).length() / 2);
+  const vf = THREE.MathUtils.degToRad(cam.fov), hf = 2 * Math.atan(Math.tan(vf / 2) * cam.aspect);
+  const d = r / Math.sin(Math.min(vf, hf) / 2) * folga;
+  cam.position.copy(c).addScaledVector(new V3(...dir).normalize(), d); ctl.target.copy(c); ctl.anim = null;
+};
+window.__proj = idxs => { const w = canvas.clientWidth, h = canvas.clientHeight; ctl.update(); cam.updateMatrixWorld();
+  return idxs.map(j => { const v = centroPeca(j).project(cam); return { j, x: (v.x + 1) / 2, y: (1 - v.y) / 2, ok: v.z < 1 && Math.abs(v.x) <= 1 && Math.abs(v.y) <= 1 }; }); };
 window.__nav = () => ({ cam: cam.position.toArray().map(v => +v.toFixed(1)), alvo: ctl.target.toArray().map(v => +v.toFixed(1)), seguir, modo: ctl.modo });
 window.__cam = c => { seguir = false; cam.position.set(c[0], c[1], c[2]); ctl.target.set(c[3], c[4], c[5]); };
 function tamanho() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
@@ -961,5 +980,5 @@ atualiza3D = atualizaCena;
 $("loading").hidden = true;
 atualiza(t);
 // abre já com o primeiro passo acontecendo, para mostrar o que a página faz
-if (t === 0 && !tocando && alvoT === null) alvoT = 1;
+if (t === 0 && !tocando && alvoT === null && !passoDoLink()) alvoT = 1;
 </script>

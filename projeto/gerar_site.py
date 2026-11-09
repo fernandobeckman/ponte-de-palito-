@@ -54,7 +54,7 @@ body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important
 """
 
 def nav(atual):
-    itens = [("index.html", "Início"), ("montagem.html", "Montagem 3D"), ("projeto.html", "Como foi calculada"), ("manual_de_corte.pdf", "Manual (PDF)")]
+    itens = [("index.html", "Início"), ("manual.html", "Manual"), ("montagem.html", "Montagem 3D"), ("projeto.html", "Como foi calculada"), ("manual_de_corte.pdf", "Moldes (PDF)")]
     links = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == atual else ""}>{t}</a>' for h, t in itens)
     return f'<nav class="sitenav" aria-label="Páginas do site"><div class="in"><a class="marca" href="index.html">Ponte de Palito</a>{links}</div></nav>'
 
@@ -66,6 +66,8 @@ def embrulha(fragmento, atual, titulo, descricao):
     return (f'<!doctype html>\n<html lang="pt-BR">\n<head>\n{cabeca_comum(titulo, descricao)}\n{cabeca}<style>{NAV_CSS}</style>\n</head>\n'
             f'<body>\n{nav(atual)}\n{corpo}\n</body>\n</html>\n')
 
+if __name__ != "__main__":
+    pass
 # ------------------------------------------------------------------ páginas 3D
 pm = open(os.path.join(R, "site", "montagem.html")).read()
 pm = pm.replace('O PDF com os moldes em tamanho real está no repositório, em <span class="mono">projeto/manual/manual_de_corte.pdf</span>.',
