@@ -38,7 +38,7 @@ rows = "".join(
         ("Montantes b3-t3, b5-t5", "67,50000", "", "0,00000", "+220,64962", "3", "12,00328*", "tração"),
         ("Demais barras da alma", "22,5 a 77,0", "", "0,00000", "0,00000", "3", "—", "travamento"),
     ])
-html = open(os.path.join(d, "pagina_modelo.html")).read()
+html = open(os.path.join(d, "pagina_modelo.html")).read().replace("__NAVEGADOR__", open(os.path.join(d, "navegador.js")).read())
 html = (html.replace("__BARS__", json.dumps(bars)).replace("__SVG__", svg).replace("__ROWS__", rows)
         .replace("__FS__", f5(r["fs_min"])).replace("__FLECHA__", f5(r["flecha_mm"]))
         .replace("__RUPT__", f5(r["fs_min"] * 45)).replace("__PALITOS__", str(r["total_palitos"])))

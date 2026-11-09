@@ -44,7 +44,31 @@ section { display: grid; gap: 12px; min-width: 0; }
 .hud { position: absolute; left: 10px; right: 10px; top: 10px; display: flex; justify-content: space-between; gap: 8px; pointer-events: none; flex-wrap: wrap; }
 .hud > * { pointer-events: auto; }
 .tag { font: 600 .74rem var(--mono); background: color-mix(in srgb, var(--card) 88%, transparent); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; color: var(--ink); }
-.tools { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.hud { flex-direction: column; align-items: flex-start; justify-content: flex-start; right: auto; max-width: calc(100% - 20px); }
+.peca { font-weight: 400; white-space: normal; max-width: 100%; }
+.dica { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px); text-align: center;
+  font: .78rem var(--body); color: var(--ink); background: color-mix(in srgb, var(--card) 85%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; pointer-events: none; transition: opacity .6s; }
+.dica.some { opacity: 0; }
+.voo { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
+.voo > * { pointer-events: auto; }
+.joy { width: 116px; height: 116px; border-radius: 50%; position: relative; touch-action: none; background: color-mix(in srgb, var(--card) 70%, transparent); border: 1px solid var(--line); }
+.knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: var(--wood); box-shadow: 0 1px 4px #0006; }
+.updown { display: grid; gap: 10px; }
+.vbtn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 80%, transparent); color: var(--ink); display: grid; place-items: center; touch-action: none; cursor: pointer; }
+.vbtn svg { width: 20px; height: 20px; fill: currentColor; }
+.barra3d { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding: 8px 12px; border-top: 1px solid var(--line); scrollbar-width: thin; }
+.barra3d > * { flex: none; }
+.grp { display: flex; }
+.grp .tbtn:first-child { border-radius: 999px 0 0 999px; }
+.grp .tbtn:last-child { border-radius: 0 999px 999px 0; margin-left: -1px; }
+.sep { font: 600 .68rem var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding-left: 8px; }
+.bench.cheia { position: fixed; inset: 0; z-index: 50; border: 0; border-radius: 0; display: flex; flex-direction: column;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.bench.cheia .stage { flex: 1; min-height: 0; }
+.bench.cheia #cena { height: 100%; }
+.bench.cheia .det, .bench.cheia .hint, .bench.cheia .chips { display: none; }
+.bench.cheia .caption { min-height: 0; padding-block: 8px 2px; }
 .tbtn { font: 600 .78rem var(--body); border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
 .tbtn[aria-pressed="true"] { background: var(--ink); color: var(--card); border-color: var(--ink); }
 .tbtn:focus-visible, .ctl:focus-visible, .chip:focus-visible, input:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
@@ -117,13 +141,33 @@ footer a { color: var(--tension); }
       <div class="loading" id="loading">Carregando a bancada 3D…</div>
       <div class="hud">
         <span class="tag" id="contador">Passo 1</span>
-        <div class="tools">
-          <button class="tbtn" id="b360" aria-pressed="false" type="button">Girar 360°</button>
-          <button class="tbtn" id="bseg" aria-pressed="true" type="button">Seguir o passo</button>
-          <button class="tbtn" id="btudo" type="button">Ver tudo</button>
+        <span class="tag peca" id="peca" hidden></span>
+      </div>
+      <div class="dica" id="dica">1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa peça para ver o nome</div>
+      <div class="voo" id="voo" hidden>
+        <div class="joy" id="joy" aria-label="Joystick: andar para frente, para trás e para os lados"><div class="knob" id="knob"></div></div>
+        <div class="updown">
+          <button class="vbtn" id="bsobe" type="button" aria-label="Subir"><svg viewBox="0 0 24 24"><path d="M12 5l8 10H4z"/></svg></button>
+          <button class="vbtn" id="bdesce" type="button" aria-label="Descer"><svg viewBox="0 0 24 24"><path d="M12 19L4 9h16z"/></svg></button>
         </div>
       </div>
       <div class="cure" id="cure" hidden><b>24 h</b><span>tempo de cura da cola</span></div>
+    </div>
+    <div class="barra3d" id="barra3d">
+      <div class="grp" role="group" aria-label="Modo de navegação">
+        <button class="tbtn" id="mOrb" aria-pressed="true" type="button">Girar em volta</button>
+        <button class="tbtn" id="mVoo" aria-pressed="false" type="button">Voar por dentro</button>
+      </div>
+      <button class="tbtn" id="bseg" aria-pressed="true" type="button">Seguir o passo</button>
+      <button class="tbtn" id="b360" aria-pressed="false" type="button">Girar 360°</button>
+      <button class="tbtn" id="bamp" aria-pressed="false" type="button">Ampliar</button>
+      <span class="sep">Vistas</span>
+      <button class="tbtn" type="button" data-v="tudo">Inteira</button>
+      <button class="tbtn" type="button" data-v="lado">Lado</button>
+      <button class="tbtn" type="button" data-v="frente">Frente</button>
+      <button class="tbtn" type="button" data-v="cima">Cima</button>
+      <button class="tbtn" type="button" data-v="baixo">Baixo</button>
+      <button class="tbtn" type="button" data-v="dentro">Por dentro</button>
     </div>
     <div class="caption" aria-live="polite">
       <span class="cap" id="cap">Preparação</span>
@@ -316,52 +360,169 @@ async function carregaThree() {
   for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
   throw erro;
 }
-function criaOrbita(THREE) {
-  return class Orbita {
+function criaNavegador(THREE) {
+  /* Navegação livre: girar, mover (pan), zoom na direção do dedo/cursor, toque duplo para aproximar,
+     modo "voar" (olhar em volta + andar), teclado WASD/QE e animação para vistas prontas. */
+  const V = THREE.Vector3;
+  return class Navegador {
     constructor(cam, el) {
-      this.cam = cam; this.el = el; this.target = new THREE.Vector3();
-      this.minDistance = 0; this.maxDistance = Infinity; this.minPolarAngle = .02; this.maxPolarAngle = Math.PI;
-      this.autoRotate = false; this.autoRotateSpeed = 2; this.enableDamping = true; this.dampingFactor = .1;
-      this.dT = 0; this.dP = 0; this.esc = 1; this.ptr = new Map(); this.pin = 0; this.ouv = { start: [], end: [] };
-      const dist = () => { const [a, b] = [...this.ptr.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
-      el.addEventListener("pointerdown", e => {
-        try { el.setPointerCapture(e.pointerId); } catch (_) {}
-        this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (this.ptr.size === 1) this.ouv.start.forEach(f => f());
-        if (this.ptr.size === 2) this.pin = dist();
+      this.cam = cam; this.el = el; this.target = new V();
+      this.modo = "orbitar"; this.autoRotate = false; this.autoRotateSpeed = 2;
+      this.minDistance = 2; this.maxDistance = 8000; this.velVoo = 160;
+      this.dT = 0; this.dP = 0; this.ptr = new Map(); this.par = null;
+      this.ouv = { start: [], end: [], toque: [], duplo: [], interagiu: [] };
+      this.joy = { f: 0, r: 0, u: 0 }; this.teclas = new Set(); this.rapido = false;
+      this.ultToque = { t: 0, x: 0, y: 0 }; this.anim = null; this.antes = performance.now();
+      this.pick = null;   // função (x, y) -> ponto 3D sob o cursor, definida pela página
+      el.addEventListener("contextmenu", e => e.preventDefault());
+      el.addEventListener("pointerdown", e => this._down(e));
+      el.addEventListener("pointermove", e => this._move(e));
+      for (const ev of ["pointerup", "pointercancel"]) el.addEventListener(ev, e => this._up(e));
+      el.addEventListener("wheel", e => { e.preventDefault(); this._avisa("zoom"); this.zoomEm(e.clientX, e.clientY, Math.exp(e.deltaY * .0012)); }, { passive: false });
+      addEventListener("keydown", e => {
+        if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== "range") return;
+        const k = e.key.length === 1 ? e.key.toLowerCase() : "";
+        if (k && "wasdqe".includes(k)) { this.teclas.add(k); this._avisa("andar"); e.preventDefault(); }
+        if (e.key === "Shift") this.rapido = true;
       });
-      el.addEventListener("pointermove", e => {
-        const q = this.ptr.get(e.pointerId); if (!q) return;
-        const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY;
-        if (this.ptr.size === 1) { const k = 2 * Math.PI / Math.max(240, el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
-        else if (this.ptr.size === 2) { const d = dist(); if (this.pin > 0 && d > 0) this.esc *= this.pin / d; this.pin = d; }
-      });
-      const solta = e => { if (!this.ptr.delete(e.pointerId)) return; this.pin = this.ptr.size === 2 ? dist() : 0;
-        if (this.ptr.size === 0) this.ouv.end.forEach(f => f()); };
-      for (const ev of ["pointerup", "pointercancel", "lostpointercapture"]) el.addEventListener(ev, solta);
-      el.addEventListener("wheel", e => { e.preventDefault(); this.esc *= Math.exp(e.deltaY * .0012); }, { passive: false });
+      addEventListener("keyup", e => { this.teclas.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key); if (e.key === "Shift") this.rapido = false; });
+      addEventListener("blur", () => { this.teclas.clear(); this.rapido = false; });
     }
     addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
+    _emite(n, ...a) { this.ouv[n].forEach(f => f(...a)); }
+    _avisa(tipo) { this.anim = null; this._emite("interagiu", tipo); }
+    _down(e) {
+      try { this.el.setPointerCapture(e.pointerId); } catch (_) {}
+      this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, b: e.button, mod: e.shiftKey || e.ctrlKey || e.metaKey, andou: 0 });
+      if (this.ptr.size === 1) this._emite("start");
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+    }
+    _medePar() { const [a, b] = [...this.ptr.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+    _move(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY; q.andou += Math.abs(dx) + Math.abs(dy);
+      if (this.ptr.size === 1) {
+        if (q.andou < 4) return;
+        const mover = q.b === 1 || q.b === 2 || q.mod;
+        if (mover) { this._avisa("mover"); this.pan(dx, dy); }
+        else if (this.modo === "voar") { this._avisa("olhar"); this.olhar(dx, dy); }
+        else { this._avisa("girar"); const k = 2 * Math.PI / Math.max(240, this.el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
+      } else if (this.ptr.size === 2 && this.par) {
+        const p = this._medePar();
+        this._avisa("mover");
+        this.pan(p.x - this.par.x, p.y - this.par.y);
+        if (this.par.d > 0 && p.d > 0) {
+          if (this.modo === "voar") this.andar((p.d - this.par.d) * 1.2, 0, 0);
+          else this.zoomEm(p.x, p.y, this.par.d / p.d);
+        }
+        this.par = p;
+      }
+    }
+    _up(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      this.ptr.delete(e.pointerId);
+      if (q.andou < 8 && this.ptr.size === 0) {
+        const agora = performance.now(), u = this.ultToque;
+        if (agora - u.t < 330 && Math.hypot(e.clientX - u.x, e.clientY - u.y) < 35) { this._emite("duplo", e.clientX, e.clientY); this.focarEm(e.clientX, e.clientY); u.t = 0; }
+        else { this._emite("toque", e.clientX, e.clientY); this.ultToque = { t: agora, x: e.clientX, y: e.clientY }; }
+      }
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+      if (this.ptr.size === 0) this._emite("end");
+    }
+    _base() {
+      const f = this.target.clone().sub(this.cam.position); const d = f.length() || 1; f.divideScalar(d);
+      const r = new V().crossVectors(f, new V(0, 1, 0)); if (r.lengthSq() < 1e-8) r.set(1, 0, 0); r.normalize();
+      const u = new V().crossVectors(r, f).normalize();
+      return { f, r, u, d };
+    }
+    pan(dx, dy) {
+      const { r, u, d } = this._base();
+      const dist = this.modo === "voar" ? 150 : d;
+      const k = 2 * dist * Math.tan(THREE.MathUtils.degToRad(this.cam.fov) / 2) / Math.max(1, this.el.clientHeight);
+      const delta = r.multiplyScalar(-dx * k).add(u.multiplyScalar(dy * k));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    olhar(dx, dy) {
+      const k = 2 * Math.PI / Math.max(240, this.el.clientHeight) * .6;
+      const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+      s.theta += dx * k; s.phi = Math.min(Math.PI - .01, Math.max(.01, s.phi - dy * k)); s.radius = 150;
+      this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+    }
+    andar(f, r, u) {
+      const b = this._base();
+      const delta = b.f.multiplyScalar(f).add(b.r.multiplyScalar(r)).add(new V(0, u, 0));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    _raio(x, y) {
+      const rc = this.el.getBoundingClientRect();
+      const ndc = new THREE.Vector2((x - rc.left) / rc.width * 2 - 1, -(y - rc.top) / rc.height * 2 + 1);
+      const ray = new THREE.Raycaster(); ray.setFromCamera(ndc, this.cam); return ray.ray;
+    }
+    zoomEm(x, y, s) {
+      if (this.modo === "voar") { this.andar((1 - s) * 220, 0, 0); return; }
+      const ray = this._raio(x, y), d = this.cam.position.distanceTo(this.target);
+      let P = this.pick ? this.pick(x, y) : null;
+      if (!P) P = ray.origin.clone().addScaledVector(ray.direction, d);
+      const nc = P.clone().add(this.cam.position.clone().sub(P).multiplyScalar(s));
+      if (nc.distanceTo(P) < this.minDistance && s < 1) return;
+      if (nc.distanceTo(P) > this.maxDistance && s > 1) return;
+      this.target.copy(P.clone().add(this.target.clone().sub(P).multiplyScalar(s)));
+      this.cam.position.copy(nc);
+    }
+    focarEm(x, y) {
+      const P = this.pick ? this.pick(x, y) : null; if (!P) return;
+      this._avisa("focar");
+      const off = this.cam.position.clone().sub(this.target), d = off.length();
+      const nd = Math.min(d, 140);
+      this.irPara(P.clone().add(off.normalize().multiplyScalar(nd)), P);
+    }
+    irPara(pos, alvo, dur = .7) {
+      this.anim = { t: 0, dur, p0: this.cam.position.clone(), a0: this.target.clone(), p1: pos.clone(), a1: alvo.clone() };
+      this.dT = this.dP = 0;
+    }
     update() {
-      const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
-      if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
-      const f = this.enableDamping ? Math.min(1, this.dampingFactor * 2.5) : 1;
-      s.theta += this.dT * f; s.phi += this.dP * f; this.dT *= 1 - f; this.dP *= 1 - f;
-      s.phi = Math.min(this.maxPolarAngle, Math.max(this.minPolarAngle, s.phi));
-      s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius * this.esc)); this.esc = 1;
-      s.makeSafe(); off.setFromSpherical(s); this.cam.position.copy(this.target).add(off); this.cam.lookAt(this.target);
+      const agora = performance.now(), dt = Math.min(.05, (agora - this.antes) / 1000); this.antes = agora;
+      if (this.anim) {
+        const a = this.anim; a.t += dt / a.dur; const k = Math.min(1, a.t), e = k * k * (3 - 2 * k);
+        this.cam.position.lerpVectors(a.p0, a.p1, e); this.target.lerpVectors(a.a0, a.a1, e);
+        if (k >= 1) this.anim = null;
+        this.cam.lookAt(this.target); return;
+      }
+      const T = this.teclas;
+      const f = (T.has("w") ? 1 : 0) - (T.has("s") ? 1 : 0) + this.joy.f;
+      const r = (T.has("d") ? 1 : 0) - (T.has("a") ? 1 : 0) + this.joy.r;
+      const u = (T.has("e") ? 1 : 0) - (T.has("q") ? 1 : 0) + this.joy.u;
+      if (f || r || u) {
+        const base = this.modo === "voar" ? this.velVoo : Math.max(60, this.cam.position.distanceTo(this.target) * .8);
+        const v = base * (this.rapido ? 3 : 1) * dt;
+        this.andar(f * v, r * v, u * v);
+      }
+      if (this.modo === "orbitar") {
+        const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
+        if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
+        const k = .22;
+        s.theta += this.dT * k; s.phi += this.dP * k; this.dT *= 1 - k; this.dP *= 1 - k;
+        s.phi = Math.min(Math.PI - .001, Math.max(.001, s.phi));
+        s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius));
+        off.setFromSpherical(s); this.cam.position.copy(this.target).add(off);
+      } else if (this.autoRotate && this.ptr.size === 0) {
+        const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+        s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed; this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+      }
+      this.cam.lookAt(this.target);
     }
   };
 }
+
 
 let THREE = null;
 try { THREE = await carregaThree(); } catch (e) { console.warn("3D indisponível:", e); }
 if (!THREE) {
   $("loading").textContent = "O 3D não abriu neste aparelho. Use a barra e os botões: os passos, a lista de corte e o orçamento continuam funcionando.";
-  for (const id of ["b360", "bseg", "btudo"]) $(id).hidden = true;
+  $("barra3d").hidden = true; $("dica").hidden = true;
   await new Promise(() => {});   // para aqui: o resto do módulo é só o 3D
 }
-const OrbitControls = criaOrbita(THREE);
+const Navegador = criaNavegador(THREE);
 const V3 = THREE.Vector3;
 const canvas = $("cena");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -369,11 +530,10 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const scene = new THREE.Scene();
-const cam = new THREE.PerspectiveCamera(42, 1, 2, 8000);
+const cam = new THREE.PerspectiveCamera(42, 1, 1, 12000);
 cam.position.set(-260, 520, 820);
-const ctl = new OrbitControls(cam, canvas);
-ctl.target.set(250, 60, 250); ctl.enableDamping = true; ctl.dampingFactor = .08;
-ctl.minDistance = 60; ctl.maxDistance = 2600; ctl.maxPolarAngle = Math.PI * .94; ctl.autoRotateSpeed = 2.2;
+const ctl = new Navegador(cam, canvas);
+ctl.target.set(250, 60, 250); ctl.autoRotateSpeed = 2.2;
 
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.6));
 const sol = new THREE.DirectionalLight(0xfff4e6, 2.2);
@@ -533,7 +693,7 @@ P.forEach((p, j) => {
   const geo = new THREE.ExtrudeGeometry(shape, { depth: TK - .3, bevelEnabled: true, bevelThickness: .15, bevelSize: .1, bevelSegments: 1, curveSegments: 4 });
   geo.translate(0, 0, .15);
   const mat = matsMadeira[j % matsMadeira.length];
-  const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; mesh.receiveShadow = true;
+  const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; mesh.receiveShadow = true; mesh.userData.p = p;
   const rot = new THREE.Group(); rot.rotation.z = ang; rot.add(mesh);
   const holder = new THREE.Group(); holder.add(rot);
   const fixo = new THREE.Group();           // referencial fixo da posição final (cola fica aqui)
@@ -712,15 +872,90 @@ function cameraSegue() {
 }
 
 /* ---------------- botões do 3D ---------------- */
+function setSeguir(v) { seguir = v; $("bseg").setAttribute("aria-pressed", v); }
+$("bseg").addEventListener("click", () => setSeguir(!seguir));
 $("b360").addEventListener("click", e => { ctl.autoRotate = !ctl.autoRotate; e.currentTarget.setAttribute("aria-pressed", ctl.autoRotate); });
-$("bseg").addEventListener("click", e => { seguir = !seguir; e.currentTarget.setAttribute("aria-pressed", seguir); });
-$("btudo").addEventListener("click", () => { seguir = false; $("bseg").setAttribute("aria-pressed", "false");
-  const c = t < idx.levantaA ? new V3(250, 0, 330) : new V3(250, Y0, 40);
-  const off = cam.position.clone().sub(ctl.target).normalize(); ctl.target.copy(c); cam.position.copy(c).addScaledVector(off, 1100); });
+ctl.addEventListener("interagiu", tipo => { if (tipo !== "girar") setSeguir(false); escondeDica(); });
+ctl.addEventListener("start", escondeDica);
+// toque numa peça: mostra o nome; toque duplo: aproxima daquele ponto (feito pelo Navegador)
+const alvosPick = []; scene.traverse(o => { if (o.isMesh) alvosPick.push(o); });
+const visivel = o => { for (let x = o; x; x = x.parent) if (!x.visible) return false; return true; };
+const rayPick = new THREE.Raycaster();
+function pegar(x, y) {
+  const rc = canvas.getBoundingClientRect();
+  rayPick.setFromCamera(new THREE.Vector2((x - rc.left) / rc.width * 2 - 1, -(y - rc.top) / rc.height * 2 + 1), cam);
+  for (const h of rayPick.intersectObjects(alvosPick, false)) if (visivel(h.object)) return h;
+  return null;
+}
+ctl.pick = (x, y) => { const h = pegar(x, y); return h ? h.point.clone() : null; };
+ctl.addEventListener("toque", (x, y) => {
+  const h = pegar(x, y), p = h && h.object.userData.p, tag = $("peca");
+  clearTimeout(tag._t);
+  if (!p) { tag.hidden = true; return; }
+  tag.textContent = `${p.nome} · ${fmt(p.comp, 1)} mm`; tag.hidden = false;
+  tag._t = setTimeout(() => { tag.hidden = true; }, 6000);
+});
+ctl.addEventListener("duplo", () => setSeguir(false));
+// dica some depois da primeira interação ou de 9 s
+let dicaFora = false;
+function escondeDica() { if (dicaFora) return; dicaFora = true; $("dica").classList.add("some"); setTimeout(() => { $("dica").hidden = true; }, 700); }
+setTimeout(escondeDica, 9000);
+// modos: girar em volta / voar por dentro
+function setModo(m) {
+  const dir = ctl.target.clone().sub(cam.position).normalize();
+  ctl.modo = m; ctl.target.copy(cam.position).addScaledVector(dir, 150);
+  $("mOrb").setAttribute("aria-pressed", m === "orbitar"); $("mVoo").setAttribute("aria-pressed", m === "voar");
+  $("voo").hidden = m !== "voar"; if (m === "voar") { setSeguir(false); ctl.autoRotate = false; $("b360").setAttribute("aria-pressed", "false"); }
+  $("dica").textContent = m === "voar" ? "Joystick anda · ▲ ▼ sobem e descem · arraste a tela para olhar em volta · 2 dedos avançam" :
+    "1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa peça para ver o nome";
+  $("dica").hidden = false; $("dica").classList.remove("some"); dicaFora = false; setTimeout(escondeDica, 7000);
+}
+$("mOrb").addEventListener("click", () => setModo("orbitar"));
+$("mVoo").addEventListener("click", () => setModo("voar"));
+// joystick e botões de subir/descer (modo voar)
+const joy = $("joy"), knob = $("knob"); let joyId = null;
+function moveJoy(e) {
+  const r = joy.getBoundingClientRect(), R = r.width / 2;
+  let x = e.clientX - r.left - R, y = e.clientY - r.top - R; const mm = Math.hypot(x, y);
+  if (mm > R) { x *= R / mm; y *= R / mm; }
+  knob.style.transform = `translate(${x}px, ${y}px)`; ctl.joy.r = x / R; ctl.joy.f = -y / R; ctl.anim = null;
+}
+joy.addEventListener("pointerdown", e => { joyId = e.pointerId; try { joy.setPointerCapture(e.pointerId); } catch (_) {} moveJoy(e); escondeDica(); });
+joy.addEventListener("pointermove", e => { if (e.pointerId === joyId) moveJoy(e); });
+for (const ev of ["pointerup", "pointercancel"]) joy.addEventListener(ev, e => { if (e.pointerId !== joyId) return; joyId = null; ctl.joy.f = ctl.joy.r = 0; knob.style.transform = ""; });
+for (const [id, v] of [["bsobe", 1], ["bdesce", -1]]) {
+  const b = $(id);
+  b.addEventListener("pointerdown", e => { try { b.setPointerCapture(e.pointerId); } catch (_) {} ctl.joy.u = v; ctl.anim = null; });
+  for (const ev of ["pointerup", "pointercancel"]) b.addEventListener(ev, () => { ctl.joy.u = 0; });
+}
+// ampliar (ocupa a tela toda dentro do app)
+$("bamp").addEventListener("click", e => {
+  const on = !document.querySelector(".bench").classList.contains("cheia");
+  document.querySelector(".bench").classList.toggle("cheia", on);
+  document.documentElement.style.overflow = on ? "hidden" : "";
+  e.currentTarget.setAttribute("aria-pressed", on); e.currentTarget.textContent = on ? "Reduzir" : "Ampliar";
+});
+// vistas prontas
+function vista(v) {
+  setSeguir(false);
+  const emPe = tMostrado >= idx.levantaA + 1;
+  const C = emPe ? new V3(250, Y0 + 30, 40) : new V3(250, 0, 330);
+  const off = { tudo: emPe ? [-330, 300, 720] : [-200, 620, 560], lado: [0, 30, 900], frente: [-950, 60, 0],
+    cima: [0, 1000, 1], baixo: [0, -650, 1] }[v];
+  if (v === "dentro") {
+    if (emPe) { if (ctl.modo !== "voar") setModo("voar"); ctl.irPara(new V3(-30, Y0 + 24, 40), new V3(120, Y0 + 24, 40)); }
+    else ctl.irPara(new V3(250, 70, 430), new V3(250, 0, 300));
+    return;
+  }
+  if (ctl.modo !== "orbitar") setModo("orbitar");
+  ctl.irPara(C.clone().add(new V3(...off)), C);
+}
+document.querySelectorAll("[data-v]").forEach(b => b.addEventListener("click", () => vista(b.dataset.v)));
+window.__nav = () => ({ cam: cam.position.toArray().map(v => +v.toFixed(1)), alvo: ctl.target.toArray().map(v => +v.toFixed(1)), seguir, modo: ctl.modo });
 window.__cam = c => { seguir = false; cam.position.set(c[0], c[1], c[2]); ctl.target.set(c[3], c[4], c[5]); };
 function tamanho() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
 new ResizeObserver(tamanho).observe(canvas); tamanho();
-quadro3D = () => { cameraSegue(); if (cam.position.y < 6) cam.position.y = 6; ctl.update(); renderer.render(scene, cam); };
+quadro3D = () => { cameraSegue(); ctl.update(); renderer.render(scene, cam); };
 atualiza3D = atualizaCena;
 $("loading").hidden = true;
 atualiza(t);

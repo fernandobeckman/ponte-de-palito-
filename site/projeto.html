@@ -94,7 +94,7 @@ footer a { color: var(--tension); }
   <section aria-label="Modelo 3D">
     <div class="viewer">
       <canvas id="cena" aria-label="Modelo 3D da ponte"></canvas>
-      <span class="hint">arraste para girar · pinça para zoom · toque numa barra</span>
+      <span class="hint">1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa barra</span>
       <div class="legend">
         <span><i class="sw" style="background:var(--tension)"></i>tração</span>
         <span><i class="sw" style="background:var(--compression)"></i>compressão</span>
@@ -196,43 +196,160 @@ async function carregaThree() {
   for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
   throw erro;
 }
-function criaOrbita(THREE) {
-  return class Orbita {
+function criaNavegador(THREE) {
+  /* Navegação livre: girar, mover (pan), zoom na direção do dedo/cursor, toque duplo para aproximar,
+     modo "voar" (olhar em volta + andar), teclado WASD/QE e animação para vistas prontas. */
+  const V = THREE.Vector3;
+  return class Navegador {
     constructor(cam, el) {
-      this.cam = cam; this.el = el; this.target = new THREE.Vector3();
-      this.minDistance = 0; this.maxDistance = Infinity; this.minPolarAngle = .02; this.maxPolarAngle = Math.PI;
-      this.autoRotate = false; this.autoRotateSpeed = 2; this.enableDamping = true; this.dampingFactor = .1;
-      this.dT = 0; this.dP = 0; this.esc = 1; this.ptr = new Map(); this.pin = 0; this.ouv = { start: [], end: [] };
-      const dist = () => { const [a, b] = [...this.ptr.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
-      el.addEventListener("pointerdown", e => {
-        try { el.setPointerCapture(e.pointerId); } catch (_) {}
-        this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (this.ptr.size === 1) this.ouv.start.forEach(f => f());
-        if (this.ptr.size === 2) this.pin = dist();
+      this.cam = cam; this.el = el; this.target = new V();
+      this.modo = "orbitar"; this.autoRotate = false; this.autoRotateSpeed = 2;
+      this.minDistance = 2; this.maxDistance = 8000; this.velVoo = 160;
+      this.dT = 0; this.dP = 0; this.ptr = new Map(); this.par = null;
+      this.ouv = { start: [], end: [], toque: [], duplo: [], interagiu: [] };
+      this.joy = { f: 0, r: 0, u: 0 }; this.teclas = new Set(); this.rapido = false;
+      this.ultToque = { t: 0, x: 0, y: 0 }; this.anim = null; this.antes = performance.now();
+      this.pick = null;   // função (x, y) -> ponto 3D sob o cursor, definida pela página
+      el.addEventListener("contextmenu", e => e.preventDefault());
+      el.addEventListener("pointerdown", e => this._down(e));
+      el.addEventListener("pointermove", e => this._move(e));
+      for (const ev of ["pointerup", "pointercancel"]) el.addEventListener(ev, e => this._up(e));
+      el.addEventListener("wheel", e => { e.preventDefault(); this._avisa("zoom"); this.zoomEm(e.clientX, e.clientY, Math.exp(e.deltaY * .0012)); }, { passive: false });
+      addEventListener("keydown", e => {
+        if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== "range") return;
+        const k = e.key.length === 1 ? e.key.toLowerCase() : "";
+        if (k && "wasdqe".includes(k)) { this.teclas.add(k); this._avisa("andar"); e.preventDefault(); }
+        if (e.key === "Shift") this.rapido = true;
       });
-      el.addEventListener("pointermove", e => {
-        const q = this.ptr.get(e.pointerId); if (!q) return;
-        const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY;
-        if (this.ptr.size === 1) { const k = 2 * Math.PI / Math.max(240, el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
-        else if (this.ptr.size === 2) { const d = dist(); if (this.pin > 0 && d > 0) this.esc *= this.pin / d; this.pin = d; }
-      });
-      const solta = e => { if (!this.ptr.delete(e.pointerId)) return; this.pin = this.ptr.size === 2 ? dist() : 0;
-        if (this.ptr.size === 0) this.ouv.end.forEach(f => f()); };
-      for (const ev of ["pointerup", "pointercancel", "lostpointercapture"]) el.addEventListener(ev, solta);
-      el.addEventListener("wheel", e => { e.preventDefault(); this.esc *= Math.exp(e.deltaY * .0012); }, { passive: false });
+      addEventListener("keyup", e => { this.teclas.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key); if (e.key === "Shift") this.rapido = false; });
+      addEventListener("blur", () => { this.teclas.clear(); this.rapido = false; });
     }
     addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
+    _emite(n, ...a) { this.ouv[n].forEach(f => f(...a)); }
+    _avisa(tipo) { this.anim = null; this._emite("interagiu", tipo); }
+    _down(e) {
+      try { this.el.setPointerCapture(e.pointerId); } catch (_) {}
+      this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, b: e.button, mod: e.shiftKey || e.ctrlKey || e.metaKey, andou: 0 });
+      if (this.ptr.size === 1) this._emite("start");
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+    }
+    _medePar() { const [a, b] = [...this.ptr.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+    _move(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY; q.andou += Math.abs(dx) + Math.abs(dy);
+      if (this.ptr.size === 1) {
+        if (q.andou < 4) return;
+        const mover = q.b === 1 || q.b === 2 || q.mod;
+        if (mover) { this._avisa("mover"); this.pan(dx, dy); }
+        else if (this.modo === "voar") { this._avisa("olhar"); this.olhar(dx, dy); }
+        else { this._avisa("girar"); const k = 2 * Math.PI / Math.max(240, this.el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
+      } else if (this.ptr.size === 2 && this.par) {
+        const p = this._medePar();
+        this._avisa("mover");
+        this.pan(p.x - this.par.x, p.y - this.par.y);
+        if (this.par.d > 0 && p.d > 0) {
+          if (this.modo === "voar") this.andar((p.d - this.par.d) * 1.2, 0, 0);
+          else this.zoomEm(p.x, p.y, this.par.d / p.d);
+        }
+        this.par = p;
+      }
+    }
+    _up(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      this.ptr.delete(e.pointerId);
+      if (q.andou < 8 && this.ptr.size === 0) {
+        const agora = performance.now(), u = this.ultToque;
+        if (agora - u.t < 330 && Math.hypot(e.clientX - u.x, e.clientY - u.y) < 35) { this._emite("duplo", e.clientX, e.clientY); this.focarEm(e.clientX, e.clientY); u.t = 0; }
+        else { this._emite("toque", e.clientX, e.clientY); this.ultToque = { t: agora, x: e.clientX, y: e.clientY }; }
+      }
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+      if (this.ptr.size === 0) this._emite("end");
+    }
+    _base() {
+      const f = this.target.clone().sub(this.cam.position); const d = f.length() || 1; f.divideScalar(d);
+      const r = new V().crossVectors(f, new V(0, 1, 0)); if (r.lengthSq() < 1e-8) r.set(1, 0, 0); r.normalize();
+      const u = new V().crossVectors(r, f).normalize();
+      return { f, r, u, d };
+    }
+    pan(dx, dy) {
+      const { r, u, d } = this._base();
+      const dist = this.modo === "voar" ? 150 : d;
+      const k = 2 * dist * Math.tan(THREE.MathUtils.degToRad(this.cam.fov) / 2) / Math.max(1, this.el.clientHeight);
+      const delta = r.multiplyScalar(-dx * k).add(u.multiplyScalar(dy * k));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    olhar(dx, dy) {
+      const k = 2 * Math.PI / Math.max(240, this.el.clientHeight) * .6;
+      const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+      s.theta += dx * k; s.phi = Math.min(Math.PI - .01, Math.max(.01, s.phi - dy * k)); s.radius = 150;
+      this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+    }
+    andar(f, r, u) {
+      const b = this._base();
+      const delta = b.f.multiplyScalar(f).add(b.r.multiplyScalar(r)).add(new V(0, u, 0));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    _raio(x, y) {
+      const rc = this.el.getBoundingClientRect();
+      const ndc = new THREE.Vector2((x - rc.left) / rc.width * 2 - 1, -(y - rc.top) / rc.height * 2 + 1);
+      const ray = new THREE.Raycaster(); ray.setFromCamera(ndc, this.cam); return ray.ray;
+    }
+    zoomEm(x, y, s) {
+      if (this.modo === "voar") { this.andar((1 - s) * 220, 0, 0); return; }
+      const ray = this._raio(x, y), d = this.cam.position.distanceTo(this.target);
+      let P = this.pick ? this.pick(x, y) : null;
+      if (!P) P = ray.origin.clone().addScaledVector(ray.direction, d);
+      const nc = P.clone().add(this.cam.position.clone().sub(P).multiplyScalar(s));
+      if (nc.distanceTo(P) < this.minDistance && s < 1) return;
+      if (nc.distanceTo(P) > this.maxDistance && s > 1) return;
+      this.target.copy(P.clone().add(this.target.clone().sub(P).multiplyScalar(s)));
+      this.cam.position.copy(nc);
+    }
+    focarEm(x, y) {
+      const P = this.pick ? this.pick(x, y) : null; if (!P) return;
+      this._avisa("focar");
+      const off = this.cam.position.clone().sub(this.target), d = off.length();
+      const nd = Math.min(d, 140);
+      this.irPara(P.clone().add(off.normalize().multiplyScalar(nd)), P);
+    }
+    irPara(pos, alvo, dur = .7) {
+      this.anim = { t: 0, dur, p0: this.cam.position.clone(), a0: this.target.clone(), p1: pos.clone(), a1: alvo.clone() };
+      this.dT = this.dP = 0;
+    }
     update() {
-      const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
-      if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
-      const f = this.enableDamping ? Math.min(1, this.dampingFactor * 2.5) : 1;
-      s.theta += this.dT * f; s.phi += this.dP * f; this.dT *= 1 - f; this.dP *= 1 - f;
-      s.phi = Math.min(this.maxPolarAngle, Math.max(this.minPolarAngle, s.phi));
-      s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius * this.esc)); this.esc = 1;
-      s.makeSafe(); off.setFromSpherical(s); this.cam.position.copy(this.target).add(off); this.cam.lookAt(this.target);
+      const agora = performance.now(), dt = Math.min(.05, (agora - this.antes) / 1000); this.antes = agora;
+      if (this.anim) {
+        const a = this.anim; a.t += dt / a.dur; const k = Math.min(1, a.t), e = k * k * (3 - 2 * k);
+        this.cam.position.lerpVectors(a.p0, a.p1, e); this.target.lerpVectors(a.a0, a.a1, e);
+        if (k >= 1) this.anim = null;
+        this.cam.lookAt(this.target); return;
+      }
+      const T = this.teclas;
+      const f = (T.has("w") ? 1 : 0) - (T.has("s") ? 1 : 0) + this.joy.f;
+      const r = (T.has("d") ? 1 : 0) - (T.has("a") ? 1 : 0) + this.joy.r;
+      const u = (T.has("e") ? 1 : 0) - (T.has("q") ? 1 : 0) + this.joy.u;
+      if (f || r || u) {
+        const base = this.modo === "voar" ? this.velVoo : Math.max(60, this.cam.position.distanceTo(this.target) * .8);
+        const v = base * (this.rapido ? 3 : 1) * dt;
+        this.andar(f * v, r * v, u * v);
+      }
+      if (this.modo === "orbitar") {
+        const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
+        if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
+        const k = .22;
+        s.theta += this.dT * k; s.phi += this.dP * k; this.dT *= 1 - k; this.dP *= 1 - k;
+        s.phi = Math.min(Math.PI - .001, Math.max(.001, s.phi));
+        s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius));
+        off.setFromSpherical(s); this.cam.position.copy(this.target).add(off);
+      } else if (this.autoRotate && this.ptr.size === 0) {
+        const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+        s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed; this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+      }
+      this.cam.lookAt(this.target);
     }
   };
 }
+
 
 const B = [{"id": "b0-b1", "a": [0.0, 0.0, 0.0], "b": [62.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 0.0], "b": [125.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 0.0], "b": [187.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 0.0], "b": [250.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 0.0], "b": [312.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 0.0], "b": [375.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 0.0], "b": [437.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 0.0], "b": [500.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 0.0], "b": [125.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 0.0], "b": [250.0, 90.0, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 0.0], "b": [312.5, 67.5, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 0.0], "b": [375.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 0.0], "b": [437.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 0.0], "b": [500.0, 0.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 0.0], "b": [125.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 0.0], "b": [250.0, 90.0, 0.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 0.0], "b": [312.5, 67.5, 0.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 0.0], "b": [375.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 0.0], "b": [437.5, 22.5, 0.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 0.0], "b": [125.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 0.0], "b": [187.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 0.0], "b": [312.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 0.0], "b": [375.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "b0-b1", "a": [0.0, 0.0, 80.0], "b": [62.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 80.0], "b": [125.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 80.0], "b": [187.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 80.0], "b": [250.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 80.0], "b": [312.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 80.0], "b": [375.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 80.0], "b": [437.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 80.0], "b": [500.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 80.0], "b": [125.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 80.0], "b": [250.0, 90.0, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 80.0], "b": [312.5, 67.5, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 80.0], "b": [375.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 80.0], "b": [437.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 80.0], "b": [500.0, 0.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 80.0], "b": [125.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 80.0], "b": [250.0, 90.0, 80.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 80.0], "b": [312.5, 67.5, 80.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 80.0], "b": [375.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 80.0], "b": [437.5, 22.5, 80.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 80.0], "b": [125.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 80.0], "b": [187.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 80.0], "b": [312.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 80.0], "b": [375.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "transversina b0", "a": [0.0, 0, 0], "b": [0.0, 0, 80.0], "N": null}, {"id": "transversina b1", "a": [62.5, 0, 0], "b": [62.5, 0, 80.0], "N": null}, {"id": "transversina b2", "a": [125.0, 0, 0], "b": [125.0, 0, 80.0], "N": null}, {"id": "transversina b3", "a": [187.5, 0, 0], "b": [187.5, 0, 80.0], "N": null}, {"id": "transversina b4", "a": [250.0, 0, 0], "b": [250.0, 0, 80.0], "N": null}, {"id": "transversina b5", "a": [312.5, 0, 0], "b": [312.5, 0, 80.0], "N": null}, {"id": "transversina b6", "a": [375.0, 0, 0], "b": [375.0, 0, 80.0], "N": null}, {"id": "transversina b7", "a": [437.5, 0, 0], "b": [437.5, 0, 80.0], "N": null}, {"id": "transversina b8", "a": [500.0, 0, 0], "b": [500.0, 0, 80.0], "N": null}, {"id": "escora t1", "a": [62.5, 22.5, 0], "b": [62.5, 22.5, 80.0], "N": null}, {"id": "escora t2", "a": [125.0, 45.0, 0], "b": [125.0, 45.0, 80.0], "N": null}, {"id": "escora t3", "a": [187.5, 67.5, 0], "b": [187.5, 67.5, 80.0], "N": null}, {"id": "escora t4", "a": [250.0, 90.0, 0], "b": [250.0, 90.0, 80.0], "N": null}, {"id": "escora t5", "a": [312.5, 67.5, 0], "b": [312.5, 67.5, 80.0], "N": null}, {"id": "escora t6", "a": [375.0, 45.0, 0], "b": [375.0, 45.0, 80.0], "N": null}, {"id": "escora t7", "a": [437.5, 22.5, 0], "b": [437.5, 22.5, 80.0], "N": null}];
 const out = document.getElementById("barra");
@@ -240,12 +357,13 @@ const canvas = document.getElementById("cena");
 const fmt = v => (v + 0).toFixed(5).replace(".", ",");
 try {
   const THREE = await carregaThree();
-  const OrbitControls = criaOrbita(THREE);
+  const Navegador = criaNavegador(THREE);
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const scene = new THREE.Scene();
-  const cam = new THREE.PerspectiveCamera(40, 1, 1, 5000);
+  const cam = new THREE.PerspectiveCamera(40, 1, 1, 8000);
+  const ray = new THREE.Raycaster(), p = new THREE.Vector2();
   scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 2.4));
   const dl = new THREE.DirectionalLight(0xffffff, 1.4); dl.position.set(200, 500, 400); scene.add(dl);
   const mats = {};
@@ -272,8 +390,10 @@ try {
     const dist = raio / Math.sin(Math.min(vf, hf) / 2) * 0.82;
     cam.position.copy(c).addScaledVector(dir, dist); cam.updateProjectionMatrix();
   };
-  const ctl = new OrbitControls(cam, canvas); ctl.target.copy(c); ctl.enableDamping = true;
-  ctl.minDistance = 150; ctl.maxDistance = 1400;
+  const ctl = new Navegador(cam, canvas); ctl.target.copy(c);
+  ctl.pick = (x, y) => { const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2((x - r.left) / r.width * 2 - 1, -(y - r.top) / r.height * 2 + 1), cam);
+    const h = ray.intersectObjects(meshes)[0]; return h ? h.point : null; };
   const size = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     renderer.setSize(w, h, false); cam.aspect = w / h;
@@ -282,7 +402,7 @@ try {
   new ResizeObserver(size).observe(canvas); size();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paint);
   new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  const ray = new THREE.Raycaster(), p = new THREE.Vector2(); let down = null, sel = null;
+  let down = null, sel = null;
   canvas.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
   canvas.addEventListener("pointerup", e => {
     if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;

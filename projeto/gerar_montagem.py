@@ -441,7 +441,8 @@ for c, t, n in lista: print(f"  {c:>4} mm  {t:12} x{n}")
 
 modelo = os.path.join(D, "montagem_modelo.html")
 if os.path.exists(modelo):
-    html = open(modelo).read().replace("__DADOS__", json.dumps(dados, ensure_ascii=False, separators=(",", ":")))
+    html = (open(modelo).read().replace("__NAVEGADOR__", open(os.path.join(D, "navegador.js")).read())
+            .replace("__DADOS__", json.dumps(dados, ensure_ascii=False, separators=(",", ":"))))
     os.makedirs(os.path.join(D, "..", "site"), exist_ok=True)
     open(os.path.join(D, "..", "site", "montagem.html"), "w").write(html)
     print("site/montagem.html", len(html), "bytes")

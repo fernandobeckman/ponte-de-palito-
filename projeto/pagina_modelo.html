@@ -94,7 +94,7 @@ footer a { color: var(--tension); }
   <section aria-label="Modelo 3D">
     <div class="viewer">
       <canvas id="cena" aria-label="Modelo 3D da ponte"></canvas>
-      <span class="hint">arraste para girar · pinça para zoom · toque numa barra</span>
+      <span class="hint">1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa barra</span>
       <div class="legend">
         <span><i class="sw" style="background:var(--tension)"></i>tração</span>
         <span><i class="sw" style="background:var(--compression)"></i>compressão</span>
@@ -196,43 +196,7 @@ async function carregaThree() {
   for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
   throw erro;
 }
-function criaOrbita(THREE) {
-  return class Orbita {
-    constructor(cam, el) {
-      this.cam = cam; this.el = el; this.target = new THREE.Vector3();
-      this.minDistance = 0; this.maxDistance = Infinity; this.minPolarAngle = .02; this.maxPolarAngle = Math.PI;
-      this.autoRotate = false; this.autoRotateSpeed = 2; this.enableDamping = true; this.dampingFactor = .1;
-      this.dT = 0; this.dP = 0; this.esc = 1; this.ptr = new Map(); this.pin = 0; this.ouv = { start: [], end: [] };
-      const dist = () => { const [a, b] = [...this.ptr.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
-      el.addEventListener("pointerdown", e => {
-        try { el.setPointerCapture(e.pointerId); } catch (_) {}
-        this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (this.ptr.size === 1) this.ouv.start.forEach(f => f());
-        if (this.ptr.size === 2) this.pin = dist();
-      });
-      el.addEventListener("pointermove", e => {
-        const q = this.ptr.get(e.pointerId); if (!q) return;
-        const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY;
-        if (this.ptr.size === 1) { const k = 2 * Math.PI / Math.max(240, el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
-        else if (this.ptr.size === 2) { const d = dist(); if (this.pin > 0 && d > 0) this.esc *= this.pin / d; this.pin = d; }
-      });
-      const solta = e => { if (!this.ptr.delete(e.pointerId)) return; this.pin = this.ptr.size === 2 ? dist() : 0;
-        if (this.ptr.size === 0) this.ouv.end.forEach(f => f()); };
-      for (const ev of ["pointerup", "pointercancel", "lostpointercapture"]) el.addEventListener(ev, solta);
-      el.addEventListener("wheel", e => { e.preventDefault(); this.esc *= Math.exp(e.deltaY * .0012); }, { passive: false });
-    }
-    addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
-    update() {
-      const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
-      if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
-      const f = this.enableDamping ? Math.min(1, this.dampingFactor * 2.5) : 1;
-      s.theta += this.dT * f; s.phi += this.dP * f; this.dT *= 1 - f; this.dP *= 1 - f;
-      s.phi = Math.min(this.maxPolarAngle, Math.max(this.minPolarAngle, s.phi));
-      s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius * this.esc)); this.esc = 1;
-      s.makeSafe(); off.setFromSpherical(s); this.cam.position.copy(this.target).add(off); this.cam.lookAt(this.target);
-    }
-  };
-}
+__NAVEGADOR__
 
 const B = __BARS__;
 const out = document.getElementById("barra");
@@ -240,12 +204,13 @@ const canvas = document.getElementById("cena");
 const fmt = v => (v + 0).toFixed(5).replace(".", ",");
 try {
   const THREE = await carregaThree();
-  const OrbitControls = criaOrbita(THREE);
+  const Navegador = criaNavegador(THREE);
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const scene = new THREE.Scene();
-  const cam = new THREE.PerspectiveCamera(40, 1, 1, 5000);
+  const cam = new THREE.PerspectiveCamera(40, 1, 1, 8000);
+  const ray = new THREE.Raycaster(), p = new THREE.Vector2();
   scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 2.4));
   const dl = new THREE.DirectionalLight(0xffffff, 1.4); dl.position.set(200, 500, 400); scene.add(dl);
   const mats = {};
@@ -272,8 +237,10 @@ try {
     const dist = raio / Math.sin(Math.min(vf, hf) / 2) * 0.82;
     cam.position.copy(c).addScaledVector(dir, dist); cam.updateProjectionMatrix();
   };
-  const ctl = new OrbitControls(cam, canvas); ctl.target.copy(c); ctl.enableDamping = true;
-  ctl.minDistance = 150; ctl.maxDistance = 1400;
+  const ctl = new Navegador(cam, canvas); ctl.target.copy(c);
+  ctl.pick = (x, y) => { const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2((x - r.left) / r.width * 2 - 1, -(y - r.top) / r.height * 2 + 1), cam);
+    const h = ray.intersectObjects(meshes)[0]; return h ? h.point : null; };
   const size = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     renderer.setSize(w, h, false); cam.aspect = w / h;
@@ -282,7 +249,7 @@ try {
   new ResizeObserver(size).observe(canvas); size();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paint);
   new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  const ray = new THREE.Raycaster(), p = new THREE.Vector2(); let down = null, sel = null;
+  let down = null, sel = null;
   canvas.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
   canvas.addEventListener("pointerup", e => {
     if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;
