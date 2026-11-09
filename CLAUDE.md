@@ -3,7 +3,7 @@
 Projeto de engenharia: concepção, cálculo, modelagem 3D, construção, ensaio e site de uma ponte de palitos de madeira.
 
 ## Regras para o Claude
-1. **Leia `ERROS.md` antes de qualquer tarefa** e não repita os erros listados. Ao errar, registre o erro lá (skill `registro-de-erros`).
+1. **Leia `ERROS.md` e `docs/requisitos.md` antes de qualquer tarefa** e não repita os erros listados. Ao errar, registre o erro lá (skill `registro-de-erros`).
 2. Responda em português do Brasil. Use unidades SI (mm, N, MPa, g).
 3. Cálculos estruturais saem das skills `analise-trelica` e `flambagem-euler`, nunca de conta de cabeça. Confira sempre o equilíbrio e uma barra à mão.
 4. Valores de material precisam ter origem (ensaio ou fonte citada). Dado que não existe fica como [PENDENTE].

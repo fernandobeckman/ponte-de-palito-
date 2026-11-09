@@ -202,13 +202,13 @@ $("figs").innerHTML = [
   [`${fmt(R.massa_g, 5)} g`, "massa estimada da ponte"],
 ].map(([v, k]) => `<div class="fig"><span class="v">${v}</span><span class="k">${k}</span></div>`).join("");
 const NOMES = { banzo: "banzo", chapa: "chapa de ligação", montante: "montante", diagonal: "diagonal", transversina: "transversina",
-  escora: "escora superior", contravento: "diagonal de contraventamento", consolo: "consolo" };
+  escora: "escora superior", contravento: "diagonal de contraventamento", consolo: "consolo", espacador: "espaçador provisório (não fica na ponte)" };
 $("corte").innerHTML = R.lista.map(([c, t, n]) => `<tr><td class="n">${c}</td><td>${NOMES[t] || t}</td><td class="n">${n}</td></tr>`).join("");
 
 const ITENS = [
   { id: "palitos", nome: "Palito de picolé de madeira, pacote com 100", qtd: Math.ceil(R.palitos_comprar / 100), preco: 9.90,
     fonte: "Shopee, via escorregaopreco.com.br", url: "https://escorregaopreco.com.br/ofertas/shopee/5505782",
-    nota: `${R.palitos_ponte} para a ponte + ${R.palitos_ensaio} para os ensaios + 15% de perda = ${R.palitos_comprar} palitos` },
+    nota: `${R.palitos_ponte} para a ponte + ${R.palitos_esp} para os espaçadores + ${R.palitos_ensaio} para os ensaios + 15% de perda = ${R.palitos_comprar} palitos` },
   { id: "cola", nome: "Cola branca PVA extra 500 g (Tekbond)", qtd: 1, preco: 14.90, fonte: "Loja do Mecânico",
     url: "https://www.lojadomecanico.com.br/buscar/cola-pva-preco",
     nota: `a ponte usa ≈ ${fmt(R.cola_comprar_g, 0)} g com as perdas; o resto vai para os ensaios. Cascorez Extra 500 g: R$ 24,90` },
@@ -417,8 +417,13 @@ mesa.rotation.x = -Math.PI / 2; mesa.position.set(250, 0, 220); mesa.receiveShad
 
 /* treliças: grupos A e B */
 const ZFLAT = { A: 300, B: 440 }, ZPE = { A: C.ZA, B: C.ZB };
-const grupos = { A: new THREE.Group(), B: new THREE.Group() };
-for (const g of ["A", "B"]) { scene.add(grupos[g]); }
+const grupos = { A: new THREE.Group(), B: new THREE.Group(), E: new THREE.Group() };
+for (const g of ["A", "B", "E"]) { scene.add(grupos[g]); }
+const E_MESA = { y: -(Y0 - W / 2), z: 477 };     // espaçadores de palito montados na mesa, atrás da treliça B
+function poseEsp(k) { // k: 0 = na mesa, 1 = entre as treliças
+  const e = k * k * (3 - 2 * k);
+  grupos.E.position.set(0, E_MESA.y * (1 - e) + Math.sin(Math.PI * e) * 140, E_MESA.z * (1 - e));
+}
 function poseGrupo(g, k) { // k: 0 = deitada no gabarito, 1 = de pé
   const G = grupos[g], e = k * k * (3 - 2 * k);
   G.rotation.set(-Math.PI / 2 * (1 - e), 0, 0);
@@ -452,18 +457,6 @@ const matApoio = new THREE.MeshStandardMaterial({ color: 0x6f7a80, roughness: .7
 for (const x of [-5, 505]) { const b = new THREE.Mesh(new THREE.BoxGeometry(40, Y0 - W / 2 - 4, 150), matApoio);
   b.position.set(x, (Y0 - W / 2 - 4) / 2, 40); b.castShadow = b.receiveShadow = true; apoios.add(b); }
 scene.add(apoios);
-
-/* espaçadores provisórios */
-const espac = new THREE.Group();
-// blocos soltos (sem cola) de 74 mm entre as faces dos banzos inferiores, fora das chapas (entre b2-b3 e b5-b6)
-const texEsp = texCanvas(256, 256, (g, w, h) => {
-  g.fillStyle = "#4f86c6"; g.fillRect(0, 0, w, h); g.strokeStyle = "#f2c230"; g.lineWidth = 22;
-  for (let k = -h; k < w + h; k += 64) { g.beginPath(); g.moveTo(k, 0); g.lineTo(k + h, h); g.stroke(); }
-  g.fillStyle = "#fff"; g.font = "bold 34px sans-serif"; g.textAlign = "center"; g.fillText("PROVISÓRIO", w / 2, h / 2 + 12);
-});
-for (const x of [156.25, 343.75]) { const b = new THREE.Mesh(new THREE.BoxGeometry(20, 30, 74), new THREE.MeshStandardMaterial({ map: texEsp, roughness: .8, transparent: true }));
-  b.position.set(x, Y0 + 15 - W / 2, 40); b.castShadow = true; espac.add(b); }
-scene.add(espac);
 
 /* tábua e livros da prensagem */
 const prensa = {};
@@ -545,7 +538,7 @@ P.forEach((p, j) => {
   const holder = new THREE.Group(); holder.add(rot);
   const fixo = new THREE.Group();           // referencial fixo da posição final (cola fica aqui)
   const fixoRot = new THREE.Group(); fixoRot.rotation.z = ang; fixo.add(fixoRot);
-  const pai = p.fr ? scene : grupos[p.g];
+  const pai = p.g === "W" ? scene : grupos[p.g];
   if (p.fr) {
     const m = new THREE.Matrix4().makeBasis(new V3(...p.fr.u), new V3(...p.fr.v), new V3(...p.fr.n));
     holder.quaternion.setFromRotationMatrix(m); holder.position.set(...p.fr.o);
@@ -584,7 +577,7 @@ P.forEach((p, j) => {
 
 /* índices dos eventos */
 const idx = {}; P.forEach((p, i) => { if (p.k === "ev") idx[p.ev] = i; });
-const cura = { A: idx.curaA, B: idx.curaB, W: idx.curafinal };
+const cura = { A: idx.curaA, B: idx.curaB, W: idx.curafinal, E: idx.secaE };
 
 /* ---------------- estado em função de t ---------------- */
 const tmpV = new V3(), tmpV2 = new V3(), tmpQ = new THREE.Quaternion();
@@ -661,6 +654,7 @@ function atualizaCena(t) {
   scene.updateMatrixWorld();
   // grupos (deitados ou em pé)
   for (const g of ["A", "B"]) poseGrupo(g, prog(t, idx["levanta" + g]));
+  poseEsp(prog(t, idx.colocaE) * (1 - prog(t, idx.tiraesp)));
   scene.updateMatrixWorld();
   faseAtual = null;
   let ativo = false;
@@ -687,8 +681,6 @@ function atualizaCena(t) {
   if (lixa.visible) { const g = pl < .5 ? "A" : "B", k = (pl < .5 ? pl : pl - .5) * 2;
     lixa.position.set(-10 + 520 * k, 10.5 + Math.abs(Math.sin(k * 40)) * 1.2, ZFLAT[g] + 4); }
   const pa = prog(t, idx.levantaA); apoios.visible = pa > 0; apoios.scale.y = Math.max(.001, ease(pa * 3));
-  const pe = prog(t, idx.levantaB), pr = prog(t, idx.tiraesp);
-  espac.visible = pe > .85 && pr < 1; espac.children.forEach(b => b.material.opacity = 1 - pr); espac.position.y = 80 * ease(pr);
   const pn = prog(t, idx.ensaio); ensaio.visible = pn > 0;
   if (pn > 0) { const topo = Y0 + W / 2 + 20, baixo = 120 + 60 * (1 - ease(pn * 1.5));
     const corda = ensaio.getObjectByName("corda"), pilha = ensaio.getObjectByName("pilha");
@@ -698,7 +690,7 @@ function atualizaCena(t) {
   if (p.k === "pc") { const o = objs[ic]; focoAlvo = o.fixoRot.localToWorld(o.centro.clone()); distAlvo = o.p.fr ? 260 : 190; }
   else {
     const f = p.foco;
-    focoAlvo = f === "mesa" ? new V3(250, 0, 300) : f === "materiais" ? new V3(700, 0, 300) :
+    focoAlvo = f === "mesa" ? new V3(250, 0, 300) : f === "materiais" ? new V3(700, 0, 300) : f === "espacadores" ? new V3(250, 0, 517) :
       f === "A" || f === "B" ? new V3(250, 0, ZFLAT[f] - 45) : f === "AB" ? new V3(250, 0, 330) : new V3(250, Y0 - 20, 40);
     distAlvo = p.dist || 800;
   }

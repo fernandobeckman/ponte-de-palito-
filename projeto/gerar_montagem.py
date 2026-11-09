@@ -266,11 +266,33 @@ evento("desenforma", "Acabamento", "Retire as duas treliças do gabarito, puxand
        "Se alguma peça descolar, recole e espere mais 24 h antes de continuar.", foco="AB", dist=900)
 evento("lixa", "Acabamento", "Lixe de leve as rebarbas de cola das bordas, sem afinar os palitos.",
        "Use lixa fina (grão 120 ou mais). Lixar demais reduz a seção e a resistência.", foco="AB", dist=900)
+# espaçadores provisórios feitos de palito (2 blocos: 4 camadas x 2 palitos de 74 mm), montados na mesa
+# Referencial do grupo "E" = posição final entre as treliças; na mesa o grupo é só deslocado.
+X_ESP = (156.25, 343.75)          # entre b2-b3 e b5-b6, fora das chapas
+L_ESP = 74.0                      # distância entre as faces internas dos banzos inferiores (80 - 6)
+for e, xc in enumerate(X_ESP):
+    for k in range(4):
+        for sidx, xs in enumerate((xc - W / 2, xc + W / 2)):
+            fr = dict(o=[xs, Y0 - W / 2 + 2.0 * k, 3.0], u=[0, 0, 1], v=[1, 0, 0], n=[0, 1, 0])
+            p = dict(nome=f"Espaçador {e+1}, camada {k+1} de 4, palito {sidx+1} de 2",
+                     poly=[[0, -W / 2], [L_ESP, -W / 2], [L_ESP, W / 2], [0, W / 2]], eixo=(1, 0), tipo="espacador")
+            if k == 0:
+                txt = f"{p['nome']}: corte 74,0 mm e coloque sobre o plástico, sem cola, encostado no outro palito da camada."
+                cola = []
+            else:
+                txt = f"{p['nome']}: corte 74,0 mm, passe cola sobre a camada de baixo e pressione por 30 s."
+                cola = "toda"
+            peca("E", "Espaçadores provisórios", p, txt,
+                 "Feito só de palito e cola, como a ponte. É provisório: não é colado na ponte, só segura as duas treliças "
+                 "paralelas durante a montagem. Comprimento 74,0 mm, que é a distância entre as faces dos banzos.", cola, frame=fr)
+evento("secaE", "Espaçadores provisórios", "Deixe os dois espaçadores secarem por pelo menos 1 h.",
+       "Eles só seguram as treliças no lugar, então não precisam das 24 h de cura da ponte.", foco="espacadores", dist=500)
 evento("levantaA", "Montagem 3D", "Coloque a treliça A de pé sobre os apoios.",
        "A face com as chapas da face de cima fica virada para dentro da ponte.", foco="ponte", dist=900)
-evento("levantaB", "Montagem 3D", "Coloque a treliça B de pé, paralela, com 80 mm entre os eixos.",
-       "Coloque dois blocos espaçadores soltos (sem cola) de 74 mm entre os banzos inferiores, fora das chapas: "
-       "um entre os nós b2 e b3 e outro entre b5 e b6. Eles não fazem parte da ponte e saem no fim. Confira o esquadro nas duas pontas.",
+evento("levantaB", "Montagem 3D", "Coloque a treliça B de pé, paralela à A, com 80 mm entre os eixos.",
+       "Os espaçadores de palito entram no próximo passo para garantir essa distância.", foco="ponte", dist=900)
+evento("colocaE", "Montagem 3D", "Encaixe os dois espaçadores de palito entre os banzos inferiores, sem cola.",
+       "Um entre os nós b2 e b3, outro entre b5 e b6, fora das chapas. Confira o esquadro nas duas pontas antes de colar qualquer peça.",
        foco="ponte", dist=900)
 
 def peca_mundo(cap, nome, o, u, v, n, comp, larg, txt, det, cola, tipo, inteiro=False):
@@ -366,7 +388,7 @@ for k in range(10):
                    f"Transversina central, camada {k+1} de 10, palito {s+1}: corte 70,0 mm e cole {'sobre os consolos' if k == 0 else 'sobre a camada de baixo'}.",
                    "É aqui que a carga de 45 kg fica pendurada. Cole camada por camada, apertando bem cada uma.",
                    "pontas" if k == 0 else "toda", "transversina")
-evento("tiraesp", "Finalização", "Retire os dois blocos espaçadores provisórios.", "Eles só seguravam as treliças paralelas durante a colagem. Agora a ponte já está travada pelas transversinas, escoras e diagonais.",
+evento("tiraesp", "Finalização", "Retire os dois espaçadores de palito.", "Eles só seguravam as treliças paralelas durante a colagem. Agora a ponte já está travada pelas transversinas, escoras e diagonais. Guarde-os: servem para a próxima ponte.",
        foco="ponte", dist=900)
 evento("curafinal", "Finalização", "Deixe a ponte inteira curar por mais 24 h.",
        "Só aplique carga depois desse tempo (recomendação do fabricante da cola).", foco="ponte", dist=900)
@@ -375,7 +397,9 @@ evento("ensaio", "Ensaio", "Pendure a carga no meio da transversina central e au
        "Carga aplicada devagar e centrada. Ninguém embaixo da carga. Use óculos de proteção.", foco="ponte", dist=1000)
 
 # ---------------------------------------------------------------- lista de corte, cola e orçamento
-pcs = [p for p in passos if p["k"] == "pc"]
+todas = [p for p in passos if p["k"] == "pc"]
+pcs = [p for p in todas if p["g"] != "E"]          # só a ponte (os espaçadores são provisórios)
+esp = [p for p in todas if p["g"] == "E"]
 comps = sorted((p["comp"] for p in pcs), reverse=True)
 sobras = []                     # first-fit decreasing em palitos de comprimento útil L_UTIL
 for c in comps:
@@ -386,23 +410,26 @@ for c in comps:
         sobras.append(L_UTIL - c - 0.5)
 n_palitos_ponte = len(sobras)
 area_cola = 0.0
-for p in pcs:
+for p in todas:
     if p["cola"] == "toda": area_cola += p["area"]
     elif p["cola"] == "pontas": area_cola += min(p["area"], 2 * 15 * W)
 g_cola = area_cola / 100.0 * 0.02 * 1.0      # área em cm² x 0,02 g/cm² (200 g/m², limite alto da ficha técnica)
 g_cola_compra = g_cola * 3                    # perdas, frasco, excesso que escorre
 palitos_ensaio = 10 + 20 + 20                 # tração, pares de flambagem, juntas coladas
-total_palitos = math.ceil((n_palitos_ponte + palitos_ensaio) * 1.15)
-massa_g = sum(p["area"] * T for p in pcs) * 560e-9 * 1000 + g_cola * 0.5   # madeira + resíduo seco de cola
+palitos_esp = len(esp)                        # 1 peça de 74 mm por palito
+total_palitos = math.ceil((n_palitos_ponte + palitos_ensaio + palitos_esp) * 1.15)
+area_cola_ponte = sum(p["area"] if p["cola"] == "toda" else min(p["area"], 2 * 15 * W) if p["cola"] == "pontas" else 0 for p in pcs)
+massa_g = sum(p["area"] * T for p in pcs) * 560e-9 * 1000 + area_cola_ponte / 100 * 0.02 * 0.5   # madeira + resíduo seco de cola
 
 # lista de corte agrupada
 grupos = {}
-for p in pcs:
+for p in todas:
     k = (round(p["comp"]), p["tipo"])
     grupos[k] = grupos.get(k, 0) + 1
 lista = sorted(((c, t, n) for (c, t), n in grupos.items()), key=lambda x: (-x[0], x[1]))
 
-resumo = dict(pecas=len(pcs), passos=len(passos), palitos_ponte=n_palitos_ponte, palitos_ensaio=palitos_ensaio,
+resumo = dict(pecas=len(pcs), pecas_esp=len(esp), passos=len(passos), palitos_ponte=n_palitos_ponte,
+              palitos_ensaio=palitos_ensaio, palitos_esp=palitos_esp,
               palitos_comprar=total_palitos, area_cola_cm2=round(area_cola / 100, 5), cola_g=round(g_cola, 5),
               cola_comprar_g=round(g_cola_compra, 5), massa_g=round(massa_g, 5), lista=lista)
 NOS_LOCAIS = {k: list(v) for k, v in NOS.items()}

@@ -110,7 +110,12 @@ Nota: as barras com esforço zero e carga central são indispensáveis. Elas tra
   - Apoio no consolo (compressão normal às fibras): σ = 2,18898 MPa, FS = 4,61401, com f_c90 = 0,25 × f_c0 = 10,1 MPa (NBR 7190).
   - Cola do consolo na chapa: τ = 0,87559 MPa, FS = 2,28416.
 
-### 6.5 Contraventamento
+### 6.5 Espaçadores provisórios (só palito e cola)
+- São dois blocos com 4 camadas de 2 palitos de 74 mm, colados entre si, que mantêm as treliças a 80 mm entre eixos durante a colagem. 74 mm é a distância entre as faces dos banzos inferiores.
+- Ficam soltos, sem cola na ponte: um entre os nós b2 e b3, outro entre b5 e b6, fora das chapas. Saem depois que o contraventamento está pronto.
+- São feitos de palito para respeitar a regra de usar só palito de picolé e cola branca.
+
+### 6.6 Contraventamento
 - Transversinas inferiores (2 camadas, 90 mm) por baixo dos banzos, em todos os nós do banzo inferior menos o central (b4, que tem a transversina central).
 - Escoras superiores (2 camadas, 90 mm) por cima dos banzos superiores, ligando os nós t1 a t7 das duas treliças.
 - Uma diagonal por painel, alternando a direção (zigue-zague): 8 painéis embaixo e 6 em cima. Cada diagonal fica a 12 mm dos nós para não bater nas transversinas e escoras.
@@ -123,11 +128,12 @@ Gerado por `projeto/gerar_montagem.py`. O plano de corte encaixa as peças em pa
 |---|---|
 | Peças cortadas e coladas | 404 |
 | Palitos usados na ponte | 254 |
+| Palitos para os 2 espaçadores provisórios (4 camadas × 2 palitos de 74 mm cada) | 16 |
 | Palitos para os ensaios de material | 50 |
-| **Palitos a comprar (+15% de perda)** | **350** |
-| Área colada | 1275,50756 cm² |
-| Cola que fica nas juntas (200 g/m²) | 25,51015 g |
-| Cola a reservar, com perdas (×3) | 76,53045 g |
+| **Palitos a comprar (+15% de perda)** | **368** |
+| Área colada (ponte + espaçadores) | 1350,09956 cm² |
+| Cola que fica nas juntas (200 g/m²) | 27,00199 g |
+| Cola a reservar, com perdas (×3) | 81,00597 g |
 | Massa estimada da ponte | 222,61836 g |
 
 A lista de corte completa e o orçamento estão na página de montagem. O consumo de 160 a 200 g/m² e o fato de a cola não aderir a polietileno vêm da ficha técnica da Cascola Cascorez Extra (Henkel).
