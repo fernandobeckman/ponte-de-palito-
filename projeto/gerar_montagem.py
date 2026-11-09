@@ -269,7 +269,8 @@ evento("lixa", "Acabamento", "Lixe de leve as rebarbas de cola das bordas, sem a
 evento("levantaA", "Montagem 3D", "Coloque a treliça A de pé sobre os apoios.",
        "A face com as chapas da face de cima fica virada para dentro da ponte.", foco="ponte", dist=900)
 evento("levantaB", "Montagem 3D", "Coloque a treliça B de pé, paralela, com 80 mm entre os eixos.",
-       "Use dois blocos espaçadores de 74 mm entre as faces internas e confira o esquadro nas duas pontas.",
+       "Coloque dois blocos espaçadores soltos (sem cola) de 74 mm entre os banzos inferiores, fora das chapas: "
+       "um entre os nós b2 e b3 e outro entre b5 e b6. Eles não fazem parte da ponte e saem no fim. Confira o esquadro nas duas pontas.",
        foco="ponte", dist=900)
 
 def peca_mundo(cap, nome, o, u, v, n, comp, larg, txt, det, cola, tipo, inteiro=False):
@@ -365,7 +366,7 @@ for k in range(10):
                    f"Transversina central, camada {k+1} de 10, palito {s+1}: corte 70,0 mm e cole {'sobre os consolos' if k == 0 else 'sobre a camada de baixo'}.",
                    "É aqui que a carga de 45 kg fica pendurada. Cole camada por camada, apertando bem cada uma.",
                    "pontas" if k == 0 else "toda", "transversina")
-evento("tiraesp", "Finalização", "Retire os blocos espaçadores.", "A ponte já está travada pelas transversinas e diagonais.",
+evento("tiraesp", "Finalização", "Retire os dois blocos espaçadores provisórios.", "Eles só seguravam as treliças paralelas durante a colagem. Agora a ponte já está travada pelas transversinas, escoras e diagonais.",
        foco="ponte", dist=900)
 evento("curafinal", "Finalização", "Deixe a ponte inteira curar por mais 24 h.",
        "Só aplique carga depois desse tempo (recomendação do fabricante da cola).", foco="ponte", dist=900)

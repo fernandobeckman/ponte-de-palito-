@@ -455,7 +455,13 @@ scene.add(apoios);
 
 /* espaçadores provisórios */
 const espac = new THREE.Group();
-for (const x of [150, 350]) { const b = new THREE.Mesh(new THREE.BoxGeometry(24, 30, 70), new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: .8, transparent: true }));
+// blocos soltos (sem cola) de 74 mm entre as faces dos banzos inferiores, fora das chapas (entre b2-b3 e b5-b6)
+const texEsp = texCanvas(256, 256, (g, w, h) => {
+  g.fillStyle = "#4f86c6"; g.fillRect(0, 0, w, h); g.strokeStyle = "#f2c230"; g.lineWidth = 22;
+  for (let k = -h; k < w + h; k += 64) { g.beginPath(); g.moveTo(k, 0); g.lineTo(k + h, h); g.stroke(); }
+  g.fillStyle = "#fff"; g.font = "bold 34px sans-serif"; g.textAlign = "center"; g.fillText("PROVISÓRIO", w / 2, h / 2 + 12);
+});
+for (const x of [156.25, 343.75]) { const b = new THREE.Mesh(new THREE.BoxGeometry(20, 30, 74), new THREE.MeshStandardMaterial({ map: texEsp, roughness: .8, transparent: true }));
   b.position.set(x, Y0 + 15 - W / 2, 40); b.castShadow = true; espac.add(b); }
 scene.add(espac);
 
