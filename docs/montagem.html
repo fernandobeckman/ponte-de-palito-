@@ -103,7 +103,13 @@ section { display: grid; gap: 12px; min-width: 0; }
 .bench.cheia .stage { flex: 1; min-height: 0; }
 .bench.cheia #cena { height: 100%; }
 .bench.cheia .det, .bench.cheia .hint, .bench.cheia .chips { display: none; }
-.bench.cheia .caption { min-height: 0; padding-block: 8px 2px; }
+.bench.cheia .caption { min-height: 0; padding-block: 8px 2px; max-height: 26vh; overflow-y: auto; }
+.btela { position: absolute; top: calc(10px + 0px); right: 10px; display: flex; align-items: center; gap: 6px; font: 600 .82rem var(--body);
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+.btela svg { width: 18px; height: 18px; fill: currentColor; }
+.btela.sair { background: var(--ink); color: var(--card); border-color: var(--ink); padding: 10px 16px; font-size: .95rem; }
+.bench.cheia .btela.sair { top: calc(10px + env(safe-area-inset-top, 0px)); right: calc(10px + env(safe-area-inset-right, 0px)); }
+.btela:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
 .tbtn { font: 600 .78rem var(--body); border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
 .tbtn[aria-pressed="true"] { background: var(--ink); color: var(--card); border-color: var(--ink); }
 .tbtn:focus-visible, .ctl:focus-visible, .chip:focus-visible, input:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
@@ -202,6 +208,8 @@ body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important
         </div>
       </div>
       <div class="cure" id="cure" hidden><b>24 h</b><span>tempo de cura da cola</span></div>
+      <button class="btela" id="bfull" type="button" aria-label="Abrir o 3D em tela cheia"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm10-5h6v5h-2V6h-4zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg><span>Tela cheia</span></button>
+      <button class="btela sair" id="bsair" type="button" hidden aria-label="Sair da tela cheia"><svg viewBox="0 0 24 24"><path d="M6.4 5L5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6L19 6.4 17.6 5 12 10.6z"/></svg><span>Sair</span></button>
     </div>
     <div class="barra3d" id="barra3d">
       <div class="grp" role="group" aria-label="Modo de navegação">
@@ -617,7 +625,7 @@ let THREE = null;
 try { THREE = await carregaThree(); } catch (e) { console.warn("3D indisponível:", e); }
 if (!THREE) {
   $("loading").textContent = "O 3D não abriu neste aparelho. Use a barra e os botões: os passos, a lista de corte e o orçamento continuam funcionando.";
-  $("barra3d").hidden = true; $("dica").hidden = true;
+  $("barra3d").hidden = true; $("dica").hidden = true; $("bfull").hidden = true;
   document.querySelectorAll(".ver3d").forEach(b => { b.hidden = true; });
   await new Promise(() => {});   // para aqui: o resto do módulo é só o 3D
 }
@@ -1033,12 +1041,31 @@ for (const [id, v] of [["bsobe", 1], ["bdesce", -1]]) {
   for (const ev of ["pointerup", "pointercancel"]) b.addEventListener(ev, () => { ctl.joy.u = 0; });
 }
 // ampliar (ocupa a tela toda dentro do app)
-$("bamp").addEventListener("click", e => {
-  const on = !document.querySelector(".bench").classList.contains("cheia");
-  document.querySelector(".bench").classList.toggle("cheia", on);
+// tela cheia: usa a tela cheia do navegador quando existe; senão, ocupa a janela. Sai pelo botão, pela tecla Esc ou pelo "voltar" do celular.
+const bancada = document.querySelector(".bench");
+let historicoCheia = false;
+function setCheia(on, origem) {
+  if (on === bancada.classList.contains("cheia")) return;
+  bancada.classList.toggle("cheia", on);
   document.documentElement.style.overflow = on ? "hidden" : "";
-  e.currentTarget.setAttribute("aria-pressed", on); e.currentTarget.textContent = on ? "Reduzir" : "Ampliar";
-});
+  $("bamp").setAttribute("aria-pressed", on); $("bamp").textContent = on ? "Sair da tela cheia" : "Tela cheia";
+  $("bfull").hidden = on; $("bsair").hidden = !on;
+  if (on) {
+    try { const r = bancada.requestFullscreen ? bancada.requestFullscreen({ navigationUI: "hide" }) : null; if (r && r.catch) r.catch(() => {}); } catch (_) {}
+    try { history.pushState({ telaCheia: 1 }, ""); historicoCheia = true; } catch (_) { historicoCheia = false; }
+  } else {
+    try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch (_) {}
+    if (historicoCheia && origem !== "voltar") { historicoCheia = false; try { history.back(); } catch (_) {} }
+    historicoCheia = false;
+  }
+}
+$("bamp").textContent = "Tela cheia";
+$("bamp").addEventListener("click", () => setCheia(!bancada.classList.contains("cheia")));
+$("bfull").addEventListener("click", () => setCheia(true));
+$("bsair").addEventListener("click", () => setCheia(false));
+addEventListener("popstate", () => { if (bancada.classList.contains("cheia")) { historicoCheia = false; setCheia(false, "voltar"); } });
+document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && bancada.classList.contains("cheia")) setCheia(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && bancada.classList.contains("cheia")) setCheia(false); });
 // números sobre as peças (as mais próximas, sem sobrepor) e cores por família
 const caixaRot = $("rotulos"), rotPool = [];
 for (let i = 0; i < 44; i++) { const e = document.createElement("span"); e.className = "rot"; e.hidden = true; caixaRot.appendChild(e); rotPool.push(e); }
