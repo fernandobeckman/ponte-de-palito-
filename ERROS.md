@@ -1,0 +1,15 @@
+# Registro de erros (ler antes de cada tarefa)
+
+Erros já cometidos neste projeto, por Claude ou pela equipe, e a regra para não repeti-los.
+Entradas novas vão **no topo**. Veja a skill `.claude/skills/registro-de-erros`.
+
+| # | data | contexto | erro | causa | como evitar |
+|---|---|---|---|---|---|
+| 8 | 2026-11-09 | Teste da página 3D no Chromium headless | O Three.js do CDN (unpkg) não carregou (`ERR_TUNNEL_CONNECTION_FAILED`) | O Chromium da sessão na nuvem não passa pelo proxy para CDNs | Para testar, instalar a mesma versão com `npm i three@0.160.0` e interceptar as URLs do CDN com `page.route` para os arquivos locais. Fixar sempre a versão exata. |
+| 7 | 2026-11-09 | Skill `openscad-ponte` (json2scad.py) | Rotação das barras escrita com sinais negativos: `rotate([0,-acos(..),-atan2(..)])`, o que apontaria as barras na direção errada | Escrevi a fórmula de memória sem conferir | Conferir toda transformação geométrica numericamente: o vetor (0,0,1) rotacionado tem de bater com d/L. A forma correta é `rotate([0, acos(dz/L), atan2(dy,dx)])`. |
+| 6 | 2026-11-09 | Seleção de skills | Quase incluí `doc-coauthoring` (Anthropic) e a skill OpenSCAD de andreahaku, mas elas **não têm arquivo de licença** | Supus que repositório público = livre para copiar | Antes de copiar, verificar o arquivo LICENSE de **cada** skill/agente. Sem licença → só citar como referência, não copiar. |
+| 5 | 2026-11-09 | Agentes da VoltAgent | 3 agentes (`scientific-literature-researcher`, `ui-ux-tester`, `visual-asset-generator`) citam ferramentas MCP que não estão instaladas | Os agentes vieram de outro ambiente | Antes de usar um agente, ver a linha `tools:`. Se citar `mcp__...` ou `chrome-mcp`, instalar o MCP ou esperar só funcionamento parcial. |
+| 4 | 2026-11-09 | Shell | Usei `cd` para dentro de pastas e o diretório de trabalho da sessão mudou junto | O `cd` persiste entre os comandos | Usar sempre caminhos absolutos nos comandos e não depender de `cd`. |
+| 3 | 2026-11-09 | Ver estrelas de repositórios | `curl api.github.com/repos/...` foi bloqueado para repositórios não anexados à sessão | O proxy só libera a API do GitHub para repositórios anexados | Para metadados públicos (estrelas e licença), usar WebFetch na página do GitHub. Para o código, usar `git clone --depth 1`. |
+| 2 | 2026-11-09 | Criar um repositório no GitHub | `gh auth status` mostrou que o token `GH_TOKEN` é inválido, então não dá para criar repositório pelo `gh` | A sessão na nuvem não tem um token pessoal válido | Criar repositório só pelo site (github.com/new). Para anexar um repositório que já existe, usar a ferramenta `add_repo`. |
+| 1 | 2026-11-09 | Cálculo da treliça | (prevenção) Um resultado de solver pode estar errado sem dar nenhum aviso | — | Sempre conferir o equilíbrio (deve dar ≈0) e checar uma barra à mão pelo método das seções antes de reportar. |
