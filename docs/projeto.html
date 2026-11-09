@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Cálculo da ponte de palito: geometria escolhida, esforços em cada barra e fator de segurança.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Como a ponte de palito foi calculada">
+<meta property="og:description" content="Cálculo da ponte de palito: geometria escolhida, esforços em cada barra e fator de segurança.">
+<meta property="og:image" content="https://fernandobeckman.github.io/ponte-de-palito-/img/capa.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 24h28M4 24L16 9l12 15M10 24l6-15M22 24l-6-15' stroke='%23b98a45' stroke-width='3' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Ponte Parker 8×90</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: uma coluna estreita como uma prancha de projeto; o modelo 3D abre a página, os números vêm logo abaixo. */
+:root {
+  --bg: #eef2f0; --card: #ffffff; --ink: #18211f; --muted: #56635f; --line: #d3dbd8;
+  --wood: #b98a45; --wood-soft: #f1e4cf;
+  --tension: #2a66ad; --compression: #bf3b28; --zero: #9aa5a1;
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111614; --card: #19201e; --ink: #e5ebe9; --muted: #98a5a1; --line: #2b3431;
+  --wood: #d9b57a; --wood-soft: #2e271b;
+  --tension: #6ea7ea; --compression: #f07a62; --zero: #5d6966; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111614; --card: #19201e; --ink: #e5ebe9; --muted: #98a5a1; --line: #2b3431;
+  --wood: #d9b57a; --wood-soft: #2e271b;
+  --tension: #6ea7ea; --compression: #f07a62; --zero: #5d6966; color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 36px; }
+h1, h2 { font-family: var(--display); font-weight: 700; line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(2.3rem, 8vw, 3.6rem); }
+h2 { font-size: 1.7rem; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font: 600 .78rem var(--mono); text-transform: uppercase; letter-spacing: .12em; color: var(--wood); }
+header { display: grid; gap: 10px; }
+.lede { color: var(--muted); font-size: 1.08rem; }
+section { display: grid; gap: 14px; min-width: 0; }
+.num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* visualizador 3D */
+.viewer { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+#cena { display: block; width: 100%; height: clamp(280px, 62vw, 460px); touch-action: none; }
+.hint { position: absolute; left: 12px; top: 10px; font: .78rem var(--mono); color: var(--muted); pointer-events: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 10px 12px; border-top: 1px solid var(--line); font-size: .9rem; }
+.sw { display: inline-block; width: 18px; height: 5px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+#barra { padding: 10px 12px; border-top: 1px solid var(--line); font-size: .95rem; min-height: 2.6em; }
+#barra b { font-family: var(--mono); }
+.fallback { padding: 24px; color: var(--muted); }
+
+/* números principais */
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fig { background: var(--card); padding: 14px; display: grid; gap: 2px; align-content: start; }
+.fig .v { font: 600 clamp(1.05rem, 4.4vw, 1.35rem) var(--mono); font-variant-numeric: tabular-nums; }
+.fig .k { font-size: .85rem; color: var(--muted); }
+.fig.key .v { color: var(--compression); }
+
+/* vista lateral */
+.side { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; }
+.side svg { width: 100%; min-width: 320px; height: auto; display: block; }
+.side line { stroke-width: 3.2; stroke-linecap: round; }
+.side line.t { stroke: var(--tension); } .side line.c { stroke: var(--compression); } .side line.z { stroke: var(--zero); }
+.side circle { fill: var(--ink); }
+.side text { fill: var(--muted); font: 7px var(--mono); }
+.side .dim { stroke: var(--muted); stroke-width: .6; }
+
+/* tabelas */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 600 .74rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.tr { color: var(--tension); } td.co { color: var(--compression); }
+tr.win td { background: var(--wood-soft); font-weight: 600; }
+.note { font-size: .88rem; color: var(--muted); }
+
+/* montagem */
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 12px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 10px; align-items: start; }
+ol.steps li::before { content: counter(s); font: 700 1.25rem var(--display); color: var(--wood); border: 1.5px solid var(--wood); border-radius: 50%; width: 2rem; height: 2rem; display: grid; place-items: center; }
+ol.steps li div { min-width: 0; }
+.chip { display: inline-block; font: 600 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; background: var(--wood-soft); color: var(--ink); border: 1px solid var(--wood); margin-right: 6px; }
+ul.pend { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+footer { font-size: .85rem; color: var(--muted); display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 16px; }
+footer a { color: var(--tension); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important; }
+.sitenav { border-bottom: 1px solid var(--line, #d3dbd8); background: var(--card, #fff); }
+.sitenav .in { max-width: 980px; margin: 0 auto; display: flex; gap: 4px 18px; align-items: center; flex-wrap: wrap;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sitenav a { color: var(--ink, #18211f); text-decoration: none; font: 600 .92rem var(--body, system-ui, sans-serif); padding: 4px 0; border-bottom: 2px solid transparent; }
+.sitenav a.marca { font: 700 1.1rem var(--display, sans-serif); margin-right: auto; }
+.sitenav a[aria-current="page"] { border-bottom-color: var(--wood, #b98a45); }
+.sitenav a:focus-visible { outline: 2px solid var(--tension, #2a66ad); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<nav class="sitenav" aria-label="Páginas do site"><div class="in"><a class="marca" href="index.html">Ponte de Palito</a><a href="index.html">Início</a><a href="montagem.html">Montagem 3D</a><a href="projeto.html" aria-current="page">Como foi calculada</a><a href="manual_de_corte.pdf">Manual (PDF)</a></div></nav>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Ponte de palito · vão 500 mm · carga 45 kg no meio</span>
+    <h1>Ponte Parker 8×90</h1>
+    <p class="lede">Treliça Parker com 8 painéis e 90 mm de altura no meio. Só palito de picolé e cola branca. Foi a melhor forma entre 208 geometrias comparadas.</p>
+  </header>
+
+  <section aria-label="Modelo 3D">
+    <div class="viewer">
+      <canvas id="cena" aria-label="Modelo 3D da ponte"></canvas>
+      <span class="hint">1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa barra</span>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--tension)"></i>tração</span>
+        <span><i class="sw" style="background:var(--compression)"></i>compressão</span>
+        <span><i class="sw" style="background:var(--zero)"></i>sem esforço (travamento)</span>
+        <span><i class="sw" style="background:var(--wood)"></i>transversinas e escoras</span>
+      </div>
+      <div id="barra" aria-live="polite">Toque numa barra para ver o esforço com 45 kg.</div>
+    </div>
+  </section>
+
+  <section aria-label="Resultados principais">
+    <div class="figs">
+      <div class="fig"><span class="v">45 kg</span><span class="k">carga de projeto (441,29925 N)</span></div>
+      <div class="fig key"><span class="v">2,26124</span><span class="k">fator de segurança mínimo (banzo superior)</span></div>
+      <div class="fig"><span class="v">≈ 101,75596 kg</span><span class="k">ruptura teórica; na prática, menos</span></div>
+      <div class="fig"><span class="v">1,97675 mm</span><span class="k">flecha no meio com 45 kg</span></div>
+      <div class="fig"><span class="v">≈ 254</span><span class="k">palitos na ponte (compre 368)</span></div>
+      <div class="fig"><span class="v">91,99185 mm</span><span class="k">maior barra: cabe num palito, sem emenda</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vista lateral de uma treliça</h2>
+    <div class="side">
+      <svg viewBox="0 0 520 128" role="img" aria-label="Vista lateral da treliça com cotas">
+        <line class="t" x1="10.0" y1="100.0" x2="72.5" y2="100.0"/><line class="t" x1="72.5" y1="100.0" x2="135.0" y2="100.0"/><line class="t" x1="135.0" y1="100.0" x2="197.5" y2="100.0"/><line class="t" x1="197.5" y1="100.0" x2="260.0" y2="100.0"/><line class="t" x1="260.0" y1="100.0" x2="322.5" y2="100.0"/><line class="t" x1="322.5" y1="100.0" x2="385.0" y2="100.0"/><line class="t" x1="385.0" y1="100.0" x2="447.5" y2="100.0"/><line class="t" x1="447.5" y1="100.0" x2="510.0" y2="100.0"/><line class="c" x1="72.5" y1="77.5" x2="135.0" y2="55.0"/><line class="c" x1="135.0" y1="55.0" x2="197.5" y2="32.5"/><line class="c" x1="197.5" y1="32.5" x2="260.0" y2="10.0"/><line class="c" x1="260.0" y1="10.0" x2="322.5" y2="32.5"/><line class="c" x1="322.5" y1="32.5" x2="385.0" y2="55.0"/><line class="c" x1="385.0" y1="55.0" x2="447.5" y2="77.5"/><line class="c" x1="10.0" y1="100.0" x2="72.5" y2="77.5"/><line class="c" x1="447.5" y1="77.5" x2="510.0" y2="100.0"/><line class="z" x1="72.5" y1="100.0" x2="72.5" y2="77.5"/><line class="z" x1="135.0" y1="100.0" x2="135.0" y2="55.0"/><line class="z" x1="197.5" y1="100.0" x2="197.5" y2="32.5"/><line class="t" x1="260.0" y1="100.0" x2="260.0" y2="10.0"/><line class="z" x1="322.5" y1="100.0" x2="322.5" y2="32.5"/><line class="z" x1="385.0" y1="100.0" x2="385.0" y2="55.0"/><line class="z" x1="447.5" y1="100.0" x2="447.5" y2="77.5"/><line class="z" x1="72.5" y1="77.5" x2="135.0" y2="100.0"/><line class="z" x1="135.0" y1="55.0" x2="197.5" y2="100.0"/><line class="z" x1="197.5" y1="32.5" x2="260.0" y2="100.0"/><line class="z" x1="322.5" y1="32.5" x2="260.0" y2="100.0"/><line class="z" x1="385.0" y1="55.0" x2="322.5" y2="100.0"/><line class="z" x1="447.5" y1="77.5" x2="385.0" y2="100.0"/><circle cx="10.0" cy="100.0" r="2.2"/><circle cx="72.5" cy="100.0" r="2.2"/><circle cx="135.0" cy="100.0" r="2.2"/><circle cx="197.5" cy="100.0" r="2.2"/><circle cx="260.0" cy="100.0" r="2.2"/><circle cx="322.5" cy="100.0" r="2.2"/><circle cx="385.0" cy="100.0" r="2.2"/><circle cx="447.5" cy="100.0" r="2.2"/><circle cx="510.0" cy="100.0" r="2.2"/><circle cx="72.5" cy="77.5" r="2.2"/><circle cx="135.0" cy="55.0" r="2.2"/><circle cx="197.5" cy="32.5" r="2.2"/><circle cx="260.0" cy="10.0" r="2.2"/><circle cx="322.5" cy="32.5" r="2.2"/><circle cx="385.0" cy="55.0" r="2.2"/><circle cx="447.5" cy="77.5" r="2.2"/>
+        <line class="dim" x1="10" y1="114" x2="510" y2="114"/><line class="dim" x1="10" y1="110" x2="10" y2="118"/><line class="dim" x1="510" y1="110" x2="510" y2="118"/>
+        <text x="260" y="124" text-anchor="middle">vão 500 mm · 8 painéis de 62,5 mm</text>
+        <line class="dim" x1="250" y1="10" x2="250" y2="100"/>
+        <text x="246" y="58" text-anchor="end">h = 90 mm</text>
+      </svg>
+    </div>
+    <p class="note">O banzo de cima sobe em linha reta de cada apoio até o meio. Com a carga no centro ele acompanha o diagrama de momento, então os banzos trabalham com força constante e a alma fica quase sem esforço.</p>
+  </section>
+
+  <section>
+    <h2>Por que essa forma</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Treliça</th><th>Painéis</th><th>h (mm)</th><th>Palitos/treliça</th><th>Barras com emenda</th><th>Força máx. (N)</th></tr></thead>
+      <tbody class="mono">
+        <tr class="win"><td>Parker (escolhida)</td><td>8</td><td>90</td><td>33,86000</td><td>0</td><td>325,71146</td></tr>
+        <tr><td>Warren</td><td>4</td><td>60</td><td>33,05653</td><td>7</td><td>459,68672</td></tr>
+        <tr><td>Howe</td><td>4</td><td>70</td><td>35,35624</td><td>10</td><td>394,01719</td></tr>
+        <tr><td>Pratt</td><td>4</td><td>80</td><td>36,46272</td><td>10</td><td>344,76504</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">A Warren gasta um pouco menos, mas tem 7 barras maiores que um palito (110 mm), e emenda é onde ponte de palito costuma quebrar. A Parker não precisa de emenda nas diagonais nem nos montantes, e tem a menor força máxima, o que alivia as ligações.</p>
+  </section>
+
+  <section>
+    <h2>Esforços e dimensionamento</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Barras</th><th>L (mm)</th><th>N centro (N)</th><th>N deslocada (N)</th><th>Camadas</th><th>FS</th><th>Modo crítico</th></tr></thead>
+      <tbody><tr><td>Banzo inferior</td><td class="num">62,50000</td><td class="num tr">+306,45781</td><td class="num">+383,07227</td><td class="num">3 (2 efet.)</td><td class="num">5,76158</td><td>tração</td></tr><tr><td>Banzo superior</td><td class="num">66,42665</td><td class="num co">−325,71146</td><td class="num">−407,13932</td><td class="num">3 (2 efet.)</td><td class="num"><b>2,26124</b></td><td>flambagem</td></tr><tr><td>Montante central</td><td class="num">90,00000</td><td class="num tr">+220,64962</td><td class="num">+165,48722</td><td class="num">3</td><td class="num">12,00328</td><td>tração</td></tr><tr><td>Diagonais centrais</td><td class="num">91,99185</td><td class="num ">0,00000</td><td class="num">−225,53296</td><td class="num">3</td><td class="num">5,74685*</td><td>flambagem</td></tr><tr><td>Montantes b3-t3, b5-t5</td><td class="num">67,50000</td><td class="num ">0,00000</td><td class="num">+220,64962</td><td class="num">3</td><td class="num">12,00328*</td><td>tração</td></tr><tr><td>Demais barras da alma</td><td class="num">22,5 a 77,0</td><td class="num ">0,00000</td><td class="num">0,00000</td><td class="num">3</td><td class="num">—</td><td>travamento</td></tr></tbody>
+    </table></div>
+    <p class="note">Valores para uma treliça (cada uma recebe 220,64962 N). "Deslocada" é a carga um painel fora do centro. *FS com a carga deslocada um painel; com a carga no centro essas barras ficam sem esforço.</p>
+  </section>
+
+  <section>
+    <h2>Como montar</h2>
+    <ol class="steps">
+      <li><div><b>Imprima o gabarito em tamanho real</b> (arquivo <span class="mono">gabarito_lateral_1-1.svg</span>). A régua impressa tem que medir 100 mm.</div></li>
+      <li><div><b>Banzos contínuos:</b> 3 camadas de palito coladas face a face, com as emendas desencontradas pelo menos 30 mm.</div></li>
+      <li><div><b>Diagonais e montantes:</b> 3 camadas, como os banzos, para as chapas ficarem planas. Em cada nó e em cada face, uma chapa sobre o banzo e duas faixas sobre as pontas das barras (16,8 mm de sobreposição). No nó do apoio, use 40 mm.</div></li>
+      <li><div><b>Monte as duas treliças</b> sobre o gabarito e deixe curar.</div></li>
+      <li><div><b>Una as treliças a 80 mm</b> com transversinas embaixo, escoras em cima e uma diagonal por painel em zigue-zague. Sem esse travamento lateral o banzo de cima flamba de lado.</div></li>
+      <li><div><b>Transversina central:</b> 2 palitos lado a lado × 10 camadas, apoiada em consolos colados na face interna do nó do meio. Em cima do banzo ela bateria no montante e nas diagonais. É nela que a carga fica pendurada.</div></li>
+      <li><div><b>Espere 24 h de cura</b> antes de colocar qualquer carga.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Montagem animada</h2>
+    <p>A montagem palito por palito, com corte, cola, prensagem, cura, lista de corte e orçamento, está na página <b>Montagem da Ponte Parker</b>: <a href="montagem.html" target="_blank" rel="noopener" style="color:var(--tension)">abrir a montagem animada</a></p>
+  </section>
+
+  <section>
+    <h2>Antes de construir</h2>
+    <ul class="pend">
+      <li><span class="chip">pendente</span>Medir 20 palitos: largura, espessura, comprimento e massa.</li>
+      <li><span class="chip">pendente</span>Ensaiar 10 palitos à tração, 10 pares à flambagem e 10 juntas coladas.</li>
+      <li><span class="chip">pendente</span>Refazer o cálculo com os valores medidos (<span class="mono">python3 projeto/calculo_ponte.py</span>).</li>
+    </ul>
+    <p class="note">Valores usados até lá: palito de 8,4 × 2,0 × 110 mm, E = 7350 MPa, tração 52,55 MPa (AVILA, 2009), compressão 40,4 MPa (NBR 7190, Pinus elliottii) e resistência da cola estimada em 2,0 MPa.</p>
+  </section>
+
+  <footer>
+    <span>Memorial completo, modelo de cálculo e gabarito no repositório <span class="mono">fernandobeckman/ponte-de-palito-</span>, pasta <span class="mono">projeto/</span>.</span>
+    <span>Valores numéricos com 5 casas decimais. Unidades: mm, N, MPa.</span>
+  </footer>
+</div>
+
+<script type="module">
+/* Carrega o Three.js pelo endereço completo (sem import map) e define um controle de órbita próprio. */
+async function carregaThree() {
+  const urls = ["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+                "https://unpkg.com/three@0.160.0/build/three.module.min.js"];
+  let erro;
+  for (const u of urls) { try { return await import(u); } catch (e) { erro = e; } }
+  throw erro;
+}
+function criaNavegador(THREE) {
+  /* Navegação livre: girar, mover (pan), zoom na direção do dedo/cursor, toque duplo para aproximar,
+     modo "voar" (olhar em volta + andar), teclado WASD/QE e animação para vistas prontas. */
+  const V = THREE.Vector3;
+  return class Navegador {
+    constructor(cam, el) {
+      this.cam = cam; this.el = el; this.target = new V();
+      this.modo = "orbitar"; this.autoRotate = false; this.autoRotateSpeed = 2;
+      this.minDistance = 2; this.maxDistance = 8000; this.velVoo = 160;
+      this.dT = 0; this.dP = 0; this.ptr = new Map(); this.par = null;
+      this.ouv = { start: [], end: [], toque: [], duplo: [], interagiu: [] };
+      this.joy = { f: 0, r: 0, u: 0 }; this.teclas = new Set(); this.rapido = false;
+      this.ultToque = { t: 0, x: 0, y: 0 }; this.anim = null; this.antes = performance.now();
+      this.pick = null;   // função (x, y) -> ponto 3D sob o cursor, definida pela página
+      el.addEventListener("contextmenu", e => e.preventDefault());
+      el.addEventListener("pointerdown", e => this._down(e));
+      el.addEventListener("pointermove", e => this._move(e));
+      for (const ev of ["pointerup", "pointercancel"]) el.addEventListener(ev, e => this._up(e));
+      el.addEventListener("wheel", e => { e.preventDefault(); this._avisa("zoom"); this.zoomEm(e.clientX, e.clientY, Math.exp(e.deltaY * .0012)); }, { passive: false });
+      addEventListener("keydown", e => {
+        if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== "range") return;
+        const k = e.key.length === 1 ? e.key.toLowerCase() : "";
+        if (k && "wasdqe".includes(k)) { this.teclas.add(k); this._avisa("andar"); e.preventDefault(); }
+        if (e.key === "Shift") this.rapido = true;
+      });
+      addEventListener("keyup", e => { this.teclas.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key); if (e.key === "Shift") this.rapido = false; });
+      addEventListener("blur", () => { this.teclas.clear(); this.rapido = false; });
+    }
+    addEventListener(n, f) { if (this.ouv[n]) this.ouv[n].push(f); }
+    _emite(n, ...a) { this.ouv[n].forEach(f => f(...a)); }
+    _avisa(tipo) { this.anim = null; this._emite("interagiu", tipo); }
+    _down(e) {
+      try { this.el.setPointerCapture(e.pointerId); } catch (_) {}
+      this.ptr.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, b: e.button, mod: e.shiftKey || e.ctrlKey || e.metaKey, andou: 0 });
+      if (this.ptr.size === 1) this._emite("start");
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+    }
+    _medePar() { const [a, b] = [...this.ptr.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+    _move(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      const dx = e.clientX - q.x, dy = e.clientY - q.y; q.x = e.clientX; q.y = e.clientY; q.andou += Math.abs(dx) + Math.abs(dy);
+      if (this.ptr.size === 1) {
+        if (q.andou < 4) return;
+        const mover = q.b === 1 || q.b === 2 || q.mod;
+        if (mover) { this._avisa("mover"); this.pan(dx, dy); }
+        else if (this.modo === "voar") { this._avisa("olhar"); this.olhar(dx, dy); }
+        else { this._avisa("girar"); const k = 2 * Math.PI / Math.max(240, this.el.clientHeight); this.dT -= dx * k; this.dP -= dy * k; }
+      } else if (this.ptr.size === 2 && this.par) {
+        const p = this._medePar();
+        this._avisa("mover");
+        this.pan(p.x - this.par.x, p.y - this.par.y);
+        if (this.par.d > 0 && p.d > 0) {
+          if (this.modo === "voar") this.andar((p.d - this.par.d) * 1.2, 0, 0);
+          else this.zoomEm(p.x, p.y, this.par.d / p.d);
+        }
+        this.par = p;
+      }
+    }
+    _up(e) {
+      const q = this.ptr.get(e.pointerId); if (!q) return;
+      this.ptr.delete(e.pointerId);
+      if (q.andou < 8 && this.ptr.size === 0) {
+        const agora = performance.now(), u = this.ultToque;
+        if (agora - u.t < 330 && Math.hypot(e.clientX - u.x, e.clientY - u.y) < 35) { this._emite("duplo", e.clientX, e.clientY); this.focarEm(e.clientX, e.clientY); u.t = 0; }
+        else { this._emite("toque", e.clientX, e.clientY); this.ultToque = { t: agora, x: e.clientX, y: e.clientY }; }
+      }
+      this.par = this.ptr.size === 2 ? this._medePar() : null;
+      if (this.ptr.size === 0) this._emite("end");
+    }
+    _base() {
+      const f = this.target.clone().sub(this.cam.position); const d = f.length() || 1; f.divideScalar(d);
+      const r = new V().crossVectors(f, new V(0, 1, 0)); if (r.lengthSq() < 1e-8) r.set(1, 0, 0); r.normalize();
+      const u = new V().crossVectors(r, f).normalize();
+      return { f, r, u, d };
+    }
+    pan(dx, dy) {
+      const { r, u, d } = this._base();
+      const dist = this.modo === "voar" ? 150 : d;
+      const k = 2 * dist * Math.tan(THREE.MathUtils.degToRad(this.cam.fov) / 2) / Math.max(1, this.el.clientHeight);
+      const delta = r.multiplyScalar(-dx * k).add(u.multiplyScalar(dy * k));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    olhar(dx, dy) {
+      const k = 2 * Math.PI / Math.max(240, this.el.clientHeight) * .6;
+      const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+      s.theta += dx * k; s.phi = Math.min(Math.PI - .01, Math.max(.01, s.phi - dy * k)); s.radius = 150;
+      this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+    }
+    andar(f, r, u) {
+      const b = this._base();
+      const delta = b.f.multiplyScalar(f).add(b.r.multiplyScalar(r)).add(new V(0, u, 0));
+      this.cam.position.add(delta); this.target.add(delta);
+    }
+    _raio(x, y) {
+      const rc = this.el.getBoundingClientRect();
+      const ndc = new THREE.Vector2((x - rc.left) / rc.width * 2 - 1, -(y - rc.top) / rc.height * 2 + 1);
+      const ray = new THREE.Raycaster(); ray.setFromCamera(ndc, this.cam); return ray.ray;
+    }
+    zoomEm(x, y, s) {
+      if (this.modo === "voar") { this.andar((1 - s) * 220, 0, 0); return; }
+      const ray = this._raio(x, y), d = this.cam.position.distanceTo(this.target);
+      let P = this.pick ? this.pick(x, y) : null;
+      if (!P) P = ray.origin.clone().addScaledVector(ray.direction, d);
+      const nc = P.clone().add(this.cam.position.clone().sub(P).multiplyScalar(s));
+      if (nc.distanceTo(P) < this.minDistance && s < 1) return;
+      if (nc.distanceTo(P) > this.maxDistance && s > 1) return;
+      this.target.copy(P.clone().add(this.target.clone().sub(P).multiplyScalar(s)));
+      this.cam.position.copy(nc);
+    }
+    focarEm(x, y) {
+      const P = this.pick ? this.pick(x, y) : null; if (!P) return;
+      this._avisa("focar");
+      const off = this.cam.position.clone().sub(this.target), d = off.length();
+      const nd = Math.min(d, 140);
+      this.irPara(P.clone().add(off.normalize().multiplyScalar(nd)), P);
+    }
+    irPara(pos, alvo, dur = .7) {
+      this.anim = { t: 0, dur, p0: this.cam.position.clone(), a0: this.target.clone(), p1: pos.clone(), a1: alvo.clone() };
+      this.dT = this.dP = 0;
+    }
+    update() {
+      const agora = performance.now(), dt = Math.min(.05, (agora - this.antes) / 1000); this.antes = agora;
+      if (this.anim) {
+        const a = this.anim; a.t += dt / a.dur; const k = Math.min(1, a.t), e = k * k * (3 - 2 * k);
+        this.cam.position.lerpVectors(a.p0, a.p1, e); this.target.lerpVectors(a.a0, a.a1, e);
+        if (k >= 1) this.anim = null;
+        this.cam.lookAt(this.target); return;
+      }
+      const T = this.teclas;
+      const f = (T.has("w") ? 1 : 0) - (T.has("s") ? 1 : 0) + this.joy.f;
+      const r = (T.has("d") ? 1 : 0) - (T.has("a") ? 1 : 0) + this.joy.r;
+      const u = (T.has("e") ? 1 : 0) - (T.has("q") ? 1 : 0) + this.joy.u;
+      if (f || r || u) {
+        const base = this.modo === "voar" ? this.velVoo : Math.max(60, this.cam.position.distanceTo(this.target) * .8);
+        const v = base * (this.rapido ? 3 : 1) * dt;
+        this.andar(f * v, r * v, u * v);
+      }
+      if (this.modo === "orbitar") {
+        const off = this.cam.position.clone().sub(this.target), s = new THREE.Spherical().setFromVector3(off);
+        if (this.autoRotate && this.ptr.size === 0) s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed;
+        const k = .22;
+        s.theta += this.dT * k; s.phi += this.dP * k; this.dT *= 1 - k; this.dP *= 1 - k;
+        s.phi = Math.min(Math.PI - .001, Math.max(.001, s.phi));
+        s.radius = Math.min(this.maxDistance, Math.max(this.minDistance, s.radius));
+        off.setFromSpherical(s); this.cam.position.copy(this.target).add(off);
+      } else if (this.autoRotate && this.ptr.size === 0) {
+        const s = new THREE.Spherical().setFromVector3(this.target.clone().sub(this.cam.position));
+        s.theta -= 2 * Math.PI / 3600 * this.autoRotateSpeed; this.target.copy(this.cam.position).add(new V().setFromSpherical(s));
+      }
+      this.cam.lookAt(this.target);
+    }
+  };
+}
+
+
+const B = [{"id": "b0-b1", "a": [0.0, 0.0, 0.0], "b": [62.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 0.0], "b": [125.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 0.0], "b": [187.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 0.0], "b": [250.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 0.0], "b": [312.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 0.0], "b": [375.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 0.0], "b": [437.5, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 0.0], "b": [500.0, 0.0, 0.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 0.0], "b": [125.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 0.0], "b": [250.0, 90.0, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 0.0], "b": [312.5, 67.5, 0.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 0.0], "b": [375.0, 45.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 0.0], "b": [437.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 0.0], "b": [500.0, 0.0, 0.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 0.0], "b": [62.5, 22.5, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 0.0], "b": [125.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 0.0], "b": [187.5, 67.5, 0.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 0.0], "b": [250.0, 90.0, 0.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 0.0], "b": [312.5, 67.5, 0.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 0.0], "b": [375.0, 45.0, 0.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 0.0], "b": [437.5, 22.5, 0.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 0.0], "b": [125.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 0.0], "b": [187.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 0.0], "b": [250.0, 0.0, 0.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 0.0], "b": [312.5, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 0.0], "b": [375.0, 0.0, 0.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "b0-b1", "a": [0.0, 0.0, 80.0], "b": [62.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b1-b2", "a": [62.5, 0.0, 80.0], "b": [125.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b2-b3", "a": [125.0, 0.0, 80.0], "b": [187.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b3-b4", "a": [187.5, 0.0, 80.0], "b": [250.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b4-b5", "a": [250.0, 0.0, 80.0], "b": [312.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b5-b6", "a": [312.5, 0.0, 80.0], "b": [375.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b6-b7", "a": [375.0, 0.0, 80.0], "b": [437.5, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "b7-b8", "a": [437.5, 0.0, 80.0], "b": [500.0, 0.0, 80.0], "N": 306.45781, "Nd": 383.07227, "n": 2, "L": 62.5}, {"id": "t1-t2", "a": [62.5, 22.5, 80.0], "b": [125.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t2-t3", "a": [125.0, 45.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t3-t4", "a": [187.5, 67.5, 80.0], "b": [250.0, 90.0, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t4-t5", "a": [250.0, 90.0, 80.0], "b": [312.5, 67.5, 80.0], "N": -325.71146, "Nd": -244.28359, "n": 2, "L": 66.42665}, {"id": "t5-t6", "a": [312.5, 67.5, 80.0], "b": [375.0, 45.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t6-t7", "a": [375.0, 45.0, 80.0], "b": [437.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b0-t1", "a": [0.0, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "t7-b8", "a": [437.5, 22.5, 80.0], "b": [500.0, 0.0, 80.0], "N": -325.71146, "Nd": -407.13932, "n": 2, "L": 66.42665}, {"id": "b1-t1", "a": [62.5, 0.0, 80.0], "b": [62.5, 22.5, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 22.5}, {"id": "b2-t2", "a": [125.0, 0.0, 80.0], "b": [125.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b3-t3", "a": [187.5, 0.0, 80.0], "b": [187.5, 67.5, 80.0], "N": -0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b4-t4", "a": [250.0, 0.0, 80.0], "b": [250.0, 90.0, 80.0], "N": 220.64962, "Nd": 165.48722, "n": 3, "L": 90.0}, {"id": "b5-t5", "a": [312.5, 0.0, 80.0], "b": [312.5, 67.5, 80.0], "N": 0.0, "Nd": 220.64962, "n": 3, "L": 67.5}, {"id": "b6-t6", "a": [375.0, 0.0, 80.0], "b": [375.0, 45.0, 80.0], "N": 0.0, "Nd": 0.0, "n": 3, "L": 45.0}, {"id": "b7-t7", "a": [437.5, 0.0, 80.0], "b": [437.5, 22.5, 80.0], "N": 0.0, "Nd": -0.0, "n": 3, "L": 22.5}, {"id": "t1-b2", "a": [62.5, 22.5, 80.0], "b": [125.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "t2-b3", "a": [125.0, 45.0, 80.0], "b": [187.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t3-b4", "a": [187.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t5-b4", "a": [312.5, 67.5, 80.0], "b": [250.0, 0.0, 80.0], "N": -0.0, "Nd": -225.53296, "n": 3, "L": 91.99185}, {"id": "t6-b5", "a": [375.0, 45.0, 80.0], "b": [312.5, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 77.01461}, {"id": "t7-b6", "a": [437.5, 22.5, 80.0], "b": [375.0, 0.0, 80.0], "N": -0.0, "Nd": -0.0, "n": 3, "L": 66.42665}, {"id": "transversina b0", "a": [0.0, 0, 0], "b": [0.0, 0, 80.0], "N": null}, {"id": "transversina b1", "a": [62.5, 0, 0], "b": [62.5, 0, 80.0], "N": null}, {"id": "transversina b2", "a": [125.0, 0, 0], "b": [125.0, 0, 80.0], "N": null}, {"id": "transversina b3", "a": [187.5, 0, 0], "b": [187.5, 0, 80.0], "N": null}, {"id": "transversina b4", "a": [250.0, 0, 0], "b": [250.0, 0, 80.0], "N": null}, {"id": "transversina b5", "a": [312.5, 0, 0], "b": [312.5, 0, 80.0], "N": null}, {"id": "transversina b6", "a": [375.0, 0, 0], "b": [375.0, 0, 80.0], "N": null}, {"id": "transversina b7", "a": [437.5, 0, 0], "b": [437.5, 0, 80.0], "N": null}, {"id": "transversina b8", "a": [500.0, 0, 0], "b": [500.0, 0, 80.0], "N": null}, {"id": "escora t1", "a": [62.5, 22.5, 0], "b": [62.5, 22.5, 80.0], "N": null}, {"id": "escora t2", "a": [125.0, 45.0, 0], "b": [125.0, 45.0, 80.0], "N": null}, {"id": "escora t3", "a": [187.5, 67.5, 0], "b": [187.5, 67.5, 80.0], "N": null}, {"id": "escora t4", "a": [250.0, 90.0, 0], "b": [250.0, 90.0, 80.0], "N": null}, {"id": "escora t5", "a": [312.5, 67.5, 0], "b": [312.5, 67.5, 80.0], "N": null}, {"id": "escora t6", "a": [375.0, 45.0, 0], "b": [375.0, 45.0, 80.0], "N": null}, {"id": "escora t7", "a": [437.5, 22.5, 0], "b": [437.5, 22.5, 80.0], "N": null}];
+const out = document.getElementById("barra");
+const canvas = document.getElementById("cena");
+const fmt = v => (v + 0).toFixed(5).replace(".", ",");
+try {
+  const THREE = await carregaThree();
+  const Navegador = criaNavegador(THREE);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(40, 1, 1, 8000);
+  const ray = new THREE.Raycaster(), p = new THREE.Vector2();
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 2.4));
+  const dl = new THREE.DirectionalLight(0xffffff, 1.4); dl.position.set(200, 500, 400); scene.add(dl);
+  const mats = {};
+  const mat = k => mats[k] ??= new THREE.MeshStandardMaterial({ roughness: .7 });
+  const paint = () => {
+    mat("t").color.set(css("--tension")); mat("c").color.set(css("--compression"));
+    mat("z").color.set(css("--zero")); mat("w").color.set(css("--wood"));
+  };
+  const meshes = [], box = new THREE.Box3();
+  for (const b of B) {
+    const A = new THREE.Vector3(...b.a), C = new THREE.Vector3(...b.b), d = C.clone().sub(A), L = d.length();
+    const k = b.N === null ? "w" : b.N > 1e-6 ? "t" : b.N < -1e-6 ? "c" : "z";
+    const s = k === "w" ? 3 : 4.4;
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(s, s, L), mat(k));
+    mesh.position.copy(A).addScaledVector(d, .5); mesh.lookAt(C); mesh.userData = b;
+    scene.add(mesh); meshes.push(mesh); box.expandByPoint(A).expandByPoint(C);
+  }
+  paint();
+  const c = box.getCenter(new THREE.Vector3());
+  const raio = box.getBoundingSphere(new THREE.Sphere()).radius;
+  const dir = new THREE.Vector3(-0.42, 0.34, 1).normalize();
+  const enquadrar = () => {
+    const vf = THREE.MathUtils.degToRad(cam.fov), hf = 2 * Math.atan(Math.tan(vf / 2) * cam.aspect);
+    const dist = raio / Math.sin(Math.min(vf, hf) / 2) * 0.82;
+    cam.position.copy(c).addScaledVector(dir, dist); cam.updateProjectionMatrix();
+  };
+  const ctl = new Navegador(cam, canvas); ctl.target.copy(c);
+  ctl.pick = (x, y) => { const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2((x - r.left) / r.width * 2 - 1, -(y - r.top) / r.height * 2 + 1), cam);
+    const h = ray.intersectObjects(meshes)[0]; return h ? h.point : null; };
+  const size = () => {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false); cam.aspect = w / h;
+    cam.fov = 40; cam.updateProjectionMatrix(); enquadrar();
+  };
+  new ResizeObserver(size).observe(canvas); size();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paint);
+  new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  let down = null, sel = null;
+  canvas.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
+  canvas.addEventListener("pointerup", e => {
+    if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;
+    const r = canvas.getBoundingClientRect();
+    p.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+    ray.setFromCamera(p, cam);
+    const h = ray.intersectObjects(meshes)[0];
+    if (sel) sel.scale.set(1, 1, 1);
+    if (!h) { sel = null; out.textContent = "Toque numa barra para ver o esforço com 45 kg."; return; }
+    sel = h.object; sel.scale.set(1.6, 1.6, 1);
+    const b = sel.userData;
+    if (b.N === null) { out.innerHTML = `<b>${b.id}</b>: travamento lateral entre as duas treliças (80 mm).`; return; }
+    const tipo = b.N > 1e-6 ? "tração" : b.N < -1e-6 ? "compressão" : "sem esforço";
+    out.innerHTML = `<b>${b.id}</b> · ${fmt(b.L)} mm · ${b.n} camadas<br>carga no centro: <b>${fmt(b.N)} N</b> (${tipo}) · carga deslocada: <b>${fmt(b.Nd)} N</b>`;
+  });
+  renderer.setAnimationLoop(() => { ctl.update(); renderer.render(scene, cam); });
+} catch (err) {
+  canvas.replaceWith(Object.assign(document.createElement("p"), { className: "fallback",
+    textContent: "Não foi possível abrir o modelo 3D neste aparelho. A vista lateral e as tabelas abaixo mostram o mesmo projeto." }));
+}
+</script>
+
+</body>
+</html>
