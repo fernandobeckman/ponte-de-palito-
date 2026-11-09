@@ -1069,6 +1069,7 @@ function vista(v) {
   ctl.irPara(C.clone().add(new V3(...off)), C);
 }
 document.querySelectorAll("[data-v]").forEach(b => b.addEventListener("click", () => vista(b.dataset.v)));
+window.__foco = () => focoAlvo.toArray();
 window.__nav = () => ({ cam: cam.position.toArray().map(v => +v.toFixed(1)), alvo: ctl.target.toArray().map(v => +v.toFixed(1)), seguir, modo: ctl.modo });
 window.__cam = c => { seguir = false; cam.position.set(c[0], c[1], c[2]); ctl.target.set(c[3], c[4], c[5]); };
 function tamanho() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
