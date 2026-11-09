@@ -54,5 +54,5 @@ LIGAÇÕES DAS BARRAS DE ALMA — sobreposição mínima dentro da chapa (2 face
  b5-t5      N = 220.64962 N -> sobreposição ≥ 13.13391 mm | adotado: 2 faixas de chapa = 16.80000 mm (FS = 2.55826)
 
 QUANTITATIVO (do modelo físico, plano de corte)
- peças = 404 | palitos para a ponte = 254 | para os ensaios = 50 | comprar (+15%) = 368
- área colada = 1350.09956 cm² | cola nas juntas = 27.00199 g | massa estimada = 222.61836 g
+ peças = 396 | palitos para a ponte = 254 | para os ensaios = 50 | comprar (+15%) = 368
+ área colada = 1350.08616 cm² | cola nas juntas = 27.00172 g | massa estimada = 222.53056 g

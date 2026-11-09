@@ -126,17 +126,20 @@ Gerado por `projeto/gerar_montagem.py`. O plano de corte encaixa as peças em pa
 
 | item | valor |
 |---|---|
-| Peças cortadas e coladas | 404 |
+| Peças cortadas e coladas (numeradas de 1 a 412, incluindo os 16 espaçadores) | 396 na ponte + 16 espaçadores |
 | Palitos usados na ponte | 254 |
 | Palitos para os 2 espaçadores provisórios (4 camadas × 2 palitos de 74 mm cada) | 16 |
 | Palitos para os ensaios de material | 50 |
 | **Palitos a comprar (+15% de perda)** | **368** |
-| Área colada (ponte + espaçadores) | 1350,09956 cm² |
-| Cola que fica nas juntas (200 g/m²) | 27,00199 g |
-| Cola a reservar, com perdas (×3) | 81,00597 g |
-| Massa estimada da ponte | 222,61836 g |
+| Área colada (ponte + espaçadores) | 1350,08616 cm² |
+| Cola que fica nas juntas (200 g/m²) | 27,00172 g |
+| Cola a reservar, com perdas (×3) | 81,00517 g |
+| Massa estimada da ponte | 222,53056 g |
 
 A lista de corte completa e o orçamento estão na página de montagem. O consumo de 160 a 200 g/m² e o fato de a cola não aderir a polietileno vêm da ficha técnica da Cascola Cascorez Extra (Henkel).
+
+### Manual de corte (estilo LEGO)
+Cada formato de peça tem um código (letra da família + número), e há 37 tipos ao todo. Cada peça tem um número, de 1 a 412, na ordem de montagem. Os moldes em tamanho real, com comprimento, bordas e ângulos de corte, e o índice numerado estão em `projeto/manual/manual_de_corte.pdf`, gerado por `projeto/gerar_manual_pdf.py`. As chapas menores que 80 mm² foram eliminadas do modelo, porque não mudam a resistência e não dá para cortá-las direito.
 
 ## 8. Pendências antes de construir
 1. **[PENDENTE]** Medir 20 palitos (largura, espessura, comprimento e massa) e atualizar as constantes `B`, `T` e `L_PAL` em `estudo_geometrias.py`.

@@ -19,7 +19,7 @@ L_PALITO, L_UTIL = 110.0, 101.6  # comprimento total e reto útil (sem as pontas
 VAO, H, NP = 500.0, 90.0, 8
 A_PAINEL = VAO / NP
 BALANCO = 15.0                   # banzo inferior passa 15 mm além de cada apoio
-GAP = 0.3                        # folga visível nas emendas de topo
+GAP = 0.0                        # peças encostam de topo (a junta aparece pelo chanfro do 3D)
 TH = math.atan2(H, VAO / 2)      # inclinação do banzo superior
 LADO = math.hypot(VAO / 2, H)    # comprimento de cada metade do banzo superior
 Y0 = 268.2                       # altura do eixo do banzo inferior com a ponte de pé sobre os apoios
@@ -190,6 +190,7 @@ def pecas_trelica():
                                [acima_de(INF, W / 2 + 2 * W)]))
             for i, (onde, p, eixo, planos) in enumerate(pc):
                 p = recorta(p, planos)
+                if p and area(p) < 80: p = []   # sobra minúscula: não vale cortar (não muda a resistência)
                 if p: out.append(dict(nome=f"Chapa do nó {nk}, face {face}, peça {i+1} de {len(pc)} ({onde})",
                                       poly=p, z0=z0, eixo=eixo, tipo="chapa", no=nk))
         return out
@@ -396,6 +397,87 @@ evento("pesagem", "Finalização", "Pese a ponte e anote a massa.", "", foco="po
 evento("ensaio", "Ensaio", "Pendure a carga no meio da transversina central e aumente aos poucos até 45 kg.",
        "Carga aplicada devagar e centrada. Ninguém embaixo da carga. Use óculos de proteção.", foco="ponte", dist=1000)
 
+# ---------------------------------------------------------------- numeração e tipos de peça (manual estilo LEGO)
+CAT = {"banzo": ("B", "Banzo"), "diagonal": ("D", "Diagonal"), "montante": ("M", "Montante"), "chapa": ("C", "Chapa de ligação"),
+       "transversina": ("T", "Transversina"), "escora": ("E", "Escora superior"), "contravento": ("X", "Diagonal de contraventamento"),
+       "consolo": ("K", "Consolo"), "espacador": ("P", "Espaçador provisório")}
+ORDEM_CAT = list(CAT)
+
+def forma_canonica(p):
+    """Contorno da peça no próprio eixo (x ao longo do palito, y na largura), normalizado para que peças iguais
+    (mesmo comprimento e mesmos cortes, mesmo que viradas) tenham a mesma chave."""
+    ang = math.atan2(p["ax"][1], p["ax"][0]); c, s_ = math.cos(-ang), math.sin(-ang)
+    r = [(x * c - y * s_, x * s_ + y * c) for x, y in p["poly"]]
+    x0 = min(q[0] for q in r); vc = (max(q[1] for q in r) + min(q[1] for q in r)) / 2
+    r = [(x - x0, y - vc) for x, y in r]; L = max(q[0] for q in r)
+    melhor = None
+    for fx in (1, -1):
+        for fy in (1, -1):
+            q = [(round(((x if fx > 0 else L - x)) / .5) * .5 + 0.0, round(y * fy / .5) * .5 + 0.0) for x, y in r]
+            q2 = []
+            for v in q:
+                if not q2 or v != q2[-1]: q2.append(v)
+            if len(q2) > 1 and q2[0] == q2[-1]: q2.pop()
+            a = sum(q2[i][0] * q2[(i + 1) % len(q2)][1] - q2[(i + 1) % len(q2)][0] * q2[i][1] for i in range(len(q2)))
+            if a < 0: q2 = q2[::-1]
+            i0 = q2.index(min(q2)); q2 = q2[i0:] + q2[:i0]
+            k = tuple(q2)
+            if melhor is None or k < melhor: melhor = k
+    return melhor
+
+def contorno_exato(p):
+    """Contorno sem arredondar, no eixo do próprio palito: x de 0 a L, y centrado (-4,2 a 4,2)."""
+    ang = math.atan2(p["ax"][1], p["ax"][0]); c, s_ = math.cos(-ang), math.sin(-ang)
+    r = [(x * c - y * s_, x * s_ + y * c) for x, y in p["poly"]]
+    x0 = min(q[0] for q in r); vc = (max(q[1] for q in r) + min(q[1] for q in r)) / 2
+    r = [(x - x0, y - vc) for x, y in r]
+    q2 = []
+    for v in r:
+        if not q2 or math.hypot(v[0] - q2[-1][0], v[1] - q2[-1][1]) > .05: q2.append(v)
+    if len(q2) > 1 and math.hypot(q2[0][0] - q2[-1][0], q2[0][1] - q2[-1][1]) < .05: q2.pop()
+    return q2
+
+def dados_corte(p):
+    """Comprimento total, comprimento de cada borda longa e ângulo de cada corte (medido entre o corte e a borda)."""
+    pts = contorno_exato(p); n = len(pts); L = max(x for x, _ in pts)
+    bordas, pontas = [], {"esq": [], "dir": []}
+    for i in range(n):
+        (x1, y1), (x2, y2) = pts[i], pts[(i + 1) % n]
+        if abs(y1 - y2) < .05 and abs(abs(y1) - W / 2) < .3:
+            bordas.append(abs(x2 - x1))
+        else:
+            ang = math.degrees(math.atan2(abs(y2 - y1), abs(x2 - x1)))
+            pontas["esq" if (x1 + x2) / 2 < L / 2 else "dir"].append(round(ang, 1))
+    bordas = sorted(bordas, reverse=True)[:2] + [0.0] * max(0, 2 - len(bordas))
+    if len(pontas["esq"]) > len(pontas["dir"]) or (len(pontas["esq"]) == len(pontas["dir"]) and pontas["esq"] < pontas["dir"]):
+        pontas["esq"], pontas["dir"] = pontas["dir"], pontas["esq"]      # ponta mais simples à esquerda
+        pts = [(L - x, y) for x, y in pts]
+    return dict(L=round(L, 1), bordaA=round(bordas[0], 1), bordaB=round(bordas[1], 1), esq=pontas["esq"], dir=pontas["dir"],
+                poly=[[round(x, 2), round(y, 2)] for x, y in pts])
+
+pecas_todas = [p for p in passos if p["k"] == "pc"]
+grupos_forma = {}
+for p in pecas_todas:
+    grupos_forma.setdefault((p["tipo"], forma_canonica(p)), []).append(p)
+tipos = []
+for cat in ORDEM_CAT:
+    ks = [k for k in grupos_forma if k[0] == cat]
+    ks.sort(key=lambda k: (-max(x for x, _ in k[1]), k[1]))
+    for i, k in enumerate(ks):
+        cod = f"{CAT[cat][0]}{i+1}"
+        info = dados_corte(grupos_forma[k][0])
+        for p in grupos_forma[k]: p["cod"] = cod
+        tipos.append(dict(cod=cod, cat=cat, nome_cat=CAT[cat][1], qtd=len(grupos_forma[k]), **info))
+for i, p in enumerate(pecas_todas): p["num"] = i + 1
+for t in tipos: t["nums"] = [p["num"] for p in pecas_todas if p["cod"] == t["cod"]]
+
+def desc_ponta(angs):
+    if not angs: return "sem corte"
+    if len(angs) == 1: return "reta (90°)" if abs(angs[0] - 90) < .3 else f"inclinada a {fmt1(angs[0])}°"
+    return "em bico: " + " e ".join(f"{fmt1(a)}°" for a in angs)
+for t in tipos:
+    t["txt_esq"], t["txt_dir"] = desc_ponta(t["esq"]), desc_ponta(t["dir"])
+
 # ---------------------------------------------------------------- lista de corte, cola e orçamento
 todas = [p for p in passos if p["k"] == "pc"]
 pcs = [p for p in todas if p["g"] != "E"]          # só a ponte (os espaçadores são provisórios)
@@ -433,7 +515,7 @@ resumo = dict(pecas=len(pcs), pecas_esp=len(esp), passos=len(passos), palitos_po
               palitos_comprar=total_palitos, area_cola_cm2=round(area_cola / 100, 5), cola_g=round(g_cola, 5),
               cola_comprar_g=round(g_cola_compra, 5), massa_g=round(massa_g, 5), lista=lista)
 NOS_LOCAIS = {k: list(v) for k, v in NOS.items()}
-dados = dict(passos=passos, resumo=resumo, nos=NOS_LOCAIS, barras=[[b["i"], b["j"]] for b in m["barras"]],
+dados = dict(passos=passos, resumo=resumo, tipos=tipos, nos=NOS_LOCAIS, barras=[[b["i"], b["j"]] for b in m["barras"]],
              const=dict(W=W, T=T, Y0=Y0, ZA=ZA, ZB=ZB, VAO=VAO, H=H, BAL=BALANCO))
 json.dump(dados, open(os.path.join(D, "montagem.json"), "w"), ensure_ascii=False)
 print(json.dumps({k: v for k, v in resumo.items() if k != "lista"}, ensure_ascii=False, indent=1))
@@ -442,6 +524,7 @@ for c, t, n in lista: print(f"  {c:>4} mm  {t:12} x{n}")
 modelo = os.path.join(D, "montagem_modelo.html")
 if os.path.exists(modelo):
     html = (open(modelo).read().replace("__NAVEGADOR__", open(os.path.join(D, "navegador.js")).read())
+            .replace("__NPECAS__", str(len(pecas_todas)))
             .replace("__DADOS__", json.dumps(dados, ensure_ascii=False, separators=(",", ":"))))
     os.makedirs(os.path.join(D, "..", "site"), exist_ok=True)
     open(os.path.join(D, "..", "site", "montagem.html"), "w").write(html)

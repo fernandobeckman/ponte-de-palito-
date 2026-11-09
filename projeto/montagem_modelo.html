@@ -56,6 +56,28 @@ section { display: grid; gap: 12px; min-width: 0; }
 .updown { display: grid; gap: 10px; }
 .vbtn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 80%, transparent); color: var(--ink); display: grid; place-items: center; touch-action: none; cursor: pointer; }
 .vbtn svg { width: 20px; height: 20px; fill: currentColor; }
+.rotulos { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.rot { position: absolute; left: 0; top: 0; font: 600 10px var(--mono); line-height: 1; padding: 3px 5px; border-radius: 5px; white-space: nowrap;
+  background: color-mix(in srgb, var(--card) 86%, transparent); color: var(--ink); border: 1px solid var(--line); }
+.rot.ativo { background: var(--wood); color: #1b1305; border-color: var(--wood); font-size: 12px; }
+.callout { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border: 1px dashed var(--wood); border-radius: 10px; padding: 8px 10px; background: var(--wood-soft); }
+.callout .cdes { flex: 1 1 200px; min-width: 0; max-width: 360px; }
+.callout svg, .card svg { width: 100%; height: auto; display: block; }
+.cinfo { display: grid; gap: 2px; font-size: .9rem; min-width: 0; }
+.cod { display: inline-block; font: 700 .9rem var(--mono); color: #fff; border-radius: 6px; padding: 2px 7px; }
+#cartoes { display: grid; gap: 18px; }
+.familia { display: grid; gap: 10px; }
+.familia h3 { margin: 0; font: 700 1.2rem var(--display); display: flex; gap: 8px; align-items: center; }
+.familia h3 i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.card header { display: flex; align-items: center; gap: 8px; }
+.card header b { font: 700 1.05rem var(--mono); }
+.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: .86rem; }
+.card dt { color: var(--muted); }
+.card dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.card .nums { font-size: .78rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+.card .ver3d { justify-self: start; }
 .barra3d { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding: 8px 12px; border-top: 1px solid var(--line); scrollbar-width: thin; }
 .barra3d > * { flex: none; }
 .grp { display: flex; }
@@ -143,6 +165,7 @@ footer a { color: var(--tension); }
         <span class="tag" id="contador">Passo 1</span>
         <span class="tag peca" id="peca" hidden></span>
       </div>
+      <div class="rotulos" id="rotulos" aria-hidden="true"></div>
       <div class="dica" id="dica">1 dedo gira · 2 dedos arrastam e dão zoom · toque duplo aproxima · toque numa peça para ver o nome</div>
       <div class="voo" id="voo" hidden>
         <div class="joy" id="joy" aria-label="Joystick: andar para frente, para trás e para os lados"><div class="knob" id="knob"></div></div>
@@ -161,6 +184,8 @@ footer a { color: var(--tension); }
       <button class="tbtn" id="bseg" aria-pressed="true" type="button">Seguir o passo</button>
       <button class="tbtn" id="b360" aria-pressed="false" type="button">Girar 360°</button>
       <button class="tbtn" id="bamp" aria-pressed="false" type="button">Ampliar</button>
+      <button class="tbtn" id="bnum" aria-pressed="true" type="button">Números</button>
+      <button class="tbtn" id="bcor" aria-pressed="false" type="button">Cores por família</button>
       <span class="sep">Vistas</span>
       <button class="tbtn" type="button" data-v="tudo">Inteira</button>
       <button class="tbtn" type="button" data-v="lado">Lado</button>
@@ -173,6 +198,10 @@ footer a { color: var(--tension); }
       <span class="cap" id="cap">Preparação</span>
       <span class="txt" id="txt">…</span>
       <span class="det" id="det"></span>
+      <div class="callout" id="callout" hidden>
+        <div class="cdes" id="cDes"></div>
+        <div class="cinfo"><span class="cod" id="cCod">B1</span> <b id="cNum"></b><span id="cMed"></span></div>
+      </div>
       <div class="phase" id="fases" hidden>
         <span class="ph" data-f="corte">corte</span><span class="ph" data-f="cola">cola</span><span class="ph" data-f="encaixe">encaixe</span><span class="ph" data-f="pressao">pressão</span>
       </div>
@@ -195,16 +224,22 @@ footer a { color: var(--tension); }
     <p class="note">Calculado a partir do modelo 3D, peça por peça. A área colada soma todas as faces que recebem cola. O consumo de cola usa 200 g/m², o limite de cima da ficha técnica da Cascorez Extra (160 a 200 g/m²).</p>
   </section>
 
+  <section id="manual">
+    <h2>Manual de peças</h2>
+    <p class="note">Como num manual de LEGO: cada formato de peça tem um <b>código</b> (letra da família + número) e cada peça da ponte tem um <b>número</b>, na ordem de montagem. Peças com o mesmo código são iguais: mesmo comprimento e mesmos cortes. Corte todas de uma vez, escreva o número a lápis em cada uma e separe em montinhos por código. Os desenhos abaixo estão na mesma escala entre si. O PDF com os moldes em tamanho real está no repositório, em <span class="mono">projeto/manual/manual_de_corte.pdf</span>.</p>
+    <p class="note">Ângulo do corte: medido entre a linha de corte e a borda comprida do palito (90° = corte reto). "Em bico" = ponta com dois cortes. Bordas A e B = comprimento de cada lado comprido: marque as duas medidas e ligue os pontos com a régua.</p>
+    <div id="cartoes"></div>
+  </section>
+
   <section>
-    <h2>Lista de corte</h2>
+    <h2>Lista numerada</h2>
     <details>
-      <summary>Ver todas as medidas de corte agrupadas</summary>
+      <summary>Ver as peças de 1 a __NPECAS__ com código e posição</summary>
       <div class="tbl"><table>
-        <thead><tr><th>Comprimento (mm)</th><th>Peça</th><th>Quantidade</th></tr></thead>
-        <tbody id="corte"></tbody>
+        <thead><tr><th>Nº</th><th>Código</th><th>Peça</th><th>Etapa</th></tr></thead>
+        <tbody id="numerada"></tbody>
       </table></div>
     </details>
-    <p class="note">Pontas cortadas em ângulo saem do gabarito: apoie o palito sobre o desenho e corte na linha. O comprimento útil de um palito (sem as pontas arredondadas) é 101,6 mm.</p>
   </section>
 
   <section>
@@ -247,7 +282,35 @@ $("figs").innerHTML = [
 ].map(([v, k]) => `<div class="fig"><span class="v">${v}</span><span class="k">${k}</span></div>`).join("");
 const NOMES = { banzo: "banzo", chapa: "chapa de ligação", montante: "montante", diagonal: "diagonal", transversina: "transversina",
   escora: "escora superior", contravento: "diagonal de contraventamento", consolo: "consolo", espacador: "espaçador provisório (não fica na ponte)" };
-$("corte").innerHTML = R.lista.map(([c, t, n]) => `<tr><td class="n">${c}</td><td>${NOMES[t] || t}</td><td class="n">${n}</td></tr>`).join("");
+const TIPOS = Object.fromEntries(D.tipos.map(t => [t.cod, t]));
+const COR_FAM = { banzo: "#b5651d", diagonal: "#2a66ad", montante: "#2f7a4f", chapa: "#8a5cb8", transversina: "#c0392b",
+  escora: "#d48a00", contravento: "#16838f", consolo: "#6b6b6b", espacador: "#4f86c6" };
+function faixasNum(n) { const o = []; for (let i = 0; i < n.length;) { let j = i; while (j + 1 < n.length && n[j + 1] === n[j] + 1) j++;
+  o.push(i === j ? `${n[i]}` : `${n[i]}–${n[j]}`); i = j + 1; } return o.join(", "); }
+function svgPeca(t, L0 = 112) {   // mesma escala para todas: L0 mm de largura de desenho
+  const pts = t.poly.map(([x, y]) => `${(x + 1).toFixed(2)},${(-y + 7).toFixed(2)}`).join(" ");
+  return `<svg viewBox="0 -3.6 ${L0} 15.6" role="img" aria-label="Contorno da peça ${t.cod}, ${fmt(t.L, 1)} mm">
+    <text x="${t.L / 2 + 1}" y="-.6" font-size="3.2" font-family="monospace" fill="currentColor" text-anchor="middle">${fmt(t.L, 1)} mm</text>
+    <line x1="1" y1="1" x2="${t.L + 1}" y2="1" stroke="currentColor" stroke-width=".25" opacity=".6"/>
+    <line x1="1" y1="0" x2="1" y2="2" stroke="currentColor" stroke-width=".25" opacity=".6"/><line x1="${t.L + 1}" y1="0" x2="${t.L + 1}" y2="2" stroke="currentColor" stroke-width=".25" opacity=".6"/>
+    <polygon points="${pts}" fill="#e8cf9f" stroke="currentColor" stroke-width=".35"/>
+    <text x="${t.L * .45 + 1}" y="8.1" font-size="3" font-family="monospace" font-weight="700" fill="#5a3a10" text-anchor="middle">${t.cod}</text>
+  </svg>`;
+}
+const pontas = t => `${t.txt_esq} | ${t.txt_dir}`;
+{
+  const fams = []; for (const t of D.tipos) { let f = fams.find(x => x.cat === t.cat); if (!f) fams.push(f = { cat: t.cat, nome: t.nome_cat, tipos: [] }); f.tipos.push(t); }
+  $("cartoes").innerHTML = fams.map(f => `<div class="familia"><h3><i style="background:${COR_FAM[f.cat]}"></i>${f.nome}${f.cat === "espacador" ? " (não fica na ponte)" : ""}</h3><div class="grade">` +
+    f.tipos.map(t => `<article class="card" id="tipo-${t.cod}">
+      <header><span class="cod" style="background:${COR_FAM[t.cat]}">${t.cod}</span><b>× ${t.qtd}</b></header>
+      ${svgPeca(t)}
+      <dl><dt>Comprimento</dt><dd>${fmt(t.L, 1)} mm</dd><dt>Bordas</dt><dd>A ${fmt(t.bordaA, 1)} · B ${fmt(t.bordaB, 1)} mm</dd>
+      <dt>Pontas</dt><dd>${pontas(t)}</dd></dl>
+      <p class="nums">Peças nº ${faixasNum(t.nums)}</p>
+      <button class="tbtn ver3d" type="button" data-cod="${t.cod}">Ver no 3D</button></article>`).join("") + `</div></div>`).join("");
+  $("numerada").innerHTML = P.filter(p => p.k === "pc").map(p => `<tr><td class="n">${p.num}</td><td><span class="cod" style="background:${COR_FAM[TIPOS[p.cod].cat]}">${p.cod}</span></td><td>${p.nome}</td><td>${p.cap}</td></tr>`).join("");
+}
+document.addEventListener("click", e => { const b = e.target.closest(".ver3d"); if (b && window.destacarTipo) window.destacarTipo(b.dataset.cod); });
 
 const ITENS = [
   { id: "palitos", nome: "Palito de picolé de madeira, pacote com 100", qtd: Math.ceil(R.palitos_comprar / 100), preco: 9.90,
@@ -319,6 +382,14 @@ function legenda(tt, fase) {
   $("cap").textContent = p.cap; $("txt").textContent = p.txt; $("det").textContent = p.k === "ev" && p.ev === "pesagem"
     ? `Massa estimada pelo modelo: ${fmt(R.massa_g, 5)} g (madeira + cola seca). Se der muito mais, tem excesso de cola.` : p.det;
   $("fases").hidden = p.k !== "pc";
+  if (p.k === "pc") {
+    const tp = TIPOS[p.cod];
+    $("callout").hidden = false;
+    if ($("callout").dataset.cod !== p.cod) { $("cDes").innerHTML = svgPeca(tp); $("callout").dataset.cod = p.cod; }
+    $("cCod").textContent = p.cod; $("cCod").style.background = COR_FAM[tp.cat];
+    $("cNum").textContent = `Peça nº ${p.num}`;
+    $("cMed").textContent = `Corte ${fmt(tp.L, 1)} mm · bordas ${fmt(tp.bordaA, 1)} e ${fmt(tp.bordaB, 1)} mm · pontas: ${pontas(tp)} · ${tp.qtd} iguais`;
+  } else $("callout").hidden = true;
   document.querySelectorAll(".ph").forEach(e => e.classList.toggle("on", e.dataset.f === (fase || (tt >= ic + 1 ? "pressao" : ""))));
   $("cure").hidden = !(p.k === "ev" && /^cura/.test(p.ev) && (tt > ic));
   const ci = capitulos.findLastIndex(c => c.ini <= ic);
@@ -367,6 +438,7 @@ try { THREE = await carregaThree(); } catch (e) { console.warn("3D indisponível
 if (!THREE) {
   $("loading").textContent = "O 3D não abriu neste aparelho. Use a barra e os botões: os passos, a lista de corte e o orçamento continuam funcionando.";
   $("barra3d").hidden = true; $("dica").hidden = true;
+  document.querySelectorAll(".ver3d").forEach(b => { b.hidden = true; });
   await new Promise(() => {});   // para aqui: o resto do módulo é só o 3D
 }
 const Navegador = criaNavegador(THREE);
@@ -407,6 +479,11 @@ texMadeira.wrapS = texMadeira.wrapT = THREE.RepeatWrapping; texMadeira.repeat.se
 const tons = [0xffffff, 0xf6eee2, 0xfff6ea, 0xefe4d2, 0xfbf3e6];
 const matsMadeira = tons.map(c => new THREE.MeshStandardMaterial({ map: texMadeira, color: c, roughness: .82 }));
 const matAtivo = new THREE.MeshStandardMaterial({ map: texMadeira, color: 0xffffff, roughness: .8, emissive: 0x6b4a10, emissiveIntensity: .35 });
+// cores por família (tinta sobre a madeira) e destaque de um código
+const matsFam = Object.fromEntries(Object.entries(COR_FAM).map(([k, c]) => [k, new THREE.MeshStandardMaterial({ map: texMadeira, color: new THREE.Color(c).lerp(new THREE.Color(0xffffff), .25), roughness: .8 })]));
+const matDestaque = new THREE.MeshStandardMaterial({ map: texMadeira, color: 0xffe066, roughness: .6, emissive: 0x8a6a00, emissiveIntensity: .55 });
+let coresFam = false, destaque = null;
+const baseMat = o => destaque && o.p.cod === destaque ? matDestaque : coresFam ? matsFam[o.p.tipo] : o.mat;
 const matSobra = new THREE.MeshStandardMaterial({ map: texMadeira, roughness: .85, transparent: true, opacity: 1 });
 const matCorte = new THREE.MeshBasicMaterial({ color: 0xd2382b });
 const matColaUmida = new THREE.MeshStandardMaterial({ color: 0xfbfbf6, roughness: .22, metalness: 0, polygonOffset: true, polygonOffsetFactor: -2 });
@@ -596,7 +673,7 @@ let focoAlvo = new V3(250, 0, 250), distAlvo = 900, faseAtual = null;
 function setFinal(o, seca) {
   const k = "f" + (seca ? "s" : "u");
   if (o.estado === k) return; o.estado = k;
-  o.holder.visible = true; o.holder.position.copy(o.pos0); o.rot.position.set(0, 0, 0); o.mesh.material = o.mat;
+  o.holder.visible = true; o.holder.position.copy(o.pos0); o.rot.position.set(0, 0, 0); o.mesh.material = baseMat(o);
   if (o.sobra) { o.sobra.visible = false; o.risco.visible = false; }
   for (const c of o.cordoes) { c.m.visible = true; c.m.material = seca ? matColaSeca : matColaUmida;
     c.m.scale.set(c.len, (W + .35) / 2.2, .1); c.m.position.z = o.lado > 0 ? .01 : TK; }
@@ -739,7 +816,7 @@ ctl.addEventListener("toque", (x, y) => {
   const h = pegar(x, y), p = h && h.object.userData.p, tag = $("peca");
   clearTimeout(tag._t);
   if (!p) { tag.hidden = true; return; }
-  tag.textContent = `${p.nome} · ${fmt(p.comp, 1)} mm`; tag.hidden = false;
+  tag.textContent = `Nº ${p.num} · ${p.cod} · ${p.nome} · ${fmt(p.comp, 1)} mm`; tag.hidden = false;
   tag._t = setTimeout(() => { tag.hidden = true; }, 6000);
 });
 ctl.addEventListener("duplo", () => setSeguir(false));
@@ -782,6 +859,47 @@ $("bamp").addEventListener("click", e => {
   document.documentElement.style.overflow = on ? "hidden" : "";
   e.currentTarget.setAttribute("aria-pressed", on); e.currentTarget.textContent = on ? "Reduzir" : "Ampliar";
 });
+// números sobre as peças (as mais próximas, sem sobrepor) e cores por família
+const caixaRot = $("rotulos"), rotPool = [];
+for (let i = 0; i < 44; i++) { const e = document.createElement("span"); e.className = "rot"; e.hidden = true; caixaRot.appendChild(e); rotPool.push(e); }
+let mostrarNum = true, quadroRot = 0;
+const vR = new V3();
+function desenhaRotulos() {
+  if (!mostrarNum) { if (!rotPool[0].hidden || rotPool.some(e => !e.hidden)) rotPool.forEach(e => { e.hidden = true; }); return; }
+  if (quadroRot++ % 2) return;
+  const w = canvas.clientWidth, h = canvas.clientHeight, cands = [];
+  const ativo = tMostrado > 0 && tMostrado < N && tMostrado % 1 > 0 ? Math.floor(tMostrado) : -1;
+  for (let j = 0; j < N; j++) {
+    const o = objs[j]; if (!o || !o.holder.visible || !visivel(o.holder)) continue;
+    o.rot.localToWorld(vR.copy(o.centro)); const d = vR.distanceTo(cam.position);
+    vR.project(cam); if (vR.z > 1 || vR.z < -1 || Math.abs(vR.x) > 1.02 || Math.abs(vR.y) > 1.02) continue;
+    cands.push({ x: (vR.x + 1) / 2 * w, y: (1 - vR.y) / 2 * h, d, j });
+  }
+  cands.sort((a, b) => (b.j === ativo) - (a.j === ativo) || a.d - b.d);
+  const ok = [];
+  for (const c of cands) { if (ok.length >= rotPool.length) break;
+    if (ok.some(a => Math.abs(a.x - c.x) < 40 && Math.abs(a.y - c.y) < 17)) continue; ok.push(c); }
+  rotPool.forEach((e, i) => { const a = ok[i]; if (!a) { e.hidden = true; return; } const p = P[a.j];
+    e.hidden = false; e.textContent = `${p.num} ${p.cod}`; e.classList.toggle("ativo", a.j === ativo);
+    e.style.transform = `translate(${a.x.toFixed(1)}px, ${a.y.toFixed(1)}px) translate(-50%, -50%)`; });
+}
+function reaplicaMateriais() { for (const o of objs) if (o && o.estado && o.estado[0] === "f") o.mesh.material = baseMat(o); }
+$("bnum").addEventListener("click", e => { mostrarNum = !mostrarNum; e.currentTarget.setAttribute("aria-pressed", mostrarNum); });
+$("bcor").addEventListener("click", e => { coresFam = !coresFam; e.currentTarget.setAttribute("aria-pressed", coresFam); reaplicaMateriais(); });
+// "Ver no 3D" nos cartões do manual: destaca todas as peças daquele código
+window.destacarTipo = cod => {
+  destaque = destaque === cod ? null : cod;
+  if (destaque) {
+    const ult = P.reduce((m, p, i) => p.cod === cod ? i : m, -1);
+    if (t < ult + 1) { setPlay(false); alvoT = null; t = ult + 1; atualiza(t); }
+    const tp = TIPOS[cod], tag = $("peca"); clearTimeout(tag._t);
+    tag.textContent = `Destacando ${cod}: ${tp.qtd} peças de ${fmt(tp.L, 1)} mm (toque em "Ver no 3D" de novo para tirar)`; tag.hidden = false;
+    document.querySelector(".bench").scrollIntoView({ behavior: "smooth", block: "start" });
+    vista("tudo");
+  } else $("peca").hidden = true;
+  reaplicaMateriais();
+  document.querySelectorAll(".ver3d").forEach(b => { b.textContent = b.dataset.cod === destaque ? "Tirar destaque" : "Ver no 3D"; });
+};
 // vistas prontas
 function vista(v) {
   setSeguir(false);
@@ -802,7 +920,7 @@ window.__nav = () => ({ cam: cam.position.toArray().map(v => +v.toFixed(1)), alv
 window.__cam = c => { seguir = false; cam.position.set(c[0], c[1], c[2]); ctl.target.set(c[3], c[4], c[5]); };
 function tamanho() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
 new ResizeObserver(tamanho).observe(canvas); tamanho();
-quadro3D = () => { cameraSegue(); ctl.update(); renderer.render(scene, cam); };
+quadro3D = () => { cameraSegue(); ctl.update(); renderer.render(scene, cam); desenhaRotulos(); };
 atualiza3D = atualizaCena;
 $("loading").hidden = true;
 atualiza(t);
