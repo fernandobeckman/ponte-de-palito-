@@ -5,6 +5,7 @@ Entradas novas vão **no topo**. Veja a skill `.claude/skills/registro-de-erros`
 
 | # | data | contexto | erro | causa | como evitar |
 |---|---|---|---|---|---|
+| 15 | 2026-11-09 | Git | Fiz o commit sem verificar o resultado do `git checkout main`, que tinha falhado, e o commit caiu em outra branch. Também ficou um `.pyc` versionado | Encadeei comandos com `;` em vez de `&&`, e o repositório não tinha `.gitignore` | Encadear comandos git com `&&` e conferir `git status -sb` antes de cada commit. O `.gitignore` agora ignora `__pycache__`. |
 | 14 | 2026-11-09 | Memorial: peso próprio | Escrevi "0,07% da carga"; o valor certo é 0,69% (0,309 kg ÷ 45 kg) | Fiz a porcentagem de cabeça | Toda porcentagem do memorial deve ser calculada no script ou conferida com a divisão escrita ao lado. |
 | 13 | 2026-11-09 | Detalhamento das ligações | Calculei as chapas nó a nó para os banzos: 30 mm de sobreposição em cada ponta de barras de 62,5 mm, ou seja, chapa cobrindo quase a barra inteira | Dimensionei as ligações sem pensar em como a peça é montada | Verificar se a ligação cabe fisicamente. Banzos retos devem ser feitos contínuos e laminados, com emendas desencontradas. |
 | 12 | 2026-11-09 | Estudo de geometrias | O primeiro estudo considerou só a carga exatamente no centro. Nele, o Parker tinha diagonais "nulas" com 2 camadas, mas com a carga deslocada um painel o FS caía para 1,21 | Hipótese de carregamento ideal demais | Dimensionar sempre por envoltória: carga no centro (FS 2,0) e deslocada ±1 painel (FS 1,5). |
