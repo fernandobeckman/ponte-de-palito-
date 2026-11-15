@@ -11,6 +11,16 @@ D = os.path.dirname(os.path.abspath(__file__))
 dados = json.load(open(os.path.join(D, "montagem.json")))
 tipos, passos = dados["tipos"], dados["passos"]
 pecas = [p for p in passos if p["k"] == "pc"]
+# origem de cada código: peças já cortadas da ponte antiga ou palito novo (projeto/reaproveitamento.py)
+ORIGEM = {}
+_arq = os.path.join(D, "manual", "reaproveitamento.json")
+if os.path.exists(_arq):
+    _r = json.load(open(_arq)); _cod = {p["num"]: p["cod"] for p in pecas}; _cont = {}
+    for n, d in _r["destino"].items():
+        k = ("antiga " + d["cod_ant"] + (" recortada" if d["recorte"] else " sem corte")) if d["de"] == "antiga" else "palito novo"
+        _cont.setdefault(_cod[int(n)], {}); _cont[_cod[int(n)]][k] = _cont[_cod[int(n)]].get(k, 0) + 1
+    for cod, dd in _cont.items():
+        ORIGEM[cod] = " · ".join(f"{q} {k}" for k, q in sorted(dd.items(), key=lambda t: (t[0] == "palito novo", -t[1])))
 OUT = os.path.join(D, "manual", "manual_de_corte.pdf"); os.makedirs(os.path.dirname(OUT), exist_ok=True)
 PW, PH = A4
 MARG = 12 * mm
@@ -79,7 +89,7 @@ regua(c, MARG, y)
 c.showPage(); pag += 1
 
 # ---------------- moldes 1:1
-ALT = 27 * mm               # altura de cada linha
+ALT = 28 * mm               # altura de cada linha
 XT = MARG                   # coluna de texto
 XD = MARG + 66 * mm         # início do desenho (110 mm cabem até a margem direita)
 y = None
@@ -99,6 +109,8 @@ for i, t in enumerate(tipos):
     c.drawString(XT, top - 25, f"{t['nome_cat']} · comprimento total {f1(t['L'])} mm")
     c.drawString(XT, top - 34, f"Borda A {f1(t['bordaA'])} mm · borda B {f1(t['bordaB'])} mm")
     c.drawString(XT, top - 43, f"Pontas: {t['txt_esq']} | {t['txt_dir']}"[:70])
+    if ORIGEM.get(t["cod"]):
+        c.setFont("Helvetica-Bold", 6.6); c.setFillColor(HexColor("#7a5520")); c.drawString(XT, top - 61, ("De onde: " + ORIGEM[t["cod"]])[:92])
     c.setFont("Helvetica", 6.6); c.setFillColor(HexColor("#444444"))
     nums = "Nº " + faixas(t["nums"])
     c.drawString(XT, top - 52, nums[:84] + ("…" if len(nums) > 84 else ""))

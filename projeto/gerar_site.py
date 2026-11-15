@@ -28,6 +28,8 @@ MASSA = res["massa_g"]
 P_COL = calc["P_final"]                  # carga de colapso estimada (kgf)
 VEZES = P_COL * 1000 / MASSA
 N_TIPOS = len(mont["tipos"])
+_rp = os.path.join(D, "manual", "reaproveitamento.json")
+REAP = sum(1 for d in json.load(open(_rp))["destino"].values() if d["de"] == "antiga") if os.path.exists(_rp) else 0
 fmt = lambda v, d=0: f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 ICONE = ("data:image/svg+xml," + "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 24h28M4 24L16 9l12 15M10 24l6-15M22 24l-6-15' "
@@ -86,6 +88,8 @@ open(os.path.join(OUT, "projeto.html"), "w").write(embrulha(pp, "projeto.html", 
 shutil.copy(os.path.join(D, "manual", "manual_de_corte.pdf"), os.path.join(OUT, "manual_de_corte.pdf"))
 shutil.copy(os.path.join(D, "manual", "gabarito_trelica_1-1.pdf"), os.path.join(OUT, "gabarito_trelica_1-1.pdf"))
 shutil.copy(os.path.join(D, "manual", "lista_de_montagem.pdf"), os.path.join(OUT, "lista_de_montagem.pdf"))
+if os.path.exists(os.path.join(D, "manual", "plano_reaproveitamento.pdf")):
+    shutil.copy(os.path.join(D, "manual", "plano_reaproveitamento.pdf"), os.path.join(OUT, "plano_reaproveitamento.pdf"))
 if os.path.exists(os.path.join(OUT, "gabarito_lateral_1-1.svg")): os.remove(os.path.join(OUT, "gabarito_lateral_1-1.svg"))
 open(os.path.join(OUT, ".nojekyll"), "w").write("")
 
@@ -218,7 +222,7 @@ footer a {{ color: var(--tension); }}
       <div><b>≈ {fmt(math.floor(P_COL / 10) * 10)} kg</b><span>quanto o cálculo estima que ela aguenta</span></div>
       <div><b>{fmt(MASSA)} g</b><span>peso da ponte (estimado)</span></div>
       <div><b>{N_PECAS}</b><span>peças cortadas e numeradas</span></div>
-      <div><b>{res['palitos_comprar']}</b><span>palitos comprados, com sobra para testes</span></div>
+      <div><b>{REAP}</b><span>peças reaproveitadas da primeira versão da ponte</span></div>
       <div><b>80 cm</b><span>de vão livre entre os apoios</span></div>
     </div>
   </section>
@@ -258,7 +262,7 @@ footer a {{ color: var(--tension); }}
   </section>
 
   <footer>
-    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="gabarito_trelica_1-1.pdf">Gabarito 1:1 (PDF)</a> · <a href="lista_de_montagem.pdf">Lista de montagem (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
+    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="gabarito_trelica_1-1.pdf">Gabarito 1:1 (PDF)</a> · <a href="lista_de_montagem.pdf">Lista de montagem (PDF)</a> · <a href="plano_reaproveitamento.pdf">Reaproveitamento das peças antigas (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
     <span>Os números deste site vêm do cálculo do projeto. O resultado real só vale depois do teste.</span>
   </footer>
 </main>

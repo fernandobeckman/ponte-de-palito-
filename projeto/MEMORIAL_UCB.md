@@ -224,14 +224,14 @@ Os tipos com mais peças:
 
 | código | peça | comprimento (mm) | quantidade |
 |---|---|---|---|
-| C5 | Chapa de ligação | 40,0 | 192 |
-| B2 | Banzo | 100,0 | 82 |
-| X1 | Diagonal de contraventamento | 76,4 | 70 |
-| T3 | Transversina | 73,3 | 40 |
-| E1 | Escora superior | 73,3 | 35 |
-| C8 | Chapa de ligação | 24,2 | 32 |
-| M2 | Montante | 91,6 | 30 |
-| X2 | Diagonal de contraventamento | 38,2 | 28 |
+| C6 | Chapa de ligação | 40,0 | 192 |
+| B1 | Banzo | 100,0 | 82 |
+| X2 | Diagonal de contraventamento | 76,4 | 70 |
+| T5 | Transversina | 73,3 | 40 |
+| E2 | Escora superior | 73,3 | 35 |
+| C15 | Chapa de ligação | 24,2 | 32 |
+| M6 | Montante | 91,6 | 30 |
+| X3 | Diagonal de contraventamento | 38,2 | 28 |
 
 ## 13. Riscos e pendências
 

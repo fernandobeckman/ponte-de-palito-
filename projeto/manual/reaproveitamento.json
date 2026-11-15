@@ -1,0 +1,4308 @@
+{
+ "origem_antiga": "manual de corte da ponte Parker 8x90 (09/11, commit 7b592f4)",
+ "destino": {
+  "1": {
+   "de": "novo",
+   "palito": 255
+  },
+  "2": {
+   "de": "antiga",
+   "cod_ant": "B7",
+   "recorte": true
+  },
+  "3": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "4": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "5": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "6": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "7": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "8": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "9": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "10": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "11": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "12": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "13": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "14": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "15": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "16": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "17": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "18": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "19": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "20": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "21": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "22": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "23": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "24": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "25": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "26": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "27": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "28": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "29": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "30": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "31": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "32": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "33": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "34": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "35": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "36": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "37": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "38": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "39": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "40": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "41": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "42": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "43": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "44": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "45": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "46": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "47": {
+   "de": "antiga",
+   "cod_ant": "B7",
+   "recorte": true
+  },
+  "48": {
+   "de": "novo",
+   "palito": 256
+  },
+  "49": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "50": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "51": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "52": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "53": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": true
+  },
+  "54": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "55": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "56": {
+   "de": "novo",
+   "palito": 47
+  },
+  "57": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "58": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "59": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "60": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "61": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "62": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "63": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "64": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "65": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "66": {
+   "de": "antiga",
+   "cod_ant": "B4",
+   "recorte": false
+  },
+  "67": {
+   "de": "antiga",
+   "cod_ant": "C8",
+   "recorte": true
+  },
+  "68": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "69": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "70": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": true
+  },
+  "71": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "72": {
+   "de": "novo",
+   "palito": 291
+  },
+  "73": {
+   "de": "novo",
+   "palito": 89
+  },
+  "74": {
+   "de": "antiga",
+   "cod_ant": "C1",
+   "recorte": true
+  },
+  "75": {
+   "de": "novo",
+   "palito": 49
+  },
+  "76": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "77": {
+   "de": "antiga",
+   "cod_ant": "C1",
+   "recorte": true
+  },
+  "78": {
+   "de": "novo",
+   "palito": 50
+  },
+  "79": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "80": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "81": {
+   "de": "novo",
+   "palito": 51
+  },
+  "82": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "83": {
+   "de": "novo",
+   "palito": 52
+  },
+  "84": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "85": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "86": {
+   "de": "novo",
+   "palito": 53
+  },
+  "87": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "88": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "89": {
+   "de": "novo",
+   "palito": 54
+  },
+  "90": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "91": {
+   "de": "novo",
+   "palito": 90
+  },
+  "92": {
+   "de": "novo",
+   "palito": 212
+  },
+  "93": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "94": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "95": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "96": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "97": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "98": {
+   "de": "novo",
+   "palito": 214
+  },
+  "99": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "100": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "101": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "102": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "103": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "104": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "105": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "106": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "107": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "108": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "109": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "110": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "111": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "112": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "113": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "114": {
+   "de": "novo",
+   "palito": 91
+  },
+  "115": {
+   "de": "novo",
+   "palito": 216
+  },
+  "116": {
+   "de": "novo",
+   "palito": 217
+  },
+  "117": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "118": {
+   "de": "novo",
+   "palito": 218
+  },
+  "119": {
+   "de": "novo",
+   "palito": 219
+  },
+  "120": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "121": {
+   "de": "novo",
+   "palito": 220
+  },
+  "122": {
+   "de": "novo",
+   "palito": 221
+  },
+  "123": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "124": {
+   "de": "novo",
+   "palito": 222
+  },
+  "125": {
+   "de": "novo",
+   "palito": 223
+  },
+  "126": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "127": {
+   "de": "novo",
+   "palito": 224
+  },
+  "128": {
+   "de": "novo",
+   "palito": 225
+  },
+  "129": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "130": {
+   "de": "novo",
+   "palito": 226
+  },
+  "131": {
+   "de": "novo",
+   "palito": 227
+  },
+  "132": {
+   "de": "novo",
+   "palito": 92
+  },
+  "133": {
+   "de": "antiga",
+   "cod_ant": "B11",
+   "recorte": false
+  },
+  "134": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "135": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "136": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "137": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "138": {
+   "de": "novo",
+   "palito": 292
+  },
+  "139": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "140": {
+   "de": "antiga",
+   "cod_ant": "C1",
+   "recorte": true
+  },
+  "141": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "142": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "143": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "144": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "145": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "146": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "147": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "148": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "149": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "150": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "151": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "152": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "153": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "154": {
+   "de": "novo",
+   "palito": 293
+  },
+  "155": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "156": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "157": {
+   "de": "novo",
+   "palito": 93
+  },
+  "158": {
+   "de": "novo",
+   "palito": 55
+  },
+  "159": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "160": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "161": {
+   "de": "novo",
+   "palito": 56
+  },
+  "162": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "163": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "164": {
+   "de": "novo",
+   "palito": 57
+  },
+  "165": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "166": {
+   "de": "antiga",
+   "cod_ant": "B3",
+   "recorte": true
+  },
+  "167": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "168": {
+   "de": "novo",
+   "palito": 58
+  },
+  "169": {
+   "de": "antiga",
+   "cod_ant": "B3",
+   "recorte": true
+  },
+  "170": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "171": {
+   "de": "novo",
+   "palito": 59
+  },
+  "172": {
+   "de": "novo",
+   "palito": 73
+  },
+  "173": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "174": {
+   "de": "novo",
+   "palito": 60
+  },
+  "175": {
+   "de": "novo",
+   "palito": 94
+  },
+  "176": {
+   "de": "novo",
+   "palito": 257
+  },
+  "177": {
+   "de": "antiga",
+   "cod_ant": "B6",
+   "recorte": true
+  },
+  "178": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "179": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "180": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "181": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "182": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "183": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "184": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "185": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "186": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "187": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "188": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "189": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "190": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "191": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "192": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "193": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "194": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "195": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "196": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "197": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "198": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "199": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "200": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "201": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "202": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "203": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "204": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "205": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "206": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "207": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "208": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "209": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "210": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "211": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "212": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "213": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "214": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "215": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "216": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "217": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "218": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "219": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "220": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "221": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "222": {
+   "de": "antiga",
+   "cod_ant": "B6",
+   "recorte": true
+  },
+  "223": {
+   "de": "novo",
+   "palito": 258
+  },
+  "224": {
+   "de": "novo",
+   "palito": 259
+  },
+  "225": {
+   "de": "antiga",
+   "cod_ant": "B6",
+   "recorte": true
+  },
+  "226": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "227": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "228": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "229": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "230": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "231": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "232": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "233": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "234": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "235": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "236": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "237": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "238": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "239": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "240": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "241": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "242": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "243": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "244": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "245": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "246": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "247": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "248": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "249": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "250": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "251": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "252": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "253": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "254": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "255": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "256": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "257": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "258": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "259": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "260": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "261": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "262": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "263": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "264": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "265": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "266": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "267": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "268": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "269": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "270": {
+   "de": "antiga",
+   "cod_ant": "B6",
+   "recorte": true
+  },
+  "271": {
+   "de": "novo",
+   "palito": 260
+  },
+  "272": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "273": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "274": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "275": {
+   "de": "antiga",
+   "cod_ant": "B1",
+   "recorte": false
+  },
+  "276": {
+   "de": "novo",
+   "palito": 294
+  },
+  "277": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "278": {
+   "de": "novo",
+   "palito": 1
+  },
+  "279": {
+   "de": "novo",
+   "palito": 48
+  },
+  "280": {
+   "de": "novo",
+   "palito": 2
+  },
+  "281": {
+   "de": "novo",
+   "palito": 3
+  },
+  "282": {
+   "de": "novo",
+   "palito": 4
+  },
+  "283": {
+   "de": "novo",
+   "palito": 5
+  },
+  "284": {
+   "de": "novo",
+   "palito": 6
+  },
+  "285": {
+   "de": "novo",
+   "palito": 7
+  },
+  "286": {
+   "de": "novo",
+   "palito": 8
+  },
+  "287": {
+   "de": "novo",
+   "palito": 9
+  },
+  "288": {
+   "de": "novo",
+   "palito": 10
+  },
+  "289": {
+   "de": "antiga",
+   "cod_ant": "B4",
+   "recorte": false
+  },
+  "290": {
+   "de": "antiga",
+   "cod_ant": "C8",
+   "recorte": true
+  },
+  "291": {
+   "de": "antiga",
+   "cod_ant": "X1",
+   "recorte": true
+  },
+  "292": {
+   "de": "antiga",
+   "cod_ant": "M1",
+   "recorte": true
+  },
+  "293": {
+   "de": "novo",
+   "palito": 295
+  },
+  "294": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "295": {
+   "de": "novo",
+   "palito": 298
+  },
+  "296": {
+   "de": "novo",
+   "palito": 95
+  },
+  "297": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "298": {
+   "de": "novo",
+   "palito": 61
+  },
+  "299": {
+   "de": "novo",
+   "palito": 74
+  },
+  "300": {
+   "de": "antiga",
+   "cod_ant": "D3",
+   "recorte": true
+  },
+  "301": {
+   "de": "novo",
+   "palito": 62
+  },
+  "302": {
+   "de": "novo",
+   "palito": 75
+  },
+  "303": {
+   "de": "novo",
+   "palito": 216
+  },
+  "304": {
+   "de": "novo",
+   "palito": 63
+  },
+  "305": {
+   "de": "novo",
+   "palito": 76
+  },
+  "306": {
+   "de": "novo",
+   "palito": 64
+  },
+  "307": {
+   "de": "novo",
+   "palito": 217
+  },
+  "308": {
+   "de": "novo",
+   "palito": 77
+  },
+  "309": {
+   "de": "novo",
+   "palito": 65
+  },
+  "310": {
+   "de": "novo",
+   "palito": 218
+  },
+  "311": {
+   "de": "novo",
+   "palito": 78
+  },
+  "312": {
+   "de": "novo",
+   "palito": 66
+  },
+  "313": {
+   "de": "novo",
+   "palito": 219
+  },
+  "314": {
+   "de": "novo",
+   "palito": 96
+  },
+  "315": {
+   "de": "novo",
+   "palito": 213
+  },
+  "316": {
+   "de": "novo",
+   "palito": 11
+  },
+  "317": {
+   "de": "novo",
+   "palito": 12
+  },
+  "318": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "319": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "320": {
+   "de": "novo",
+   "palito": 13
+  },
+  "321": {
+   "de": "novo",
+   "palito": 215
+  },
+  "322": {
+   "de": "novo",
+   "palito": 14
+  },
+  "323": {
+   "de": "novo",
+   "palito": 15
+  },
+  "324": {
+   "de": "novo",
+   "palito": 16
+  },
+  "325": {
+   "de": "novo",
+   "palito": 17
+  },
+  "326": {
+   "de": "novo",
+   "palito": 18
+  },
+  "327": {
+   "de": "novo",
+   "palito": 19
+  },
+  "328": {
+   "de": "novo",
+   "palito": 20
+  },
+  "329": {
+   "de": "novo",
+   "palito": 21
+  },
+  "330": {
+   "de": "novo",
+   "palito": 22
+  },
+  "331": {
+   "de": "novo",
+   "palito": 23
+  },
+  "332": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "333": {
+   "de": "novo",
+   "palito": 24
+  },
+  "334": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "335": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "336": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "337": {
+   "de": "novo",
+   "palito": 97
+  },
+  "338": {
+   "de": "novo",
+   "palito": 228
+  },
+  "339": {
+   "de": "novo",
+   "palito": 229
+  },
+  "340": {
+   "de": "novo",
+   "palito": 79
+  },
+  "341": {
+   "de": "novo",
+   "palito": 230
+  },
+  "342": {
+   "de": "novo",
+   "palito": 231
+  },
+  "343": {
+   "de": "novo",
+   "palito": 80
+  },
+  "344": {
+   "de": "novo",
+   "palito": 232
+  },
+  "345": {
+   "de": "novo",
+   "palito": 233
+  },
+  "346": {
+   "de": "novo",
+   "palito": 81
+  },
+  "347": {
+   "de": "novo",
+   "palito": 234
+  },
+  "348": {
+   "de": "novo",
+   "palito": 235
+  },
+  "349": {
+   "de": "novo",
+   "palito": 82
+  },
+  "350": {
+   "de": "novo",
+   "palito": 236
+  },
+  "351": {
+   "de": "novo",
+   "palito": 237
+  },
+  "352": {
+   "de": "novo",
+   "palito": 83
+  },
+  "353": {
+   "de": "novo",
+   "palito": 238
+  },
+  "354": {
+   "de": "novo",
+   "palito": 239
+  },
+  "355": {
+   "de": "novo",
+   "palito": 98
+  },
+  "356": {
+   "de": "antiga",
+   "cod_ant": "B11",
+   "recorte": false
+  },
+  "357": {
+   "de": "novo",
+   "palito": 25
+  },
+  "358": {
+   "de": "novo",
+   "palito": 26
+  },
+  "359": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "360": {
+   "de": "novo",
+   "palito": 27
+  },
+  "361": {
+   "de": "novo",
+   "palito": 296
+  },
+  "362": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "363": {
+   "de": "antiga",
+   "cod_ant": "C1",
+   "recorte": true
+  },
+  "364": {
+   "de": "novo",
+   "palito": 28
+  },
+  "365": {
+   "de": "novo",
+   "palito": 29
+  },
+  "366": {
+   "de": "novo",
+   "palito": 30
+  },
+  "367": {
+   "de": "novo",
+   "palito": 31
+  },
+  "368": {
+   "de": "novo",
+   "palito": 32
+  },
+  "369": {
+   "de": "novo",
+   "palito": 33
+  },
+  "370": {
+   "de": "novo",
+   "palito": 34
+  },
+  "371": {
+   "de": "novo",
+   "palito": 35
+  },
+  "372": {
+   "de": "novo",
+   "palito": 36
+  },
+  "373": {
+   "de": "novo",
+   "palito": 37
+  },
+  "374": {
+   "de": "novo",
+   "palito": 38
+  },
+  "375": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "376": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "377": {
+   "de": "novo",
+   "palito": 297
+  },
+  "378": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "379": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "380": {
+   "de": "novo",
+   "palito": 99
+  },
+  "381": {
+   "de": "novo",
+   "palito": 67
+  },
+  "382": {
+   "de": "novo",
+   "palito": 220
+  },
+  "383": {
+   "de": "novo",
+   "palito": 84
+  },
+  "384": {
+   "de": "novo",
+   "palito": 68
+  },
+  "385": {
+   "de": "novo",
+   "palito": 221
+  },
+  "386": {
+   "de": "novo",
+   "palito": 85
+  },
+  "387": {
+   "de": "novo",
+   "palito": 69
+  },
+  "388": {
+   "de": "novo",
+   "palito": 222
+  },
+  "389": {
+   "de": "novo",
+   "palito": 86
+  },
+  "390": {
+   "de": "novo",
+   "palito": 223
+  },
+  "391": {
+   "de": "novo",
+   "palito": 70
+  },
+  "392": {
+   "de": "novo",
+   "palito": 87
+  },
+  "393": {
+   "de": "novo",
+   "palito": 224
+  },
+  "394": {
+   "de": "novo",
+   "palito": 71
+  },
+  "395": {
+   "de": "novo",
+   "palito": 88
+  },
+  "396": {
+   "de": "novo",
+   "palito": 225
+  },
+  "397": {
+   "de": "novo",
+   "palito": 72
+  },
+  "398": {
+   "de": "novo",
+   "palito": 100
+  },
+  "399": {
+   "de": "novo",
+   "palito": 261
+  },
+  "400": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "401": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "402": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "403": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "404": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "405": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "406": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "407": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "408": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "409": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "410": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "411": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "412": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "413": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "414": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "415": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "416": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "417": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "418": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "419": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "420": {
+   "de": "antiga",
+   "cod_ant": "C6",
+   "recorte": false
+  },
+  "421": {
+   "de": "antiga",
+   "cod_ant": "C2",
+   "recorte": true
+  },
+  "422": {
+   "de": "antiga",
+   "cod_ant": "C2",
+   "recorte": true
+  },
+  "423": {
+   "de": "antiga",
+   "cod_ant": "C2",
+   "recorte": true
+  },
+  "424": {
+   "de": "antiga",
+   "cod_ant": "C2",
+   "recorte": true
+  },
+  "425": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "426": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "427": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "428": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "429": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "430": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "431": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "432": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "433": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "434": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "435": {
+   "de": "novo",
+   "palito": 255
+  },
+  "436": {
+   "de": "novo",
+   "palito": 256
+  },
+  "437": {
+   "de": "novo",
+   "palito": 257
+  },
+  "438": {
+   "de": "antiga",
+   "cod_ant": "C3",
+   "recorte": true
+  },
+  "439": {
+   "de": "antiga",
+   "cod_ant": "M3",
+   "recorte": true
+  },
+  "440": {
+   "de": "antiga",
+   "cod_ant": "C4",
+   "recorte": true
+  },
+  "441": {
+   "de": "novo",
+   "palito": 258
+  },
+  "442": {
+   "de": "novo",
+   "palito": 259
+  },
+  "443": {
+   "de": "novo",
+   "palito": 260
+  },
+  "444": {
+   "de": "antiga",
+   "cod_ant": "M2",
+   "recorte": true
+  },
+  "445": {
+   "de": "antiga",
+   "cod_ant": "D2",
+   "recorte": true
+  },
+  "446": {
+   "de": "novo",
+   "palito": 262
+  },
+  "447": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "448": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "449": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "450": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "451": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "452": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "453": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "454": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "455": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "456": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "457": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "458": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "459": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "460": {
+   "de": "antiga",
+   "cod_ant": "C5",
+   "recorte": true
+  },
+  "461": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "462": {
+   "de": "antiga",
+   "cod_ant": "T2",
+   "recorte": true
+  },
+  "463": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "464": {
+   "de": "antiga",
+   "cod_ant": "B9",
+   "recorte": true
+  },
+  "465": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "466": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "467": {
+   "de": "antiga",
+   "cod_ant": "B9",
+   "recorte": true
+  },
+  "468": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "469": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "470": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "471": {
+   "de": "novo",
+   "palito": 208
+  },
+  "472": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "473": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "474": {
+   "de": "novo",
+   "palito": 209
+  },
+  "475": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "476": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "477": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "478": {
+   "de": "novo",
+   "palito": 291
+  },
+  "479": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "480": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "481": {
+   "de": "novo",
+   "palito": 292
+  },
+  "482": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "483": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "484": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "485": {
+   "de": "novo",
+   "palito": 292
+  },
+  "486": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "487": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "488": {
+   "de": "novo",
+   "palito": 293
+  },
+  "489": {
+   "de": "antiga",
+   "cod_ant": "B2",
+   "recorte": true
+  },
+  "490": {
+   "de": "antiga",
+   "cod_ant": "B2",
+   "recorte": true
+  },
+  "491": {
+   "de": "antiga",
+   "cod_ant": "B2",
+   "recorte": true
+  },
+  "492": {
+   "de": "novo",
+   "palito": 293
+  },
+  "493": {
+   "de": "antiga",
+   "cod_ant": "B2",
+   "recorte": true
+  },
+  "494": {
+   "de": "novo",
+   "palito": 147
+  },
+  "495": {
+   "de": "novo",
+   "palito": 294
+  },
+  "496": {
+   "de": "novo",
+   "palito": 148
+  },
+  "497": {
+   "de": "novo",
+   "palito": 149
+  },
+  "498": {
+   "de": "novo",
+   "palito": 150
+  },
+  "499": {
+   "de": "novo",
+   "palito": 294
+  },
+  "500": {
+   "de": "novo",
+   "palito": 151
+  },
+  "501": {
+   "de": "novo",
+   "palito": 152
+  },
+  "502": {
+   "de": "novo",
+   "palito": 295
+  },
+  "503": {
+   "de": "novo",
+   "palito": 153
+  },
+  "504": {
+   "de": "novo",
+   "palito": 154
+  },
+  "505": {
+   "de": "novo",
+   "palito": 155
+  },
+  "506": {
+   "de": "novo",
+   "palito": 295
+  },
+  "507": {
+   "de": "novo",
+   "palito": 156
+  },
+  "508": {
+   "de": "novo",
+   "palito": 157
+  },
+  "509": {
+   "de": "novo",
+   "palito": 296
+  },
+  "510": {
+   "de": "novo",
+   "palito": 158
+  },
+  "511": {
+   "de": "novo",
+   "palito": 159
+  },
+  "512": {
+   "de": "novo",
+   "palito": 160
+  },
+  "513": {
+   "de": "novo",
+   "palito": 296
+  },
+  "514": {
+   "de": "novo",
+   "palito": 161
+  },
+  "515": {
+   "de": "novo",
+   "palito": 162
+  },
+  "516": {
+   "de": "novo",
+   "palito": 297
+  },
+  "517": {
+   "de": "novo",
+   "palito": 163
+  },
+  "518": {
+   "de": "novo",
+   "palito": 164
+  },
+  "519": {
+   "de": "novo",
+   "palito": 165
+  },
+  "520": {
+   "de": "novo",
+   "palito": 297
+  },
+  "521": {
+   "de": "novo",
+   "palito": 166
+  },
+  "522": {
+   "de": "novo",
+   "palito": 167
+  },
+  "523": {
+   "de": "novo",
+   "palito": 298
+  },
+  "524": {
+   "de": "novo",
+   "palito": 168
+  },
+  "525": {
+   "de": "novo",
+   "palito": 169
+  },
+  "526": {
+   "de": "novo",
+   "palito": 170
+  },
+  "527": {
+   "de": "novo",
+   "palito": 298
+  },
+  "528": {
+   "de": "novo",
+   "palito": 171
+  },
+  "529": {
+   "de": "novo",
+   "palito": 172
+  },
+  "530": {
+   "de": "novo",
+   "palito": 299
+  },
+  "531": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "532": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "533": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "534": {
+   "de": "antiga",
+   "cod_ant": "B8",
+   "recorte": true
+  },
+  "535": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "536": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "537": {
+   "de": "antiga",
+   "cod_ant": "B8",
+   "recorte": true
+  },
+  "538": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "539": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "540": {
+   "de": "antiga",
+   "cod_ant": "E1",
+   "recorte": true
+  },
+  "541": {
+   "de": "novo",
+   "palito": 240
+  },
+  "542": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "543": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "544": {
+   "de": "novo",
+   "palito": 241
+  },
+  "545": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "546": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "547": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "548": {
+   "de": "novo",
+   "palito": 242
+  },
+  "549": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "550": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "551": {
+   "de": "novo",
+   "palito": 243
+  },
+  "552": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "553": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "554": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "555": {
+   "de": "novo",
+   "palito": 244
+  },
+  "556": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "557": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "558": {
+   "de": "novo",
+   "palito": 245
+  },
+  "559": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "560": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "561": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "562": {
+   "de": "novo",
+   "palito": 246
+  },
+  "563": {
+   "de": "antiga",
+   "cod_ant": "T1",
+   "recorte": true
+  },
+  "564": {
+   "de": "novo",
+   "palito": 101
+  },
+  "565": {
+   "de": "novo",
+   "palito": 247
+  },
+  "566": {
+   "de": "novo",
+   "palito": 102
+  },
+  "567": {
+   "de": "novo",
+   "palito": 103
+  },
+  "568": {
+   "de": "novo",
+   "palito": 104
+  },
+  "569": {
+   "de": "novo",
+   "palito": 248
+  },
+  "570": {
+   "de": "novo",
+   "palito": 105
+  },
+  "571": {
+   "de": "novo",
+   "palito": 106
+  },
+  "572": {
+   "de": "novo",
+   "palito": 249
+  },
+  "573": {
+   "de": "novo",
+   "palito": 107
+  },
+  "574": {
+   "de": "novo",
+   "palito": 108
+  },
+  "575": {
+   "de": "novo",
+   "palito": 109
+  },
+  "576": {
+   "de": "novo",
+   "palito": 250
+  },
+  "577": {
+   "de": "novo",
+   "palito": 110
+  },
+  "578": {
+   "de": "novo",
+   "palito": 111
+  },
+  "579": {
+   "de": "novo",
+   "palito": 251
+  },
+  "580": {
+   "de": "novo",
+   "palito": 112
+  },
+  "581": {
+   "de": "novo",
+   "palito": 113
+  },
+  "582": {
+   "de": "novo",
+   "palito": 114
+  },
+  "583": {
+   "de": "novo",
+   "palito": 252
+  },
+  "584": {
+   "de": "novo",
+   "palito": 115
+  },
+  "585": {
+   "de": "novo",
+   "palito": 116
+  },
+  "586": {
+   "de": "novo",
+   "palito": 253
+  },
+  "587": {
+   "de": "novo",
+   "palito": 173
+  },
+  "588": {
+   "de": "novo",
+   "palito": 174
+  },
+  "589": {
+   "de": "novo",
+   "palito": 175
+  },
+  "590": {
+   "de": "novo",
+   "palito": 299
+  },
+  "591": {
+   "de": "novo",
+   "palito": 176
+  },
+  "592": {
+   "de": "novo",
+   "palito": 177
+  },
+  "593": {
+   "de": "novo",
+   "palito": 300
+  },
+  "594": {
+   "de": "novo",
+   "palito": 178
+  },
+  "595": {
+   "de": "novo",
+   "palito": 179
+  },
+  "596": {
+   "de": "novo",
+   "palito": 180
+  },
+  "597": {
+   "de": "novo",
+   "palito": 300
+  },
+  "598": {
+   "de": "novo",
+   "palito": 181
+  },
+  "599": {
+   "de": "novo",
+   "palito": 182
+  },
+  "600": {
+   "de": "novo",
+   "palito": 301
+  },
+  "601": {
+   "de": "novo",
+   "palito": 183
+  },
+  "602": {
+   "de": "novo",
+   "palito": 184
+  },
+  "603": {
+   "de": "novo",
+   "palito": 185
+  },
+  "604": {
+   "de": "novo",
+   "palito": 301
+  },
+  "605": {
+   "de": "novo",
+   "palito": 186
+  },
+  "606": {
+   "de": "novo",
+   "palito": 187
+  },
+  "607": {
+   "de": "novo",
+   "palito": 302
+  },
+  "608": {
+   "de": "novo",
+   "palito": 188
+  },
+  "609": {
+   "de": "novo",
+   "palito": 189
+  },
+  "610": {
+   "de": "novo",
+   "palito": 190
+  },
+  "611": {
+   "de": "novo",
+   "palito": 302
+  },
+  "612": {
+   "de": "novo",
+   "palito": 191
+  },
+  "613": {
+   "de": "novo",
+   "palito": 192
+  },
+  "614": {
+   "de": "novo",
+   "palito": 303
+  },
+  "615": {
+   "de": "novo",
+   "palito": 193
+  },
+  "616": {
+   "de": "novo",
+   "palito": 194
+  },
+  "617": {
+   "de": "novo",
+   "palito": 195
+  },
+  "618": {
+   "de": "novo",
+   "palito": 303
+  },
+  "619": {
+   "de": "novo",
+   "palito": 196
+  },
+  "620": {
+   "de": "novo",
+   "palito": 197
+  },
+  "621": {
+   "de": "novo",
+   "palito": 304
+  },
+  "622": {
+   "de": "novo",
+   "palito": 198
+  },
+  "623": {
+   "de": "novo",
+   "palito": 199
+  },
+  "624": {
+   "de": "novo",
+   "palito": 200
+  },
+  "625": {
+   "de": "novo",
+   "palito": 304
+  },
+  "626": {
+   "de": "novo",
+   "palito": 201
+  },
+  "627": {
+   "de": "novo",
+   "palito": 202
+  },
+  "628": {
+   "de": "novo",
+   "palito": 305
+  },
+  "629": {
+   "de": "novo",
+   "palito": 203
+  },
+  "630": {
+   "de": "novo",
+   "palito": 204
+  },
+  "631": {
+   "de": "novo",
+   "palito": 205
+  },
+  "632": {
+   "de": "novo",
+   "palito": 305
+  },
+  "633": {
+   "de": "novo",
+   "palito": 206
+  },
+  "634": {
+   "de": "novo",
+   "palito": 207
+  },
+  "635": {
+   "de": "novo",
+   "palito": 306
+  },
+  "636": {
+   "de": "novo",
+   "palito": 117
+  },
+  "637": {
+   "de": "novo",
+   "palito": 118
+  },
+  "638": {
+   "de": "novo",
+   "palito": 119
+  },
+  "639": {
+   "de": "novo",
+   "palito": 254
+  },
+  "640": {
+   "de": "novo",
+   "palito": 120
+  },
+  "641": {
+   "de": "novo",
+   "palito": 121
+  },
+  "642": {
+   "de": "novo",
+   "palito": 286
+  },
+  "643": {
+   "de": "novo",
+   "palito": 122
+  },
+  "644": {
+   "de": "novo",
+   "palito": 123
+  },
+  "645": {
+   "de": "novo",
+   "palito": 124
+  },
+  "646": {
+   "de": "novo",
+   "palito": 286
+  },
+  "647": {
+   "de": "novo",
+   "palito": 125
+  },
+  "648": {
+   "de": "novo",
+   "palito": 126
+  },
+  "649": {
+   "de": "novo",
+   "palito": 287
+  },
+  "650": {
+   "de": "novo",
+   "palito": 127
+  },
+  "651": {
+   "de": "novo",
+   "palito": 128
+  },
+  "652": {
+   "de": "novo",
+   "palito": 129
+  },
+  "653": {
+   "de": "novo",
+   "palito": 287
+  },
+  "654": {
+   "de": "novo",
+   "palito": 130
+  },
+  "655": {
+   "de": "novo",
+   "palito": 131
+  },
+  "656": {
+   "de": "novo",
+   "palito": 288
+  },
+  "657": {
+   "de": "novo",
+   "palito": 132
+  },
+  "658": {
+   "de": "novo",
+   "palito": 133
+  },
+  "659": {
+   "de": "novo",
+   "palito": 134
+  },
+  "660": {
+   "de": "novo",
+   "palito": 288
+  },
+  "661": {
+   "de": "novo",
+   "palito": 135
+  },
+  "662": {
+   "de": "novo",
+   "palito": 136
+  },
+  "663": {
+   "de": "novo",
+   "palito": 289
+  },
+  "664": {
+   "de": "novo",
+   "palito": 137
+  },
+  "665": {
+   "de": "novo",
+   "palito": 138
+  },
+  "666": {
+   "de": "novo",
+   "palito": 139
+  },
+  "667": {
+   "de": "novo",
+   "palito": 289
+  },
+  "668": {
+   "de": "novo",
+   "palito": 140
+  },
+  "669": {
+   "de": "novo",
+   "palito": 141
+  },
+  "670": {
+   "de": "novo",
+   "palito": 290
+  },
+  "671": {
+   "de": "novo",
+   "palito": 142
+  },
+  "672": {
+   "de": "novo",
+   "palito": 143
+  },
+  "673": {
+   "de": "novo",
+   "palito": 144
+  },
+  "674": {
+   "de": "novo",
+   "palito": 290
+  },
+  "675": {
+   "de": "novo",
+   "palito": 145
+  },
+  "676": {
+   "de": "novo",
+   "palito": 146
+  },
+  "677": {
+   "de": "novo",
+   "palito": 291
+  },
+  "678": {
+   "de": "antiga",
+   "cod_ant": "B14",
+   "recorte": false
+  },
+  "679": {
+   "de": "antiga",
+   "cod_ant": "B14",
+   "recorte": false
+  },
+  "680": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": false
+  },
+  "681": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": false
+  },
+  "682": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": false
+  },
+  "683": {
+   "de": "antiga",
+   "cod_ant": "K1",
+   "recorte": false
+  },
+  "684": {
+   "de": "novo",
+   "palito": 101
+  },
+  "685": {
+   "de": "novo",
+   "palito": 102
+  },
+  "686": {
+   "de": "novo",
+   "palito": 103
+  },
+  "687": {
+   "de": "novo",
+   "palito": 104
+  },
+  "688": {
+   "de": "novo",
+   "palito": 105
+  },
+  "689": {
+   "de": "novo",
+   "palito": 106
+  },
+  "690": {
+   "de": "novo",
+   "palito": 107
+  },
+  "691": {
+   "de": "novo",
+   "palito": 108
+  },
+  "692": {
+   "de": "novo",
+   "palito": 261
+  },
+  "693": {
+   "de": "novo",
+   "palito": 262
+  },
+  "694": {
+   "de": "novo",
+   "palito": 263
+  },
+  "695": {
+   "de": "novo",
+   "palito": 263
+  },
+  "696": {
+   "de": "novo",
+   "palito": 264
+  },
+  "697": {
+   "de": "novo",
+   "palito": 264
+  },
+  "698": {
+   "de": "novo",
+   "palito": 265
+  },
+  "699": {
+   "de": "novo",
+   "palito": 265
+  },
+  "700": {
+   "de": "novo",
+   "palito": 266
+  },
+  "701": {
+   "de": "novo",
+   "palito": 266
+  },
+  "702": {
+   "de": "novo",
+   "palito": 267
+  },
+  "703": {
+   "de": "novo",
+   "palito": 267
+  },
+  "704": {
+   "de": "novo",
+   "palito": 268
+  },
+  "705": {
+   "de": "novo",
+   "palito": 268
+  },
+  "706": {
+   "de": "novo",
+   "palito": 269
+  },
+  "707": {
+   "de": "novo",
+   "palito": 269
+  },
+  "708": {
+   "de": "novo",
+   "palito": 270
+  },
+  "709": {
+   "de": "novo",
+   "palito": 270
+  },
+  "710": {
+   "de": "novo",
+   "palito": 271
+  },
+  "711": {
+   "de": "novo",
+   "palito": 271
+  },
+  "712": {
+   "de": "novo",
+   "palito": 272
+  },
+  "713": {
+   "de": "novo",
+   "palito": 272
+  },
+  "714": {
+   "de": "novo",
+   "palito": 273
+  },
+  "715": {
+   "de": "novo",
+   "palito": 273
+  },
+  "716": {
+   "de": "novo",
+   "palito": 109
+  },
+  "717": {
+   "de": "novo",
+   "palito": 110
+  },
+  "718": {
+   "de": "novo",
+   "palito": 111
+  },
+  "719": {
+   "de": "novo",
+   "palito": 112
+  },
+  "720": {
+   "de": "novo",
+   "palito": 113
+  },
+  "721": {
+   "de": "novo",
+   "palito": 114
+  },
+  "722": {
+   "de": "novo",
+   "palito": 115
+  },
+  "723": {
+   "de": "novo",
+   "palito": 116
+  },
+  "724": {
+   "de": "novo",
+   "palito": 210
+  },
+  "725": {
+   "de": "novo",
+   "palito": 39
+  },
+  "726": {
+   "de": "novo",
+   "palito": 208
+  },
+  "727": {
+   "de": "novo",
+   "palito": 211
+  },
+  "728": {
+   "de": "novo",
+   "palito": 40
+  },
+  "729": {
+   "de": "novo",
+   "palito": 209
+  },
+  "730": {
+   "de": "novo",
+   "palito": 240
+  },
+  "731": {
+   "de": "novo",
+   "palito": 241
+  },
+  "732": {
+   "de": "novo",
+   "palito": 242
+  },
+  "733": {
+   "de": "novo",
+   "palito": 243
+  },
+  "734": {
+   "de": "novo",
+   "palito": 244
+  },
+  "735": {
+   "de": "antiga",
+   "cod_ant": "B5",
+   "recorte": true
+  },
+  "736": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "737": {
+   "de": "antiga",
+   "cod_ant": "B5",
+   "recorte": true
+  },
+  "738": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "739": {
+   "de": "novo",
+   "palito": 210
+  },
+  "740": {
+   "de": "novo",
+   "palito": 41
+  },
+  "741": {
+   "de": "novo",
+   "palito": 212
+  },
+  "742": {
+   "de": "novo",
+   "palito": 211
+  },
+  "743": {
+   "de": "novo",
+   "palito": 42
+  },
+  "744": {
+   "de": "novo",
+   "palito": 213
+  },
+  "745": {
+   "de": "novo",
+   "palito": 245
+  },
+  "746": {
+   "de": "novo",
+   "palito": 246
+  },
+  "747": {
+   "de": "novo",
+   "palito": 247
+  },
+  "748": {
+   "de": "novo",
+   "palito": 248
+  },
+  "749": {
+   "de": "novo",
+   "palito": 249
+  },
+  "750": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "751": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "752": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "753": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "754": {
+   "de": "novo",
+   "palito": 43
+  },
+  "755": {
+   "de": "novo",
+   "palito": 44
+  },
+  "756": {
+   "de": "novo",
+   "palito": 45
+  },
+  "757": {
+   "de": "novo",
+   "palito": 46
+  },
+  "758": {
+   "de": "novo",
+   "palito": 250
+  },
+  "759": {
+   "de": "novo",
+   "palito": 251
+  },
+  "760": {
+   "de": "novo",
+   "palito": 252
+  },
+  "761": {
+   "de": "novo",
+   "palito": 253
+  },
+  "762": {
+   "de": "novo",
+   "palito": 254
+  },
+  "763": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "764": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "765": {
+   "de": "antiga",
+   "cod_ant": "D1",
+   "recorte": true
+  },
+  "766": {
+   "de": "antiga",
+   "cod_ant": "P1",
+   "recorte": true
+  },
+  "767": {
+   "de": "novo",
+   "palito": 117
+  },
+  "768": {
+   "de": "novo",
+   "palito": 118
+  },
+  "769": {
+   "de": "novo",
+   "palito": 119
+  },
+  "770": {
+   "de": "novo",
+   "palito": 120
+  },
+  "771": {
+   "de": "novo",
+   "palito": 121
+  },
+  "772": {
+   "de": "novo",
+   "palito": 122
+  },
+  "773": {
+   "de": "novo",
+   "palito": 123
+  },
+  "774": {
+   "de": "novo",
+   "palito": 124
+  },
+  "775": {
+   "de": "novo",
+   "palito": 274
+  },
+  "776": {
+   "de": "novo",
+   "palito": 274
+  },
+  "777": {
+   "de": "novo",
+   "palito": 275
+  },
+  "778": {
+   "de": "novo",
+   "palito": 275
+  },
+  "779": {
+   "de": "novo",
+   "palito": 276
+  },
+  "780": {
+   "de": "novo",
+   "palito": 276
+  },
+  "781": {
+   "de": "novo",
+   "palito": 277
+  },
+  "782": {
+   "de": "novo",
+   "palito": 277
+  },
+  "783": {
+   "de": "novo",
+   "palito": 278
+  },
+  "784": {
+   "de": "novo",
+   "palito": 278
+  },
+  "785": {
+   "de": "novo",
+   "palito": 279
+  },
+  "786": {
+   "de": "novo",
+   "palito": 279
+  },
+  "787": {
+   "de": "novo",
+   "palito": 280
+  },
+  "788": {
+   "de": "novo",
+   "palito": 280
+  },
+  "789": {
+   "de": "novo",
+   "palito": 281
+  },
+  "790": {
+   "de": "novo",
+   "palito": 281
+  },
+  "791": {
+   "de": "novo",
+   "palito": 282
+  },
+  "792": {
+   "de": "novo",
+   "palito": 282
+  },
+  "793": {
+   "de": "novo",
+   "palito": 283
+  },
+  "794": {
+   "de": "novo",
+   "palito": 283
+  },
+  "795": {
+   "de": "novo",
+   "palito": 284
+  },
+  "796": {
+   "de": "novo",
+   "palito": 284
+  },
+  "797": {
+   "de": "novo",
+   "palito": 285
+  },
+  "798": {
+   "de": "novo",
+   "palito": 285
+  },
+  "799": {
+   "de": "novo",
+   "palito": 125
+  },
+  "800": {
+   "de": "novo",
+   "palito": 126
+  },
+  "801": {
+   "de": "novo",
+   "palito": 127
+  },
+  "802": {
+   "de": "novo",
+   "palito": 128
+  },
+  "803": {
+   "de": "novo",
+   "palito": 129
+  },
+  "804": {
+   "de": "novo",
+   "palito": 130
+  },
+  "805": {
+   "de": "novo",
+   "palito": 131
+  },
+  "806": {
+   "de": "novo",
+   "palito": 132
+  }
+ },
+ "montinhos": [
+  {
+   "cod_ant": "B1",
+   "L_ant": 100.0,
+   "nome_ant": "Banzo",
+   "tem": 44,
+   "usa": 44,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B1"
+     ],
+     "qtd": 44,
+     "sem_corte": true
+    }
+   ]
+  },
+  {
+   "cod_ant": "B2",
+   "L_ant": 99.3,
+   "nome_ant": "Banzo",
+   "tem": 4,
+   "usa": 4,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "T5"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B3",
+   "L_ant": 96.7,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "M6"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B4",
+   "L_ant": 92.0,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B4"
+     ],
+     "qtd": 2,
+     "sem_corte": true
+    }
+   ]
+  },
+  {
+   "cod_ant": "B5",
+   "L_ant": 77.4,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "T6"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B6",
+   "L_ant": 64.3,
+   "nome_ant": "Banzo",
+   "tem": 4,
+   "usa": 4,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C11"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B7",
+   "L_ant": 64.2,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C11"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B8",
+   "L_ant": 62.6,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "X3"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B9",
+   "L_ant": 44.0,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "P3"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "B10",
+   "L_ant": 35.9,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 0,
+   "sobra": 2,
+   "vira": []
+  },
+  {
+   "cod_ant": "B11",
+   "L_ant": 33.3,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B11"
+     ],
+     "qtd": 2,
+     "sem_corte": true
+    }
+   ]
+  },
+  {
+   "cod_ant": "B12",
+   "L_ant": 32.6,
+   "nome_ant": "Banzo",
+   "tem": 4,
+   "usa": 0,
+   "sobra": 4,
+   "vira": []
+  },
+  {
+   "cod_ant": "B13",
+   "L_ant": 30.9,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 0,
+   "sobra": 2,
+   "vira": []
+  },
+  {
+   "cod_ant": "B14",
+   "L_ant": 30.0,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 2,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "K1"
+     ],
+     "qtd": 2,
+     "sem_corte": true
+    }
+   ]
+  },
+  {
+   "cod_ant": "B15",
+   "L_ant": 28.6,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 0,
+   "sobra": 2,
+   "vira": []
+  },
+  {
+   "cod_ant": "B16",
+   "L_ant": 23.5,
+   "nome_ant": "Banzo",
+   "tem": 2,
+   "usa": 0,
+   "sobra": 2,
+   "vira": []
+  },
+  {
+   "cod_ant": "D1",
+   "L_ant": 81.0,
+   "nome_ant": "Diagonal",
+   "tem": 12,
+   "usa": 12,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "P2"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "T6"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "D2",
+   "L_ant": 66.0,
+   "nome_ant": "Diagonal",
+   "tem": 12,
+   "usa": 12,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C6"
+     ],
+     "qtd": 10,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "C11"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "D3",
+   "L_ant": 56.1,
+   "nome_ant": "Diagonal",
+   "tem": 12,
+   "usa": 12,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "D6"
+     ],
+     "qtd": 12,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "M1",
+   "L_ant": 81.3,
+   "nome_ant": "Montante",
+   "tem": 6,
+   "usa": 6,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B21"
+     ],
+     "qtd": 6,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "M2",
+   "L_ant": 60.3,
+   "nome_ant": "Montante",
+   "tem": 12,
+   "usa": 12,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C10"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B25"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B26"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "M3",
+   "L_ant": 37.8,
+   "nome_ant": "Montante",
+   "tem": 12,
+   "usa": 12,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C13"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B27"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "M4",
+   "L_ant": 15.3,
+   "nome_ant": "Montante",
+   "tem": 12,
+   "usa": 0,
+   "sobra": 12,
+   "vira": []
+  },
+  {
+   "cod_ant": "C1",
+   "L_ant": 41.7,
+   "nome_ant": "Chapa de ligação",
+   "tem": 4,
+   "usa": 4,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B28"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "D6"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "C2",
+   "L_ant": 41.5,
+   "nome_ant": "Chapa de ligação",
+   "tem": 4,
+   "usa": 4,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C6"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "C3",
+   "L_ant": 40.0,
+   "nome_ant": "Chapa de ligação",
+   "tem": 8,
+   "usa": 8,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C14"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "C4",
+   "L_ant": 40.0,
+   "nome_ant": "Chapa de ligação",
+   "tem": 8,
+   "usa": 8,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C12"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "C5",
+   "L_ant": 40.0,
+   "nome_ant": "Chapa de ligação",
+   "tem": 8,
+   "usa": 8,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "B27"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "P3"
+     ],
+     "qtd": 4,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "C6",
+   "L_ant": 40.0,
+   "nome_ant": "Chapa de ligação",
+   "tem": 124,
+   "usa": 124,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "C6"
+     ],
+     "qtd": 124,
+     "sem_corte": true
+    }
+   ]
+  },
+  {
+   "cod_ant": "C7",
+   "L_ant": 35.1,
+   "nome_ant": "Chapa de ligação",
+   "tem": 8,
+   "usa": 0,
+   "sobra": 8,
+   "vira": []
+  },
+  {
+   "cod_ant": "C8",
+   "L_ant": 28.5,
+   "nome_ant": "Chapa de ligação",
+   "tem": 4,
+   "usa": 2,
+   "sobra": 2,
+   "vira": [
+    {
+     "novos": [
+      "B30"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "T1",
+   "L_ant": 90.0,
+   "nome_ant": "Transversina",
+   "tem": 16,
+   "usa": 16,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "X2"
+     ],
+     "qtd": 16,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "T2",
+   "L_ant": 70.0,
+   "nome_ant": "Transversina",
+   "tem": 20,
+   "usa": 20,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "P2"
+     ],
+     "qtd": 12,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B22"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "E1",
+   "L_ant": 90.0,
+   "nome_ant": "Escora superior",
+   "tem": 14,
+   "usa": 14,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "X2"
+     ],
+     "qtd": 8,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B19"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B20"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B21"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "X1",
+   "L_ant": 96.6,
+   "nome_ant": "Diagonal de contraventamento",
+   "tem": 14,
+   "usa": 14,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "M6"
+     ],
+     "qtd": 12,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "B18"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "K1",
+   "L_ant": 30.0,
+   "nome_ant": "Consolo",
+   "tem": 6,
+   "usa": 6,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "K1"
+     ],
+     "qtd": 4,
+     "sem_corte": true
+    },
+    {
+     "novos": [
+      "B29"
+     ],
+     "qtd": 2,
+     "sem_corte": false
+    }
+   ]
+  },
+  {
+   "cod_ant": "P1",
+   "L_ant": 74.0,
+   "nome_ant": "Espaçador provisório",
+   "tem": 16,
+   "usa": 16,
+   "sobra": 0,
+   "vira": [
+    {
+     "novos": [
+      "T5"
+     ],
+     "qtd": 10,
+     "sem_corte": false
+    },
+    {
+     "novos": [
+      "T4"
+     ],
+     "qtd": 6,
+     "sem_corte": false
+    }
+   ]
+  }
+ ],
+ "novas_de_palito": {
+  "B1": 38,
+  "T3": 8,
+  "B17": 2,
+  "D4": 24,
+  "M6": 16,
+  "M5": 12,
+  "X2": 46,
+  "T5": 26,
+  "E2": 35,
+  "T7": 4,
+  "B24": 2,
+  "B23": 2,
+  "D5": 24,
+  "T8": 15,
+  "C9": 8,
+  "C6": 54,
+  "X3": 26,
+  "T9": 16,
+  "E3": 14,
+  "P3": 2,
+  "T10": 4,
+  "D6": 10,
+  "B29": 6,
+  "B31": 2,
+  "C15": 32
+ },
+ "palitos_novos": 306
+}

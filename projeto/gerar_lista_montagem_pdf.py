@@ -50,7 +50,8 @@ def chip(x, y, cod, w=22):
 y = nova("Lista de montagem: o que entra em cada passo")
 txt = ("As peças já estão cortadas e numeradas. Esta lista diz, passo a passo, quais peças entram: número (escrito a lápis na peça), "
        "código (o nome do formato, igual ao do manual de corte) e tamanho. Os passos são os mesmos da aba Manual do site, "
-       "onde cada passo tem imagem. Os números e códigos não mudaram desde o manual de corte usado para cortar.")
+       "onde cada passo tem imagem. Antes de montar, use o plano de reaproveitamento: as peças da ponte antiga com o mesmo formato mantêm o código "
+       "(B1, B4, B11, C6, K1); as outras são recortadas ou cortadas de palito novo, e cada montinho fica com o código novo.")
 c.setFont("Helvetica", 9)
 for ln in simpleSplit(txt, "Helvetica", 9, PW - 2 * M): c.drawString(M, y, ln); y -= 11.5
 y -= 8

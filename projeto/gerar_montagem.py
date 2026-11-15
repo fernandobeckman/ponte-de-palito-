@@ -501,6 +501,26 @@ for cat in ORDEM_CAT:
         info = dados_corte(grupos_forma[k][0])
         for p in grupos_forma[k]: p["cod"] = cod
         tipos.append(dict(cod=cod, cat=cat, nome_cat=CAT[cat][1], qtd=len(grupos_forma[k]), **info))
+# ---------------------------------------------------------------- códigos herdados da ponte antiga
+# Já existem peças cortadas da ponte antiga (Parker, manual de 09/11). Peça nova com a mesma forma de uma antiga
+# fica com o mesmo código; as outras recebem códigos que não existiam, para não misturar montinhos.
+ARQ_ANT = os.path.join(D, "manual", "parker_montagem.json")
+if os.path.exists(ARQ_ANT):
+    ant = json.load(open(ARQ_ANT))["tipos"]
+    def forma_igual(t, a):
+        return (abs(t["L"] - a["L"]) <= .3 and abs(t["bordaA"] - a["bordaA"]) <= .3 and abs(t["bordaB"] - a["bordaB"]) <= .3
+                and sorted(t["esq"] + t["dir"]) == sorted(a["esq"] + a["dir"]) and len(t["esq"]) == len(a["esq"]))
+    tomados, troca = set(), {}
+    for t in tipos:
+        a = next((a for a in ant if a["cod"][0] == t["cod"][0] and a["cod"] not in tomados and forma_igual(t, a)), None)
+        if a: troca[t["cod"]] = a["cod"]; tomados.add(a["cod"])
+    prox = {}
+    for a in ant: prox[a["cod"][0]] = max(prox.get(a["cod"][0], 0), int(a["cod"][1:]))
+    for t in tipos:
+        if t["cod"] not in troca:
+            L0 = t["cod"][0]; prox[L0] = prox.get(L0, 0) + 1; troca[t["cod"]] = f"{L0}{prox[L0]}"
+    for t in tipos: t["herdado"] = t["cod"] in troca and troca[t["cod"]] in tomados; t["cod"] = troca[t["cod"]]
+    for p in pecas_todas: p["cod"] = troca[p["cod"]]
 for i, p in enumerate(pecas_todas): p["num"] = i + 1
 if TRAVA:
     difs = [p["nome"] for p in pecas_todas if p.pop("_trava", None) != p["num"]]
