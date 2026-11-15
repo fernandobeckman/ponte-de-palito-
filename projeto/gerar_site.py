@@ -59,7 +59,7 @@ body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important
 """
 
 def nav(atual):
-    itens = [("index.html", "Início"), ("manual.html", "Manual"), ("montagem.html", "Montagem 3D"), ("projeto.html", "Como foi calculada"), ("manual_de_corte.pdf", "Moldes (PDF)")]
+    itens = [("index.html", "Início"), ("manual.html", "Manual"), ("montagem.html", "Montagem 3D"), ("projeto.html", "Como foi calculada"), ("lista_de_montagem.pdf", "Lista de montagem (PDF)"), ("manual_de_corte.pdf", "Moldes (PDF)")]
     links = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == atual else ""}>{t}</a>' for h, t in itens)
     return f'<nav class="sitenav" aria-label="Páginas do site"><div class="in"><a class="marca" href="index.html">Ponte de Palito</a>{links}</div></nav>'
 
@@ -85,6 +85,7 @@ open(os.path.join(OUT, "projeto.html"), "w").write(embrulha(pp, "projeto.html", 
     "Cálculo da ponte de palito: geometria escolhida, esforços em cada barra e fator de segurança."))
 shutil.copy(os.path.join(D, "manual", "manual_de_corte.pdf"), os.path.join(OUT, "manual_de_corte.pdf"))
 shutil.copy(os.path.join(D, "manual", "gabarito_trelica_1-1.pdf"), os.path.join(OUT, "gabarito_trelica_1-1.pdf"))
+shutil.copy(os.path.join(D, "manual", "lista_de_montagem.pdf"), os.path.join(OUT, "lista_de_montagem.pdf"))
 if os.path.exists(os.path.join(OUT, "gabarito_lateral_1-1.svg")): os.remove(os.path.join(OUT, "gabarito_lateral_1-1.svg"))
 open(os.path.join(OUT, ".nojekyll"), "w").write("")
 
@@ -257,7 +258,7 @@ footer a {{ color: var(--tension); }}
   </section>
 
   <footer>
-    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="gabarito_trelica_1-1.pdf">Gabarito 1:1 (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
+    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="gabarito_trelica_1-1.pdf">Gabarito 1:1 (PDF)</a> · <a href="lista_de_montagem.pdf">Lista de montagem (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
     <span>Os números deste site vêm do cálculo do projeto. O resultado real só vale depois do teste.</span>
   </footer>
 </main>

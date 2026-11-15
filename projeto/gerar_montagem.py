@@ -468,6 +468,26 @@ def dados_corte(p):
     return dict(L=round(L, 1), bordaA=round(bordas[0], 1), bordaB=round(bordas[1], 1), esq=pontas["esq"], dir=pontas["dir"],
                 poly=[[round(x, 2), round(y, 2)] for x, y in pts])
 
+# ---------------------------------------------------------------- numeração travada
+# As peças já foram cortadas e numeradas com o manual de corte enviado em 15/11 (commit e90e7b9).
+# Os números ficam congelados em projeto/manual/numeracao_corte.json: dentro de cada etapa, as peças seguem essa ordem.
+ARQ_NUM = os.path.join(D, "manual", "numeracao_corte.json")
+TRAVA = json.load(open(ARQ_NUM))["numeros"] if os.path.exists(ARQ_NUM) else None
+if TRAVA:
+    _cont = {}
+    for p in passos:
+        if p["k"] != "pc": continue
+        k = (p["g"], p["nome"]); _cont[k] = _cont.get(k, 0) + 1
+        p["_trava"] = TRAVA.get(f"{p['g']}|{p['nome']}|{_cont[k]}")
+    i = 0
+    while i < len(passos):
+        if passos[i]["k"] != "pc": i += 1; continue
+        j = i
+        while j < len(passos) and passos[j]["k"] == "pc" and passos[j]["cap"] == passos[i]["cap"]: j += 1
+        if all(p["_trava"] is not None for p in passos[i:j]):
+            passos[i:j] = sorted(passos[i:j], key=lambda p: p["_trava"])
+        i = j
+
 pecas_todas = [p for p in passos if p["k"] == "pc"]
 grupos_forma = {}
 for p in pecas_todas:
@@ -482,6 +502,9 @@ for cat in ORDEM_CAT:
         for p in grupos_forma[k]: p["cod"] = cod
         tipos.append(dict(cod=cod, cat=cat, nome_cat=CAT[cat][1], qtd=len(grupos_forma[k]), **info))
 for i, p in enumerate(pecas_todas): p["num"] = i + 1
+if TRAVA:
+    difs = [p["nome"] for p in pecas_todas if p.pop("_trava", None) != p["num"]]
+    if difs: raise SystemExit(f"Numeração diferente da que já foi cortada em {len(difs)} peças, ex.: {difs[:3]}")
 for t in tipos: t["nums"] = [p["num"] for p in pecas_todas if p["cod"] == t["cod"]]
 
 def desc_ponta(angs):
