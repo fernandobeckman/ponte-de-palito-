@@ -1,4 +1,4 @@
-<title>Montagem da Ponte Parker</title>
+<title>Montagem da Ponte Pratt</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -158,7 +158,7 @@ footer a { color: var(--tension); }
 
 <div class="wrap">
   <header>
-    <span class="eyebrow">Ponte Parker 8×90 · palito por palito</span>
+    <span class="eyebrow">Ponte Pratt 8×100 · vão 800 mm · palito por palito</span>
     <h1>Montagem passo a passo</h1>
     <p class="lede">Arraste a barra para a direita e a ponte vai sendo montada: corte de cada palito, o cordão de cola branca, a colagem, a prensagem e a cura. Gire o modelo com o dedo para ver em 360°.</p>
   </header>
@@ -331,7 +331,7 @@ const ITENS = [
   { id: "laminas", nome: "Lâminas de reposição 18 mm, 10 unidades", qtd: 1, preco: 3.99, fonte: "Loja do Mecânico", url: "https://www.lojadomecanico.com.br/buscar/estilete-de-precisao-para-papel",
     nota: "lâmina nova corta sem esmagar a madeira" },
   { id: "lixa", nome: "Folha de lixa para madeira, grão 120", qtd: 1, preco: 3.00, fonte: "estimativa" },
-  { id: "impressao", nome: "Impressão do gabarito em 2 folhas A4", qtd: 2, preco: 1.00, fonte: "estimativa" },
+  { id: "impressao", nome: "Impressão do gabarito em 4 folhas A4", qtd: 4, preco: 1.00, fonte: "estimativa" },
   { id: "plastico", nome: "Saco plástico transparente (polietileno)", qtd: 1, preco: 1.00, fonte: "estimativa", tenho: true },
   { id: "regua", nome: "Régua metálica 30 cm e esquadro", qtd: 1, preco: 15.00, fonte: "estimativa", tenho: true },
 ];
@@ -545,9 +545,12 @@ const texGab = texCanvas(2048, 288, (g, w, h) => {
   g.fillStyle = "#c0392b"; g.fillText("100 mm — confira com a régua", X(0), Y(-18));
 });
 for (const g of ["A", "B"]) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(1080, 150), new THREE.MeshStandardMaterial({ map: texGab, roughness: .95, transparent: true }));
+  // polygonOffset: o papel e o plástico ficam praticamente no plano da mesa; sem isso a mesa "pisca" através deles de longe
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1080, 150), new THREE.MeshStandardMaterial({ map: texGab, roughness: .95, transparent: true,
+    polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 }));
   m.rotation.x = -Math.PI / 2; m.position.set(400, .02, ZFLAT[g] - 55); m.receiveShadow = true; scene.add(m); gab[g] = m;
-  const f = new THREE.Mesh(new THREE.PlaneGeometry(600, 165), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .12, transparent: true, opacity: .22 }));
+  const f = new THREE.Mesh(new THREE.PlaneGeometry(1080, 165), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .12, transparent: true, opacity: .22,
+    polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 }));
   f.rotation.x = -Math.PI / 2; f.position.set(400, .04, ZFLAT[g] - 55); scene.add(f); filme[g] = f;
 }
 
@@ -622,7 +625,7 @@ const ensaio = new THREE.Group();
   const pilha = new THREE.Group(); pilha.name = "pilha";
   for (let i = 0; i < 3; i++) { const d = new THREE.Mesh(new THREE.CylinderGeometry(70, 70, 16, 40), ferro); d.position.y = -8 - i * 17; d.castShadow = true; pilha.add(d); }
   const eixo = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 70, 12), ferro); eixo.position.y = -30; pilha.add(eixo);
-  const et = texCanvas(256, 96, (g, w, h) => { g.fillStyle = "#f2c230"; g.fillRect(0, 0, w, h); g.fillStyle = "#111"; g.font = "bold 60px sans-serif"; g.fillText("45 kg", 40, 70); });
+  const et = texCanvas(256, 96, (g, w, h) => { g.fillStyle = "#f2c230"; g.fillRect(0, 0, w, h); g.fillStyle = "#111"; g.font = "bold 60px sans-serif"; g.fillText("30 kg", 40, 70); });
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: et })); sp.scale.set(90, 34, 1); sp.position.set(0, -78, 0); pilha.add(sp);
   ensaio.add(pilha); scene.add(ensaio);
 }

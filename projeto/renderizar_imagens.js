@@ -12,12 +12,12 @@ const ev = Object.fromEntries(P.map((p, i) => [p.ev, i]).filter(([k]) => k));
 const iCorte = P.findIndex(p => p.k === "pc" && p.cap === "Treliça A · camada 2" && p.tipo === "diagonal");
 const iB = P.findIndex(p => p.cap.startsWith("Treliça B"));
 const fotos = [
-  { nome: "ponte_teste", t: N, cam: [-250, 430, 560, 250, 228, 40] },
+  { nome: "ponte_teste", t: N, cam: [-420, 600, 880, 400, 250, 0] },
   { nome: "passo_corte", t: iCorte + 0.12, foco: [-55, 95, 120] },
-  { nome: "passo_trelica", t: iB, cam: [110, 250, 470, 250, 0, 255] },
-  { nome: "passo_levantar", t: ev.colocaE + 1, cam: [-170, 470, 430, 250, 262, 40] },
-  { nome: "por_dentro", t: N - 1, cam: [-30, Y0 + 24, 40, 120, Y0 + 24, 40] },
-  { nome: "capa", t: N, cam: [-90, 400, 400, 250, 215, 40], w: 800, h: 420 },
+  { nome: "passo_trelica", t: iB, cam: [150, 560, 780, 400, 0, 300] },
+  { nome: "passo_levantar", t: ev.colocaE + 1, cam: [-330, 620, 700, 400, 270, 0] },
+  { nome: "por_dentro", t: N - 1, cam: [-60, Y0 + 30, 0, 300, Y0 + 30, 0] },
+  { nome: "capa", t: N, cam: [-260, 520, 640, 400, 250, 0], w: 800, h: 420 },
 ];
 (async () => {
   const b = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
@@ -28,7 +28,7 @@ const fotos = [
     r.fulfill({ path: path.join(THREE_DIR, "build", r.request().url().split("/build/")[1]), contentType: "application/javascript" }));
   await p.route("https://fonts.**", r => r.abort());
   await p.goto("file://" + path.join(RAIZ, "docs", "montagem.html"));
-  await p.addStyleTag({ content: `.sitenav,.hud,.rotulos,.dica,.voo,.cure{display:none!important}
+  await p.addStyleTag({ content: `.sitenav,.hud,.rotulos,.dica,.voo,.cure,.btela{display:none!important}
     .wrap{max-width:none;padding:0} .bench{border:0;border-radius:0} #cena{width:800px!important;height:500px!important}` });
   await p.waitForTimeout(3000);
   await p.evaluate(() => { const b = document.getElementById("bnum"); if (b.getAttribute("aria-pressed") === "true") b.click(); });

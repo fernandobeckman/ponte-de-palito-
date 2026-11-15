@@ -1,4 +1,4 @@
-<title>Ponte Parker 8×90</title>
+<title>Ponte Pratt 8×100</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,11 +56,11 @@ section { display: grid; gap: 14px; min-width: 0; }
 /* vista lateral */
 .side { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; }
 .side svg { width: 100%; min-width: 320px; height: auto; display: block; }
-.side line { stroke-width: 3.2; stroke-linecap: round; }
+.side line { stroke-width: 5; stroke-linecap: round; }
 .side line.t { stroke: var(--tension); } .side line.c { stroke: var(--compression); } .side line.z { stroke: var(--zero); }
 .side circle { fill: var(--ink); }
-.side text { fill: var(--muted); font: 7px var(--mono); }
-.side .dim { stroke: var(--muted); stroke-width: .6; }
+.side text { fill: var(--muted); font: 600 17px var(--mono); }
+.side .dim { stroke: var(--muted); stroke-width: 1.2; }
 
 /* tabelas */
 .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
@@ -86,9 +86,9 @@ footer a { color: var(--tension); }
 
 <div class="wrap">
   <header>
-    <span class="eyebrow">Ponte de palito · vão 500 mm · carga 45 kg no meio</span>
-    <h1>Ponte Parker 8×90</h1>
-    <p class="lede">Treliça Parker com 8 painéis e 90 mm de altura no meio. Só palito de picolé e cola branca. Foi a melhor forma entre 208 geometrias comparadas.</p>
+    <span class="eyebrow">Ponte de palito · vão 800 mm · competição 2026/2</span>
+    <h1>Ponte Pratt 8 × 100</h1>
+    <p class="lede">Treliça Pratt com 8 painéis de 100 mm e 100 mm de altura; a ponte tem 1020 × 220 mm. Só palito de picolé e cola branca. A meta é passar dos 30 kg do bônus com folga.</p>
   </header>
 
   <section aria-label="Modelo 3D">
@@ -99,91 +99,85 @@ footer a { color: var(--tension); }
         <span><i class="sw" style="background:var(--tension)"></i>tração</span>
         <span><i class="sw" style="background:var(--compression)"></i>compressão</span>
         <span><i class="sw" style="background:var(--zero)"></i>sem esforço (travamento)</span>
-        <span><i class="sw" style="background:var(--wood)"></i>transversinas e escoras</span>
+        <span><i class="sw" style="background:var(--wood)"></i>travamento entre as treliças e ponto de carga</span>
       </div>
-      <div id="barra" aria-live="polite">Toque numa barra para ver o esforço com 45 kg.</div>
+      <div id="barra" aria-live="polite">Toque numa barra para ver o esforço com 30 kg no meio.</div>
     </div>
   </section>
 
   <section aria-label="Resultados principais">
     <div class="figs">
-      <div class="fig"><span class="v">45 kg</span><span class="k">carga de projeto (441,29925 N)</span></div>
-      <div class="fig key"><span class="v">__FS__</span><span class="k">fator de segurança mínimo (banzo superior)</span></div>
-      <div class="fig"><span class="v">≈ __RUPT__ kg</span><span class="k">ruptura teórica; na prática, menos</span></div>
-      <div class="fig"><span class="v">__FLECHA__ mm</span><span class="k">flecha no meio com 45 kg</span></div>
-      <div class="fig"><span class="v">≈ __PALITOS__</span><span class="k">palitos na ponte (compre 368)</span></div>
-      <div class="fig"><span class="v">91,99185 mm</span><span class="k">maior barra: cabe num palito, sem emenda</span></div>
+      <div class="fig"><span class="v">30 kg</span><span class="k">meta: bônus da competição</span></div>
+      <div class="fig key"><span class="v">≈ __PCOL__ kg</span><span class="k">carga de colapso estimada</span></div>
+      <div class="fig"><span class="v">__FS__</span><span class="k">vezes a meta de 30 kg</span></div>
+      <div class="fig"><span class="v">__MASSA__ g</span><span class="k">peso estimado (limite: 1 kg)</span></div>
+      <div class="fig"><span class="v">__RAZAO__</span><span class="k">kg de carga por kg de ponte (estimado)</span></div>
+      <div class="fig"><span class="v">__PALITOS__</span><span class="k">palitos na ponte (compre __COMPRAR__)</span></div>
     </div>
   </section>
 
   <section>
     <h2>Vista lateral de uma treliça</h2>
     <div class="side">
-      <svg viewBox="0 0 520 128" role="img" aria-label="Vista lateral da treliça com cotas">
+      <svg viewBox="0 0 840 158" role="img" aria-label="Vista lateral da treliça com cotas">
         __SVG__
-        <line class="dim" x1="10" y1="114" x2="510" y2="114"/><line class="dim" x1="10" y1="110" x2="10" y2="118"/><line class="dim" x1="510" y1="110" x2="510" y2="118"/>
-        <text x="260" y="124" text-anchor="middle">vão 500 mm · 8 painéis de 62,5 mm</text>
-        <line class="dim" x1="250" y1="10" x2="250" y2="100"/>
-        <text x="246" y="58" text-anchor="end">h = 90 mm</text>
+        <line class="dim" x1="20" y1="134" x2="820" y2="134"/><line class="dim" x1="20" y1="130" x2="20" y2="138"/><line class="dim" x1="820" y1="130" x2="820" y2="138"/>
+        <text x="420" y="154" text-anchor="middle">vão 800 mm · 8 painéis de 100 mm</text>
+        <line class="dim" x1="835" y1="20" x2="835" y2="120"/>
+        <text x="828" y="64" text-anchor="end">h = 100 mm</text>
       </svg>
     </div>
-    <p class="note">O banzo de cima sobe em linha reta de cada apoio até o meio. Com a carga no centro ele acompanha o diagrama de momento, então os banzos trabalham com força constante e a alma fica quase sem esforço.</p>
+    <p class="note">Cores com a carga no centro. Na Pratt as diagonais descem em direção ao meio e trabalham esticadas; os montantes, curtos, ficam apertados. O banzo de cima é o mais apertado no meio do vão.</p>
   </section>
 
   <section>
     <h2>Por que essa forma</h2>
     <div class="tbl"><table>
-      <thead><tr><th>Treliça</th><th>Painéis</th><th>h (mm)</th><th>Palitos/treliça</th><th>Barras com emenda</th><th>Força máx. (N)</th></tr></thead>
-      <tbody class="mono">
-        <tr class="win"><td>Parker (escolhida)</td><td>8</td><td>90</td><td>33,86000</td><td>0</td><td>325,71146</td></tr>
-        <tr><td>Warren</td><td>4</td><td>60</td><td>33,05653</td><td>7</td><td>459,68672</td></tr>
-        <tr><td>Howe</td><td>4</td><td>70</td><td>35,35624</td><td>10</td><td>394,01719</td></tr>
-        <tr><td>Pratt</td><td>4</td><td>80</td><td>36,46272</td><td>10</td><td>344,76504</td></tr>
-      </tbody>
+      <thead><tr><th>Treliça</th><th>Painéis</th><th>h (mm)</th><th>kg por kg</th><th>Barra mais longa (mm)</th><th>Palitos por barra</th></tr></thead>
+      <tbody class="mono">__FORMAS__</tbody>
     </table></div>
-    <p class="note">A Warren gasta um pouco menos, mas tem 7 barras maiores que um palito (110 mm), e emenda é onde ponte de palito costuma quebrar. A Parker não precisa de emenda nas diagonais nem nos montantes, e tem a menor força máxima, o que alivia as ligações.</p>
+    <p class="note">As quatro primeiras linhas são o melhor de cada tipo no estudo de __NCOMB__ combinações, num modelo simplificado (sem emendas e com barras de até 5 palitos). A escolhida rende menos no papel, mas todos os montantes cabem num palito, as diagonais são todas iguais e todas as barras têm 3 palitos. Com dois dias para construir, isso vale mais. O valor dela já é do modelo completo, peça por peça.</p>
   </section>
 
   <section>
-    <h2>Esforços e dimensionamento</h2>
+    <h2>Esforços e resistência</h2>
     <div class="tbl"><table>
-      <thead><tr><th>Barras</th><th>L (mm)</th><th>N centro (N)</th><th>N deslocada (N)</th><th>Camadas</th><th>FS</th><th>Modo crítico</th></tr></thead>
+      <thead><tr><th>Parte</th><th>L (mm)</th><th>N centro (N)</th><th>N deslocada (N)</th><th>Resistência (N)</th><th>Colapso (kg)</th><th>Modo</th></tr></thead>
       <tbody>__ROWS__</tbody>
     </table></div>
-    <p class="note">Valores para uma treliça (cada uma recebe 220,64962 N). "Deslocada" é a carga um painel fora do centro. *FS com a carga deslocada um painel; com a carga no centro essas barras ficam sem esforço.</p>
+    <p class="note">Esforços numa treliça para 1000 N no meio da ponte (500 N em cada treliça). "Deslocada" é a carga um painel fora do centro. Colapso é a carga no meio que leva aquela parte ao limite, sem coeficiente de segurança. A cola foi estimada em 2,0 MPa até ser ensaiada.</p>
   </section>
 
   <section>
     <h2>Como montar</h2>
     <ol class="steps">
-      <li><div><b>Imprima o gabarito em tamanho real</b> (arquivo <span class="mono">gabarito_lateral_1-1.svg</span>). A régua impressa tem que medir 100 mm.</div></li>
-      <li><div><b>Banzos contínuos:</b> 3 camadas de palito coladas face a face, com as emendas desencontradas pelo menos 30 mm.</div></li>
-      <li><div><b>Diagonais e montantes:</b> 3 camadas, como os banzos, para as chapas ficarem planas. Em cada nó e em cada face, uma chapa sobre o banzo e duas faixas sobre as pontas das barras (16,8 mm de sobreposição). No nó do apoio, use 40 mm.</div></li>
-      <li><div><b>Monte as duas treliças</b> sobre o gabarito e deixe curar.</div></li>
-      <li><div><b>Una as treliças a 80 mm</b> com transversinas embaixo, escoras em cima e uma diagonal por painel em zigue-zague. Sem esse travamento lateral o banzo de cima flamba de lado.</div></li>
-      <li><div><b>Transversina central:</b> 2 palitos lado a lado × 10 camadas, apoiada em consolos colados na face interna do nó do meio. Em cima do banzo ela bateria no montante e nas diagonais. É nela que a carga fica pendurada.</div></li>
-      <li><div><b>Espere 24 h de cura</b> antes de colocar qualquer carga.</div></li>
+      <li><div><b>Imprima em 100%</b> o manual de corte e o gabarito 1:1 da treliça (4 folhas). A régua impressa tem que medir 100 mm.</div></li>
+      <li><div><b>Corte por código</b> e escreva o número em cada peça. Peças com o mesmo código são iguais.</div></li>
+      <li><div><b>Monte as duas treliças deitadas</b> sobre o gabarito coberto com plástico: chapas de baixo, 3 camadas de palitos com as emendas desencontradas, chapas de cima. Prense enquanto seca.</div></li>
+      <li><div><b>Levante as treliças</b> a 220 mm uma da outra (medida por fora), com os espaçadores de palito, e cole transversinas, escoras e as diagonais em zigue-zague em cima e embaixo.</div></li>
+      <li><div><b>Ponto de carga:</b> consolos colados por dentro do nó do meio e a mini-treliça encaixada sobre eles. É nela que a haste de aço fica pendurada.</div></li>
+      <li><div><b>Tire os espaçadores</b>, deixe secar até a entrega e confira: 1020 mm de comprimento, 220 mm de largura, menos de 1 kg.</div></li>
     </ol>
   </section>
 
   <section>
     <h2>Montagem animada</h2>
-    <p>A montagem palito por palito, com corte, cola, prensagem, cura, lista de corte e orçamento, está na página <b>Montagem da Ponte Parker</b>: <a href="https://claude.ai/artifact/FfWvcJBHkUvrubFaqQZAgw" target="_blank" rel="noopener" style="color:var(--tension)">abrir a montagem animada</a></p>
+    <p>A montagem palito por palito, com corte, cola, prensagem, lista de corte e orçamento, está na página de montagem: <a href="https://claude.ai/artifact/FfWvcJBHkUvrubFaqQZAgw" target="_blank" rel="noopener" style="color:var(--tension)">abrir a montagem animada</a></p>
   </section>
 
   <section>
     <h2>Antes de construir</h2>
     <ul class="pend">
-      <li><span class="chip">pendente</span>Medir 20 palitos: largura, espessura, comprimento e massa.</li>
-      <li><span class="chip">pendente</span>Ensaiar 10 palitos à tração, 10 pares à flambagem e 10 juntas coladas.</li>
-      <li><span class="chip">pendente</span>Refazer o cálculo com os valores medidos (<span class="mono">python3 projeto/calculo_ponte.py</span>).</li>
+      <li><span class="chip">pendente</span>Medir alguns palitos do lote comprado: largura, espessura e comprimento.</li>
+      <li><span class="chip">pendente</span>Teste da cola: dois palitos colados com 5 mm de sobreposição, um balde pendurado e água até soltar (com 2,0 MPa deve soltar perto de 8,6 kg).</li>
+      <li><span class="chip">pendente</span>Confirmar com a organização o comprimento (100 a 110 cm com prolongamento de até 10 cm) e o dia da entrega.</li>
     </ul>
-    <p class="note">Valores usados até lá: palito de 8,4 × 2,0 × 110 mm, E = 7350 MPa, tração 52,55 MPa (AVILA, 2009), compressão 40,4 MPa (NBR 7190, Pinus elliottii) e resistência da cola estimada em 2,0 MPa.</p>
+    <p class="note">Valores usados: palito de 8,4 × 2,0 × 110 mm, E = 7350 MPa, tração 52,55 MPa (AVILA, 2009), compressão 40,4 MPa (NBR 7190, Pinus elliottii) e cola estimada em 2,0 MPa.</p>
   </section>
 
   <footer>
-    <span>Memorial completo, modelo de cálculo e gabarito no repositório <span class="mono">fernandobeckman/ponte-de-palito-</span>, pasta <span class="mono">projeto/</span>.</span>
-    <span>Valores numéricos com 5 casas decimais. Unidades: mm, N, MPa.</span>
+    <span>Memorial de cálculo completo no repositório <span class="mono">fernandobeckman/ponte-de-palito-</span>, arquivo <span class="mono">projeto/MEMORIAL_UCB.md</span>.</span>
+    <span>Valores numéricos com 5 casas decimais. Unidades: mm, N, MPa, kg.</span>
   </footer>
 </div>
 
@@ -259,12 +253,12 @@ try {
     ray.setFromCamera(p, cam);
     const h = ray.intersectObjects(meshes)[0];
     if (sel) sel.scale.set(1, 1, 1);
-    if (!h) { sel = null; out.textContent = "Toque numa barra para ver o esforço com 45 kg."; return; }
+    if (!h) { sel = null; out.textContent = "Toque numa barra para ver o esforço com 30 kg no meio."; return; }
     sel = h.object; sel.scale.set(1.6, 1.6, 1);
     const b = sel.userData;
-    if (b.N === null) { out.innerHTML = `<b>${b.id}</b>: travamento lateral entre as duas treliças (80 mm).`; return; }
+    if (b.N === null) { out.innerHTML = `<b>${b.id}</b>: ${b.txt}`; return; }
     const tipo = b.N > 1e-6 ? "tração" : b.N < -1e-6 ? "compressão" : "sem esforço";
-    out.innerHTML = `<b>${b.id}</b> · ${fmt(b.L)} mm · ${b.n} camadas<br>carga no centro: <b>${fmt(b.N)} N</b> (${tipo}) · carga deslocada: <b>${fmt(b.Nd)} N</b>`;
+    out.innerHTML = `<b>${b.id}</b> · ${fmt(b.L)} mm · ${b.n} palitos<br>com 30 kg no meio: <b>${fmt(b.N)} N</b> (${tipo}) · carga deslocada: <b>${fmt(b.Nd)} N</b><br>esta barra chega ao limite com <b>${fmt(b.P)} kg</b> (${b.modo})`;
   });
   renderer.setAnimationLoop(() => { ctl.update(); renderer.render(scene, cam); });
 } catch (err) {

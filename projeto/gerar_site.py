@@ -3,7 +3,7 @@
 
 - docs/index.html: página inicial para família e amigos (imagens, como funciona, montagem).
 - docs/montagem.html e docs/projeto.html: as páginas 3D (site/*.html) embrulhadas como documentos completos, com menu.
-- docs/manual_de_corte.pdf e docs/gabarito_lateral_1-1.svg para baixar.
+- docs/manual_de_corte.pdf e docs/gabarito_trelica_1-1.pdf para baixar.
 As imagens de docs/img/ são geradas por projeto/renderizar_imagens.js (Playwright).
 """
 import json, math, os, re, shutil, sys
@@ -14,15 +14,20 @@ OUT = os.path.join(R, "docs")
 URL = "https://ponte-de-palito.netlify.app/"   # endereço principal (Netlify)
 os.makedirs(os.path.join(OUT, "img"), exist_ok=True)
 sys.path.insert(0, D)
-from estudo_geometrias import gerar, avaliar, VAO  # noqa: E402
+import estudo_geometrias as eg  # noqa: E402
+eg.VAO = 800.0                 # vão do regulamento da UCB (gerar() lê o valor do módulo)
+gerar = eg.gerar
 
 mont = json.load(open(os.path.join(D, "montagem.json")))
 res = mont["resumo"]
-modelo = json.load(open(os.path.join(D, "ponte_parker_8x90.json")))
-calc = json.load(open(os.path.join(D, "resultados_ponte.json")))
+modelo = json.load(open(os.path.join(D, "ponte_ucb.json")))
+calc = json.load(open(os.path.join(D, "resultados_ucb_ponte.json")))
+estudo = json.load(open(os.path.join(D, "resultados_ucb.json")))
 N_PECAS = res["pecas"] + res["pecas_esp"]
 MASSA = res["massa_g"]
-VEZES = 45000 / MASSA
+P_COL = calc["P_final"]                  # carga de colapso estimada (kgf)
+VEZES = P_COL * 1000 / MASSA
+N_TIPOS = len(mont["tipos"])
 fmt = lambda v, d=0: f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 ICONE = ("data:image/svg+xml," + "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 24h28M4 24L16 9l12 15M10 24l6-15M22 24l-6-15' "
@@ -73,13 +78,14 @@ pm = open(os.path.join(R, "site", "montagem.html")).read()
 pm = pm.replace('O PDF com os moldes em tamanho real está no repositório, em <span class="mono">projeto/manual/manual_de_corte.pdf</span>.',
                 'Os moldes em tamanho real estão no <a href="manual_de_corte.pdf" style="color:var(--tension)">manual de corte em PDF</a>.')
 open(os.path.join(OUT, "montagem.html"), "w").write(embrulha(pm, "montagem.html", "Montagem da ponte de palito, peça por peça",
-    "Animação 3D da montagem da ponte de palito de picolé: corte, cola, prensagem e o teste com 45 kg."))
+    "Animação 3D da montagem da ponte de palito de picolé, peça por peça: corte, cola, prensagem e o teste de carga."))
 pp = open(os.path.join(R, "site", "projeto.html")).read()
 pp = re.sub(r'<a href="https://claude\.ai/artifact/[^"]+"', '<a href="montagem.html"', pp)
 open(os.path.join(OUT, "projeto.html"), "w").write(embrulha(pp, "projeto.html", "Como a ponte de palito foi calculada",
     "Cálculo da ponte de palito: geometria escolhida, esforços em cada barra e fator de segurança."))
 shutil.copy(os.path.join(D, "manual", "manual_de_corte.pdf"), os.path.join(OUT, "manual_de_corte.pdf"))
-shutil.copy(os.path.join(D, "gabarito_lateral_1-1.svg"), os.path.join(OUT, "gabarito_lateral_1-1.svg"))
+shutil.copy(os.path.join(D, "manual", "gabarito_trelica_1-1.pdf"), os.path.join(OUT, "gabarito_trelica_1-1.pdf"))
+if os.path.exists(os.path.join(OUT, "gabarito_lateral_1-1.svg")): os.remove(os.path.join(OUT, "gabarito_lateral_1-1.svg"))
 open(os.path.join(OUT, ".nojekyll"), "w").write("")
 
 # ------------------------------------------------------------------ desenhos da página inicial
@@ -102,25 +108,30 @@ def svg_trelica(m, esforcos=None, alto=110, carga=False, classe=""):
     if carga:
         y0 = Y(0) + 6
         out.append(f'<line class="seta" x1="{L/2}" y1="{y0}" x2="{L/2}" y2="{y0 + 26}"/><path class="seta-p" d="M{L/2 - 7} {y0 + 20} l7 12 l7 -12 z"/>')
-        out.append(f'<text class="rot" x="{L/2 + 12}" y="{y0 + 26}">45 kg</text>')
+        out.append(f'<text class="rot" x="{L/2 + 12}" y="{y0 + 26}">carga</text>')
     out.append("</svg>")
     return "".join(out)
 
 esf = {x["id"]: x["N"] for x in calc["linhas"]}
 svg_funciona = svg_trelica(modelo, esf, carga=True, classe="trelica-grande")
-formas = [("Pratt", "pratt", 4, 80, "36,5", "10 emendas"), ("Howe", "howe", 4, 70, "35,4", "10 emendas"),
-          ("Warren", "warren", 4, 60, "33,1", "7 emendas"), ("Parker", "parker", 8, 90, "33,9", "nenhuma emenda")]
+melhor = {}
+for x in estudo:
+    if x["tipo"] not in melhor or x["ef"] > melhor[x["tipo"]]["ef"]: melhor[x["tipo"]] = x
+N_FORMAS = len({(x["tipo"], x["paineis"], x["h"]) for x in estudo})
+formas = [(t.capitalize(), t, x["paineis"], x["h"], f"{fmt(x['ef'])} kg por kg no papel", f"barras de até {fmt(x['Lmax'])} mm, com {x['nmax']} palitos")
+          for t, x in sorted(melhor.items(), key=lambda t: -t[1]["ef"])]
+formas.append(("Pratt 8 × 100", "escolhida", 8, 100, f"{fmt(VEZES)} kg por kg no modelo completo", "todas as barras com 3 palitos"))
 cartoes_formas = "".join(
-    f'<figure class="forma{" vence" if k == "parker" else ""}">{svg_trelica(gerar(k, p, float(h)), classe="mini")}'
-    f'<figcaption><b>{nome}</b><span>{pal} palitos por lado · {em}</span>{"<em>escolhida</em>" if k == "parker" else ""}</figcaption></figure>'
-    for nome, k, p, h, pal, em in formas)
+    f'<figure class="forma{" vence" if k == "escolhida" else ""}">{svg_trelica(gerar("pratt" if k == "escolhida" else k, p, float(h)), classe="mini")}'
+    f'<figcaption><b>{nome}</b><span>{a}</span><span>{b}</span>{"<em>escolhida</em>" if k == "escolhida" else ""}</figcaption></figure>'
+    for nome, k, p, h, a, b in formas)
 
 # ------------------------------------------------------------------ página inicial
-DESCR = f"Uma ponte feita só de palito de picolé e cola branca, calculada para aguentar 45 kg com {fmt(MASSA)} g de peso."
+DESCR = f"Uma ponte feita só de palito de picolé e cola branca, com 80 cm de vão e cerca de {fmt(MASSA)} g, calculada para passar com folga dos 30 kg."
 INDEX = f"""<!doctype html>
 <html lang="pt-BR">
 <head>
-{cabeca_comum("Ponte de palito que aguenta 45 kg", DESCR)}
+{cabeca_comum("Ponte de palito com 80 cm de vão", DESCR)}
 <title>Ponte de Palito</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,6 +174,7 @@ section {{ display: grid; gap: 16px; min-width: 0; }}
 .numeros span {{ color: var(--muted); font-size: .92rem; }}
 .desenho {{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; overflow-x: auto; }}
 .trelica-grande {{ width: 100%; min-width: 320px; height: auto; display: block; }}
+.trelica-grande line {{ stroke-width: 7; }} .trelica-grande .rot {{ font-size: 26px; }}
 svg line {{ stroke-width: 4.2; stroke-linecap: round; }}
 svg line.t {{ stroke: var(--tension); }} svg line.c {{ stroke: var(--compression); }} svg line.z {{ stroke: var(--zero); }}
 svg.mini line.z {{ stroke: var(--wood); stroke-width: 7; }}
@@ -193,20 +205,20 @@ footer a {{ color: var(--tension); }}
 <main class="wrap">
   <section class="hero">
     <span class="eyebrow">Projeto de engenharia · palito de picolé e cola branca</span>
-    <h1>Uma ponte de palito que aguenta 45 kg</h1>
-    <p class="lede">Ela tem 50 cm entre os apoios, é feita só com palitos de picolé e cola branca e pesa cerca de {fmt(MASSA)} g. O cálculo mostra que ela segura 45 kg pendurados no meio: mais de {fmt(math.floor(VEZES / 10) * 10)} vezes o próprio peso.</p>
+    <h1>Uma ponte de palito com 80 cm de vão</h1>
+    <p class="lede">Ela vence 80 cm entre os apoios, tem 1,02 m de comprimento, é feita só com palitos de picolé e cola branca e pesa cerca de {fmt(MASSA)} g. Na competição, a meta é passar de 30 kg. O cálculo estima que ela aguenta cerca de {fmt(math.floor(P_COL / 10) * 10)} kg pendurados no meio: mais de {fmt(math.floor(VEZES / 10) * 10)} vezes o próprio peso.</p>
     <div class="acoes"><a class="btn prim" href="montagem.html">Ver a montagem em 3D</a><a class="btn" href="#como-funciona">Como ela funciona</a></div>
-    <figure class="foto"><img src="img/ponte_teste.jpg" width="1600" height="842" alt="Ponte de palito pronta, apoiada em dois pilares, com pesos de 45 kg pendurados no meio"><figcaption>Modelo 3D da ponte pronta, com a carga de 45 kg pendurada no meio.</figcaption></figure>
+    <figure class="foto"><img src="img/ponte_teste.jpg" width="1600" height="842" alt="Ponte de palito pronta, apoiada em dois blocos, com a carga pendurada no meio"><figcaption>Modelo 3D da ponte pronta, com a carga pendurada no meio por uma haste de aço.</figcaption></figure>
   </section>
 
   <section aria-label="Números da ponte">
     <div class="numeros">
-      <div><b>45 kg</b><span>carga que ela precisa aguentar</span></div>
+      <div><b>30 kg</b><span>meta na competição</span></div>
+      <div><b>≈ {fmt(math.floor(P_COL / 10) * 10)} kg</b><span>quanto o cálculo estima que ela aguenta</span></div>
       <div><b>{fmt(MASSA)} g</b><span>peso da ponte (estimado)</span></div>
       <div><b>{N_PECAS}</b><span>peças cortadas e numeradas</span></div>
       <div><b>{res['palitos_comprar']}</b><span>palitos comprados, com sobra para testes</span></div>
-      <div><b>50 cm</b><span>de vão livre entre os apoios</span></div>
-      <div><b>≈ R$ 74</b><span>de material (palitos, cola, estilete, lixa)</span></div>
+      <div><b>80 cm</b><span>de vão livre entre os apoios</span></div>
     </div>
   </section>
 
@@ -220,17 +232,17 @@ footer a {{ color: var(--tension); }}
 
   <section>
     <h2>Por que esse formato</h2>
-    <p>Antes de escolher, o computador testou 208 formatos de treliça e calculou quantos palitos cada um precisa para aguentar a carga com folga de segurança. Os melhores de cada família:</p>
+    <p>Antes de escolher, o computador testou {N_FORMAS} formatos de treliça e calculou quantos palitos cada um precisa para aguentar cada carga. Os melhores de cada família, e o escolhido:</p>
     <div class="formas">{cartoes_formas}</div>
-    <p>O formato escolhido (Parker) tem o topo em triângulo, que acompanha o jeito como o peso do meio "puxa" a ponte. Ele gasta quase o mesmo tanto de palito que o melhor, mas <b>nenhuma barra é maior que um palito</b>, então não precisa de emendas, que costumam ser o ponto fraco.</p>
+    <p>O escolhido (Pratt de 8 painéis) não é o mais leve no papel, mas é o mais simples de montar: <b>todo montante tem o tamanho de um palito</b>, as diagonais são todas iguais e todas as barras têm 3 palitos. Como a ponte precisa ficar pronta em dois dias, a simplicidade vale mais que alguns gramas.</p>
   </section>
 
   <section>
     <h2>Como vai ser montada</h2>
     <div class="passos">
-      <div class="passo"><div class="txt"><span class="num">1 · cortar</span><h3>Cada peça tem número e código</h3><p>São {N_PECAS} peças em 37 formatos diferentes, como num manual de LEGO. Cada uma é cortada no tamanho e no ângulo certos, usando moldes impressos em tamanho real.</p></div>
+      <div class="passo"><div class="txt"><span class="num">1 · cortar</span><h3>Cada peça tem número e código</h3><p>São {N_PECAS} peças em {N_TIPOS} formatos diferentes, como num manual de LEGO. Cada uma é cortada no tamanho e no ângulo certos, usando moldes impressos em tamanho real.</p></div>
         <figure class="foto"><img src="img/passo_corte.jpg" width="1600" height="1000" alt="Palito sendo cortado no tamanho certo, com a linha de corte marcada em vermelho" loading="lazy"></figure></div>
-      <div class="passo"><div class="txt"><span class="num">2 · colar</span><h3>As laterais são montadas deitadas</h3><p>Cada lateral é montada sobre um desenho em tamanho real, em três camadas de palitos, com cola branca entre elas. Depois fica 24 h prensada para a cola secar.</p></div>
+      <div class="passo"><div class="txt"><span class="num">2 · colar</span><h3>As laterais são montadas deitadas</h3><p>Cada lateral é montada sobre um desenho em tamanho real, em três camadas de palitos, com cola branca entre elas. Depois fica prensada enquanto a cola seca.</p></div>
         <figure class="foto"><img src="img/passo_trelica.jpg" width="1600" height="1000" alt="Uma lateral da ponte pronta, deitada sobre o desenho impresso" loading="lazy"></figure></div>
       <div class="passo"><div class="txt"><span class="num">3 · levantar</span><h3>As duas laterais ficam de pé e são travadas</h3><p>Espaçadores de palito seguram as duas laterais paralelas enquanto são coladas as peças de baixo, de cima e as diagonais que travam tudo.</p></div>
         <figure class="foto"><img src="img/passo_levantar.jpg" width="1600" height="1000" alt="As duas laterais de pé, com os espaçadores provisórios entre elas" loading="lazy"></figure></div>
@@ -241,11 +253,11 @@ footer a {{ color: var(--tension); }}
 
   <section>
     <h2>O teste</h2>
-    <div class="aviso"><b>Em breve.</b><p>A ponte ainda vai ser construída e testada. Quando o teste acontecer, as fotos, o vídeo e quanto peso ela realmente aguentou vão aparecer aqui.</p></div>
+    <div class="aviso"><b>Em breve.</b><p>A ponte vai ser testada na competição: começa com 10 kg pendurados no meio e a carga sobe aos poucos até ela quebrar. Quando o teste acontecer, as fotos, o vídeo e quanto peso ela realmente aguentou vão aparecer aqui.</p></div>
   </section>
 
   <footer>
-    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
+    <span>Quer ver os detalhes? <a href="projeto.html">Como foi calculada</a> · <a href="montagem.html">Montagem 3D peça por peça</a> · <a href="manual_de_corte.pdf">Manual de corte (PDF)</a> · <a href="gabarito_trelica_1-1.pdf">Gabarito 1:1 (PDF)</a> · <a href="https://github.com/fernandobeckman/ponte-de-palito-">Arquivos do projeto no GitHub</a></span>
     <span>Os números deste site vêm do cálculo do projeto. O resultado real só vale depois do teste.</span>
   </footer>
 </main>

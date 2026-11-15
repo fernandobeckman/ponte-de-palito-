@@ -34,6 +34,47 @@ def faixa(nums):
         out.append(str(nums[i]) if i == j else f"{nums[i]}–{nums[j]}"); i = j + 1
     return ", ".join(out)
 
+def chave_w(nome):
+    """Elemento a que a peça do mundo pertence (todas as camadas de uma transversina, de um consolo, de uma camada da mini-treliça)."""
+    import re
+    if nome.startswith("Consolo"): return "Consolos"
+    if nome.startswith("Mini-treliça"):
+        m = re.search(r"(face \d|camada \d)", nome); return "Mini-treliça " + (m.group(1) if m else "")
+    return nome.split(", camada")[0].split(", peça")[0]
+
+def texto_w(cap, ch):
+    """Texto e subtítulo de um passo com peças do mundo (elementos inteiros)."""
+    els = []
+    for k in ch:
+        e = chave_w(P[k]["nome"])
+        if e not in els: els.append(e)
+    ids = " e ".join(e.split()[-1] for e in els)
+    um = len(els) == 1
+    nos, pains = ("do nó" if um else "dos nós"), ("do painel" if um else "dos painéis")
+    if cap == "Transversinas inferiores":
+        return (f"Cole {'a transversina' if um else 'as transversinas'} {nos} {ids} por baixo dos dois banzos, de uma face externa à outra (220 mm). "
+                "São 2 camadas, com as emendas desencontradas."), f"nós {ids}"
+    if cap == "Contraventamento inferior":
+        return (f"Cole {'a diagonal' if um else 'as diagonais'} de baixo {pains} {ids}, por baixo dos banzos e entre as transversinas, em 2 camadas. "
+                "Elas formam um zigue-zague."), f"painéis {ids}"
+    if cap == "Escoras superiores":
+        return f"Cole {'a escora' if um else 'as escoras'} {nos} {ids} por cima dos dois banzos de cima, em 2 camadas com as emendas desencontradas.", f"{'nó' if um else 'nós'} {ids}"
+    if cap == "Contraventamento superior":
+        return f"Cole {'a diagonal' if um else 'as diagonais'} de cima {pains} {ids}, sobre os banzos e entre as escoras, em 2 camadas.", f"painéis {ids}"
+    if els == ["Consolos"]:
+        return ("Cole os consolos: 3 camadas de 30 mm na face de dentro do nó b4 de cada treliça, alinhadas com o banzo de baixo. "
+                "O topo deles fica na altura do topo do banzo."), "consolos"
+    e = els[0].replace("Mini-treliça ", "")
+    if e == "face 1":
+        return "Mini-treliça: coloque as chapas da primeira face sobre o plástico, nos nós, ainda sem cola.", "mini-treliça, chapas da face 1"
+    if e == "face 2":
+        return "Mini-treliça: passe cola em toda a face de cada chapa e cole sobre os nós, cobrindo o banzo e as pontas das barras.", "mini-treliça, chapas da face 2"
+    k = e.split()[-1]
+    if k == "1":
+        return ("Mini-treliça, camada 1: banzos, montantes e diagonais por cima das chapas. Cola só onde a peça apoia nas chapas. "
+                "Encoste as pontas de topo."), "mini-treliça, camada 1"
+    return f"Mini-treliça, camada {k}: cordão de cola sobre a camada de baixo e cada peça alinhada por cima. Emendas desencontradas.", f"mini-treliça, camada {k}"
+
 def plano():
     passos, i = [], 0
     pecas_de = lambda g: [k for k, p in enumerate(P) if p["k"] == "pc" and p["g"] == g]
@@ -46,7 +87,7 @@ def plano():
             e = p["ev"]
             base = dict(titulo=p["cap"], texto=p["txt"], det=p["det"], pecas=[], abre=i + 1)
             if e == "materiais":
-                novo(**base, t=i + 1, quadro=[], extra=[[-60, 0, 150], [760, 0, 470]], dir=[0.0, 1.0, 0.8])
+                novo(**base, t=i + 1, quadro=[], extra=[[-150, 0, 180], [1150, 0, 540]], dir=[0.0, 1.0, 0.8])
             elif e in ("prensaA", "prensaB"):
                 novo(**base, t=i + 1, quadro=pecas_de(e[-1]), dir=PLANO_DIR)
             elif e == "lixa":
@@ -55,7 +96,7 @@ def plano():
                 q = pecas_de("A") + (pecas_de("B") if e != "levantaA" else [])
                 novo(**base, t=i + 1, quadro=q, dir=TRES_D, destaque=pecas_de("E") if e == "colocaE" else [])
             elif e == "ensaio":
-                novo(**base, t=i + 1, quadro=ponte, extra=[[250, 60, 40]], dir=TRES_D)
+                novo(**base, t=i + 1, quadro=ponte, extra=[[400, 60, 0]], dir=TRES_D)
             else:
                 novo(**base, t=None)
             i += 1; continue
@@ -63,13 +104,26 @@ def plano():
         while j < len(P) and P[j]["k"] == "pc" and P[j]["cap"] == cap: j += 1
         grupo = list(range(i, j))
         tam = 99 if cap.startswith("Treliça B") else 8
-        for a in range(0, len(grupo), tam):
-            ch = grupo[a:a + tam]
+        if P[i]["g"] == "W":
+            # peças do mundo: um passo por elemento inteiro (2 elementos por passo; ponto de carga por camada)
+            blocos, chave_ant = [], None
+            for k in grupo:
+                c = chave_w(P[k]["nome"])
+                if c != chave_ant: blocos.append([]); chave_ant = c
+                blocos[-1].append(k)
+            junta = 1 if cap == "Ponto de carga" else 2
+            pedacos = [sum(blocos[b:b + junta], []) for b in range(0, len(blocos), junta)]
+        else:
+            pedacos = [grupo[a:a + tam] for a in range(0, len(grupo), tam)]
+        for a_, ch in enumerate(pedacos):
+            sub = ""
             parte = cap.split(" · ")[-1]
             if cap.startswith("Treliça B"):
                 txt = f"Faça igual à treliça A: {INSTR.get(parte, '')}"
             elif cap.startswith("Treliça A"):
                 txt = INSTR.get(parte, P[ch[0]]["txt"])
+            elif P[ch[0]]["g"] == "W":
+                txt, sub = texto_w(cap, ch)
             else:
                 txt = P[ch[0]]["txt"].split(": ", 1)[-1][:1].upper() + P[ch[0]]["txt"].split(": ", 1)[-1][1:]
             det = P[ch[0]]["det"].split(" Comprimento")[0]
@@ -82,7 +136,8 @@ def plano():
                 baixo = "inferior" in P[ch[0]]["nome"]
                 quadro, d = ch + [ch[0]], (POR_BAIXO if baixo else TRES_D)
             nums = [P[k]["num"] for k in ch]
-            titulo = cap + (f" · parte {a // tam + 1}" if len(grupo) > tam else "")
+            if P[ch[0]]["g"] == "W": titulo = f"{cap} · {sub}"
+            else: titulo = cap + (f" · parte {a_ + 1}" if len(pedacos) > 1 else "")
             novo(titulo=titulo, texto=txt, det=det, pecas=ch, destaque=ch, t=ch[-1] + 1, quadro=quadro, dir=d,
                  abre=ch[-1] + 1, faixa=faixa(nums))
         i = j
