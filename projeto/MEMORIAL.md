@@ -1,5 +1,7 @@
 # Memorial de cálculo: Ponte de palito Parker, 8 painéis
 
+> **OBSOLETO.** Este memorial é do projeto antigo (vão de 500 mm, antes do regulamento). O projeto atual, para o regulamento da UCB, está em [`MEMORIAL_UCB.md`](MEMORIAL_UCB.md).
+
 > Versão 2, de 2026-11-09. Mudanças em relação à v1: todas as barras passaram a ter 3 camadas, as chapas ganharam 2 faixas sobre as pontas das barras e a transversina central foi para consolos (ver seção 9).
 > Versão 1, de 2026-11-09. Cálculo reproduzível: `python3 projeto/calculo_ponte.py` (saída completa em `projeto/saida_calculo.txt`).
 > Todos os números estão com 5 casas decimais. Unidades: mm, N, MPa, g.
