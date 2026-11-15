@@ -35,11 +35,11 @@ def regua(c, x, y):
 
 def cabecalho(c, titulo, pag):
     c.setFillColor(black); c.setFont("Helvetica-Bold", 13); c.drawString(MARG, PH - MARG - 4, titulo)
-    c.setFont("Helvetica", 8); c.drawRightString(PW - MARG, PH - MARG - 4, f"Ponte Parker 8×90 · manual de corte · página {pag}")
+    c.setFont("Helvetica", 8); c.drawRightString(PW - MARG, PH - MARG - 4, f"Ponte UCB 2026/2 · Pratt 80 cm · manual de corte · página {pag}")
     c.setLineWidth(.4); c.line(MARG, PH - MARG - 9, PW - MARG, PH - MARG - 9)
 
 c = canvas.Canvas(OUT, pagesize=A4)
-c.setTitle("Manual de corte — Ponte Parker 8x90"); c.setAuthor("ponte-de-palito-")
+c.setTitle("Manual de corte — Ponte UCB 2026/2 (Pratt 80 cm)"); c.setAuthor("ponte-de-palito-")
 pag = 1
 # ---------------- capa / como usar
 cabecalho(c, "Manual de corte — como usar", pag)
@@ -73,7 +73,8 @@ for cat, (nome, nt, nq) in fams.items():
     y -= 14
 y -= 8
 c.setFont("Helvetica", 9.5)
-c.drawString(MARG, y, f"Total: {len(pecas)} peças em {len(tipos)} tipos. Dica: corte primeiro os tipos com mais peças (C6, B1, T2...)."); y -= 26
+mais = ", ".join(t["cod"] for t in sorted(tipos, key=lambda t: -t["qtd"])[:3])
+c.drawString(MARG, y, f"Total: {len(pecas)} peças em {len(tipos)} tipos. Dica: corte primeiro os tipos com mais peças ({mais}...)."); y -= 26
 regua(c, MARG, y)
 c.showPage(); pag += 1
 

@@ -462,20 +462,20 @@ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadow
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(42, 1, 1, 12000);
-cam.position.set(-260, 520, 820);
+cam.position.set(-420, 820, 1250);
 const ctl = new Navegador(cam, canvas);
-ctl.target.set(250, 60, 250); ctl.autoRotateSpeed = 2.2;
-ctl.limites = { min: [-800, 8, -650], max: [1300, 1800, 1150],   // câmera: chão 8 mm acima da mesa e caixa em volta da bancada
-  alvo: { min: [-150, 0, -200], max: [800, 600, 650] } };          // ponto de foco: sempre na área da ponte e da mesa
-ctl.maxDistance = 1700;
+ctl.target.set(400, 60, 380); ctl.autoRotateSpeed = 2.2;
+ctl.limites = { min: [-1000, 8, -800], max: [1850, 2400, 1450],   // câmera: chão 8 mm acima da mesa e caixa em volta da bancada
+  alvo: { min: [-200, 0, -300], max: [1150, 700, 950] } };          // ponto de foco: sempre na área da ponte e da mesa
+ctl.maxDistance = 2400;
 
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.6));
 const sol = new THREE.DirectionalLight(0xfff4e6, 2.2);
-sol.position.set(420, 900, 620); sol.castShadow = true;
+sol.position.set(700, 1400, 950); sol.castShadow = true;
 sol.shadow.mapSize.set(2048, 2048);
-Object.assign(sol.shadow.camera, { left: -500, right: 700, top: 650, bottom: -450, near: 50, far: 2200 });
+Object.assign(sol.shadow.camera, { left: -900, right: 1100, top: 1000, bottom: -800, near: 50, far: 3400 });
 sol.shadow.bias = -0.0004; sol.shadow.normalBias = 0.6;
-sol.target.position.set(250, 0, 220); scene.add(sol, sol.target);
+sol.target.position.set(400, 0, 300); scene.add(sol, sol.target);
 
 /* texturas desenhadas no canvas */
 function texCanvas(w, h, draw) { const c = document.createElement("canvas"); c.width = w; c.height = h; draw(c.getContext("2d"), w, h);
@@ -511,15 +511,15 @@ const texBase = texCanvas(512, 512, (g, w, h) => {
   for (let i = 0; i <= 10; i++) { const p = i / 10 * w; g.strokeStyle = i % 5 ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.42)"; g.lineWidth = i % 5 ? 1 : 2;
     g.beginPath(); g.moveTo(p, 0); g.lineTo(p, h); g.moveTo(0, p); g.lineTo(w, p); g.stroke(); }
 });
-texBase.wrapS = texBase.wrapT = THREE.RepeatWrapping; texBase.repeat.set(16, 12);
-const mesa = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1200), new THREE.MeshStandardMaterial({ map: texBase, roughness: .9 }));
-mesa.rotation.x = -Math.PI / 2; mesa.position.set(250, 0, 220); mesa.receiveShadow = true; scene.add(mesa);
+texBase.wrapS = texBase.wrapT = THREE.RepeatWrapping; texBase.repeat.set(19, 14);
+const mesa = new THREE.Mesh(new THREE.PlaneGeometry(1900, 1400), new THREE.MeshStandardMaterial({ map: texBase, roughness: .9 }));
+mesa.rotation.x = -Math.PI / 2; mesa.position.set(450, 0, 330); mesa.receiveShadow = true; scene.add(mesa);
 
 /* treliças: grupos A e B */
-const ZFLAT = { A: 300, B: 440 }, ZPE = { A: C.ZA, B: C.ZB };
+const ZFLAT = { A: 330, B: 500 }, ZPE = { A: C.ZA, B: C.ZB };
 const grupos = { A: new THREE.Group(), B: new THREE.Group(), E: new THREE.Group() };
 for (const g of ["A", "B", "E"]) { scene.add(grupos[g]); }
-const E_MESA = { y: -(Y0 - W / 2), z: 477 };     // espaçadores de palito montados na mesa, atrás da treliça B
+const E_MESA = { y: -(Y0 - W / 2), z: 720 };     // espaçadores de palito montados na mesa, atrás da treliça B
 function poseEsp(k) { // k: 0 = na mesa, 1 = entre as treliças
   const e = k * k * (3 - 2 * k);
   grupos.E.position.set(0, E_MESA.y * (1 - e) + Math.sin(Math.PI * e) * 140, E_MESA.z * (1 - e));
@@ -532,9 +532,9 @@ function poseGrupo(g, k) { // k: 0 = deitada no gabarito, 1 = de pé
 
 /* gabarito impresso + plástico */
 const gab = {}, filme = {};
-const texGab = texCanvas(2048, 512, (g, w, h) => {
+const texGab = texCanvas(2048, 288, (g, w, h) => {
   g.fillStyle = "#fbfbf8"; g.fillRect(0, 0, w, h);
-  const sx = w / 580, X = x => (x + 40) * sx, Y = y => (125 - y) * sx;
+  const sx = w / 1080, X = x => (x + 140) * sx, Y = y => (130 - y) * sx;
   g.lineCap = "round";
   for (const [i, j] of D.barras) { const a = D.nos[i], b = D.nos[j];
     g.strokeStyle = "rgba(60,70,80,.16)"; g.lineWidth = W * sx; g.beginPath(); g.moveTo(X(a[0]), Y(a[1])); g.lineTo(X(b[0]), Y(b[1])); g.stroke();
@@ -545,31 +545,37 @@ const texGab = texCanvas(2048, 512, (g, w, h) => {
   g.fillStyle = "#c0392b"; g.fillText("100 mm — confira com a régua", X(0), Y(-18));
 });
 for (const g of ["A", "B"]) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(580, 145), new THREE.MeshStandardMaterial({ map: texGab, roughness: .95, transparent: true }));
-  m.rotation.x = -Math.PI / 2; m.position.set(250, .02, ZFLAT[g] - 52.5); m.receiveShadow = true; scene.add(m); gab[g] = m;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1080, 150), new THREE.MeshStandardMaterial({ map: texGab, roughness: .95, transparent: true }));
+  m.rotation.x = -Math.PI / 2; m.position.set(400, .02, ZFLAT[g] - 55); m.receiveShadow = true; scene.add(m); gab[g] = m;
   const f = new THREE.Mesh(new THREE.PlaneGeometry(600, 165), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .12, transparent: true, opacity: .22 }));
-  f.rotation.x = -Math.PI / 2; f.position.set(250, .04, ZFLAT[g] - 52.5); scene.add(f); filme[g] = f;
+  f.rotation.x = -Math.PI / 2; f.position.set(400, .04, ZFLAT[g] - 55); scene.add(f); filme[g] = f;
 }
 
 /* apoios do ensaio */
 const apoios = new THREE.Group();
 const matApoio = new THREE.MeshStandardMaterial({ color: 0x6f7a80, roughness: .7 });
-for (const x of [-5, 505]) { const b = new THREE.Mesh(new THREE.BoxGeometry(40, Y0 - W / 2 - 4, 150), matApoio);
-  b.position.set(x, (Y0 - W / 2 - 4) / 2, 40); b.castShadow = b.receiveShadow = true; apoios.add(b); }
+// blocos de apoio com rolete na borda (regulamento: apoio móvel tipo rolete, vão livre de 800 mm entre as bordas)
+const ALT_BLOCO = Y0 - W / 2 - 4 - 8;
+for (const [x0, x1, xr] of [[-180, 0, -4], [C.VAO, C.VAO + 180, C.VAO + 4]]) {
+  const b = new THREE.Mesh(new THREE.BoxGeometry(x1 - x0, ALT_BLOCO, 320), matApoio);
+  b.position.set((x0 + x1) / 2, ALT_BLOCO / 2, 0); b.castShadow = b.receiveShadow = true; apoios.add(b);
+  const rol = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 320, 16), new THREE.MeshStandardMaterial({ color: 0xb8bec4, metalness: .7, roughness: .3 }));
+  rol.rotation.x = Math.PI / 2; rol.position.set(xr, ALT_BLOCO + 4, 0); rol.castShadow = true; apoios.add(rol);
+}
 scene.add(apoios);
 
 /* tábua e livros da prensagem */
 const prensa = {};
 for (const g of ["A", "B"]) {
   const grp = new THREE.Group();
-  const tab = new THREE.Mesh(new THREE.BoxGeometry(580, 6, 130), new THREE.MeshStandardMaterial({ color: 0xa7764a, roughness: .7 }));
+  const tab = new THREE.Mesh(new THREE.BoxGeometry(1080, 6, 140), new THREE.MeshStandardMaterial({ color: 0xa7764a, roughness: .7 }));
   tab.position.y = 3; grp.add(tab);
-  [[90, 0x2c4a7a], [260, 0x7a2c2c], [420, 0x2c6a4a]].forEach(([x, c], i) => {
+  [[110, 0x2c4a7a], [330, 0x7a2c2c], [560, 0x2c6a4a], [780, 0x6a5a2c]].forEach(([x, c], i) => {
     const l = new THREE.Mesh(new THREE.BoxGeometry(150, 30, 105), new THREE.MeshStandardMaterial({ color: c, roughness: .6 }));
-    l.position.set(x - 250, 6 + 15, (i - 1) * 6); l.rotation.y = (i - 1) * .06; grp.add(l);
+    l.position.set(x - 400, 6 + 15, (i - 1) * 6); l.rotation.y = (i - 1) * .06; grp.add(l);
   });
   grp.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
-  grp.position.set(250, 10.2, ZFLAT[g] - 45); scene.add(grp); prensa[g] = grp;
+  grp.position.set(400, 10.2, ZFLAT[g] - 50); scene.add(grp); prensa[g] = grp;
 }
 
 /* lixa */
@@ -589,7 +595,7 @@ const materiais = new THREE.Group();
   cabo.position.set(30, 5, 120); const lam = new THREE.Mesh(new THREE.BoxGeometry(40, 1, 14), new THREE.MeshStandardMaterial({ color: 0xc8ccd0, metalness: .8, roughness: .3 }));
   lam.position.set(-29, 4, 120); const reg = new THREE.Mesh(new THREE.BoxGeometry(300, 1.2, 28), new THREE.MeshStandardMaterial({ color: 0xd6dadc, metalness: .85, roughness: .25 }));
   reg.position.set(60, .6, 165); materiais.add(cabo, lam, reg);
-  materiais.position.set(640, 0, 250); scene.add(materiais);
+  materiais.position.set(1080, 0, 260); scene.add(materiais);
 }
 
 /* frasco de cola (bico na origem, corpo para +Y) */
@@ -681,10 +687,10 @@ const cura = { A: idx.curaA, B: idx.curaB, W: idx.curafinal, E: idx.secaE };
 
 /* ---------------- estado em função de t ---------------- */
 const tmpV = new V3(), tmpV2 = new V3(), tmpQ = new THREE.Quaternion();
-const repousoFrasco = t => t < idx.levantaA ? new V3(-70, 72, (t < idx.prensaA ? ZFLAT.A : ZFLAT.B) - 40) : new V3(600, 72, 60);
+const repousoFrasco = t => t < idx.levantaA ? new V3(-200, 72, (t < idx.prensaA ? ZFLAT.A : ZFLAT.B) - 40) : new V3(1060, 72, 150);
 const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
 const prog = (t, i) => Math.min(1, Math.max(0, t - i));        // progresso do passo i
-let focoAlvo = new V3(250, 0, 250), distAlvo = 900, faseAtual = null;
+let focoAlvo = new V3(400, 0, 380), distAlvo = 1300, faseAtual = null;
 
 function setFinal(o, seca) {
   const k = "f" + (seca ? "s" : "u");
@@ -779,19 +785,19 @@ function atualizaCena(t) {
   frasco.visible = prog(t, idx.materiais) > 0;
   const pl = prog(t, idx.lixa); lixa.visible = pl > 0 && pl < 1;
   if (lixa.visible) { const g = pl < .5 ? "A" : "B", k = (pl < .5 ? pl : pl - .5) * 2;
-    lixa.position.set(-10 + 520 * k, 10.5 + Math.abs(Math.sin(k * 40)) * 1.2, ZFLAT[g] + 4); }
+    lixa.position.set(-110 + 1020 * k, 10.5 + Math.abs(Math.sin(k * 40)) * 1.2, ZFLAT[g] + 4); }
   const pa = prog(t, idx.levantaA); apoios.visible = pa > 0; apoios.scale.y = Math.max(.001, ease(pa * 3));
   const pn = prog(t, idx.ensaio); ensaio.visible = pn > 0;
-  if (pn > 0) { const topo = Y0 + W / 2 + 20, baixo = 120 + 60 * (1 - ease(pn * 1.5));
+  if (pn > 0) { const topo = C.YBM, baixo = 120 + 60 * (1 - ease(pn * 1.5));
     const corda = ensaio.getObjectByName("corda"), pilha = ensaio.getObjectByName("pilha");
-    corda.scale.y = topo - baixo; corda.position.set(250, (topo + baixo) / 2, 40); pilha.position.set(250, baixo, 40); }
+    corda.scale.y = topo - baixo; corda.position.set(C.XC, (topo + baixo) / 2, 0); pilha.position.set(C.XC, baixo, 0); }
   const ic = t > 0 ? Math.min(N - 1, Math.ceil(t) - 1) : 0, p = P[ic];
   // foco da câmera
   if (p.k === "pc") { const o = objs[ic]; focoAlvo = o.fixoRot.localToWorld(o.centro.clone()); distAlvo = o.p.fr ? 260 : 190; }
   else {
     const f = p.foco;
-    focoAlvo = f === "mesa" ? new V3(250, 0, 300) : f === "materiais" ? new V3(700, 0, 300) : f === "espacadores" ? new V3(250, 0, 517) :
-      f === "A" || f === "B" ? new V3(250, 0, ZFLAT[f] - 45) : f === "AB" ? new V3(250, 0, 330) : new V3(250, Y0 - 20, 40);
+    focoAlvo = f === "mesa" ? new V3(400, 0, 400) : f === "materiais" ? new V3(1100, 0, 320) : f === "espacadores" ? new V3(400, 0, 720) :
+      f === "A" || f === "B" ? new V3(400, 0, ZFLAT[f] - 50) : f === "AB" ? new V3(400, 0, 420) : new V3(400, Y0 - 20, 0);
     distAlvo = p.dist || 800;
   }
   return faseAtual;
@@ -939,21 +945,21 @@ window.destacarTipo = cod => {
 function vista(v) {
   setSeguir(false);
   const emPe = tMostrado >= idx.levantaA + 1;
-  const C = emPe ? new V3(250, Y0 + 30, 40) : new V3(250, 0, 330);
-  const off = { tudo: emPe ? [-330, 300, 720] : [-200, 620, 560], lado: [0, 30, 900], frente: [-950, 60, 0],
-    cima: [0, 1000, 1], baixo: [0, 0, 0] }[v];
+  const Cc = emPe ? new V3(400, Y0 + 30, 0) : new V3(400, 0, 420);
+  const off = { tudo: emPe ? [-520, 470, 1120] : [-300, 950, 820], lado: [0, 30, 1350], frente: [-1350, 60, 0],
+    cima: [0, 1500, 1], baixo: [0, 0, 0] }[v];
   if (v === "dentro") {
-    if (emPe) { if (ctl.modo !== "voar") setModo("voar"); ctl.irPara(new V3(-30, Y0 + 24, 40), new V3(120, Y0 + 24, 40)); }
-    else ctl.irPara(new V3(250, 70, 430), new V3(250, 0, 300));
+    if (emPe) { if (ctl.modo !== "voar") setModo("voar"); ctl.irPara(new V3(-60, Y0 + 50, 0), new V3(300, Y0 + 50, 0)); }
+    else ctl.irPara(new V3(400, 90, 640), new V3(400, 0, 420));
     return;
   }
   if (ctl.modo !== "orbitar") setModo("orbitar");
   if (v === "baixo") {   // por baixo da ponte, mas acima da mesa, olhando para cima
-    if (emPe) ctl.irPara(new V3(250, 30, 190), new V3(250, Y0, 40));
-    else ctl.irPara(new V3(250, 25, 470), new V3(250, 0, 300));
+    if (emPe) ctl.irPara(new V3(400, 30, 320), new V3(400, Y0, 0));
+    else ctl.irPara(new V3(400, 25, 700), new V3(400, 0, 420));
     return;
   }
-  ctl.irPara(C.clone().add(new V3(...off)), C);
+  ctl.irPara(Cc.clone().add(new V3(...off)), Cc);
 }
 document.querySelectorAll("[data-v]").forEach(b => b.addEventListener("click", () => vista(b.dataset.v)));
 window.__foco = () => focoAlvo.toArray();
