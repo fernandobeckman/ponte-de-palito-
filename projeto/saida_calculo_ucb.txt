@@ -39,8 +39,11 @@ Barra crítica: t3-t4 (flambagem) -> colapso calculado das barras = 111.84542 kg
 LIGAÇÕES: chapas nas 2 faces, 40 mm de sobreposição -> resistência 1344.00000 N por ponta de barra
  colapso pela cola (barra mais carregada) = 137.04986 kgf  (τ_cola estimado 2.0 MPa [PENDENTE ensaio])
 
-TRANSVERSINA CENTRAL (2 palitos × 10 camadas, vão 194.00000 mm): flexão -> 95.13427 kgf | cola entre camadas -> 91.36657 kgf
+MINI-TRELIÇA DO PONTO DE CARGA (vão 194.00000 mm, altura 70.00000 mm):
+ banzo de baixo (tração) -> 259.86490 kgf | banzo de cima (flambagem) -> 762.88458 kgf
+ diagonais (tração) -> 439.53631 kgf | ligações (3 faixas, 2 faces) -> 140.51779 kgf
+ cola dos consolos nas treliças (30 x 8,4 mm por lado) -> 102.78739 kgf
 
 ========================================================================================================
-CARGA DE COLAPSO CALCULADA (menor de todas) = 91.36657 kgf
-Bônus exige 30 kgf -> fator de segurança calculado = 3.04555
+CARGA DE COLAPSO CALCULADA (menor de todas) = 102.78739 kgf
+Bônus exige 30 kgf -> fator de segurança calculado = 3.42625

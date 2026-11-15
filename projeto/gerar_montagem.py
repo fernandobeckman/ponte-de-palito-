@@ -351,7 +351,7 @@ for lado, zface, sgn in (("A", ZI_A, 1), ("B", ZI_B, -1)):
                    "toda", "consolo")
 # mini-treliça no plano x = 400 (3 camadas empilhadas em x), vão entre as faces internas (200 mm), altura 50 mm
 YB_M = Y0 + W / 2 + W / 2          # eixo do banzo de baixo da mini-treliça (apoiado nos consolos)
-DM = 50.0
+DM = 70.0                          # altura da mini-treliça (eixo a eixo)
 PZ = [ZI_A + W / 2, -50.0, 0.0, 50.0, ZI_B - W / 2]      # nós (montantes) ao longo da largura
 def mini_pecas():
     pcs = []
@@ -375,13 +375,32 @@ def mini_pecas():
             pl = dentro + [(1, 0, max(z0, z1) - W / 2), (-1, 0, -(min(z0, z1) + W / 2))]
             p = recorta(faixa(Pt, dd, -15, L + 15), pl)
             if p: pcs.append((k, dict(nome=f"Mini-treliça, diagonal, camada {k+1}", poly=p, eixo=dd, tipo="transversina"), fr))
+    # chapas da mini-treliça nas duas faces: peça sobre o banzo + 3 faixas sobre as pontas das barras, em cada nó
+    for face, (x_face, sgn) in enumerate(((xc + 5.0, -1), (xc - 3.0, -1))):
+        fr = dict(o=[x_face, 0, 0], u=[0, 0, 1], v=[0, 1, 0], n=[-1, 0, 0])
+        k_ordem = -1 if face == 0 else 3          # face +x vai antes da camada 1; face -x depois da camada 3
+        limite = [(1, 0, ZI_B), (-1, 0, -ZI_A)]
+        for zz in PZ:
+            for nome, y_chapa, dy in (("de baixo", YB_M, 1), ("de cima", YB_M + DM, -1)):
+                pecas_no = [("sobre o banzo", faixa((zz, y_chapa), (1.0, 0.0), -20, 20))]
+                for fx in (1, 2, 3):
+                    pecas_no.append((f"faixa {fx}", faixa((zz, y_chapa + dy * fx * W), (1.0, 0.0), -20, 20)))
+                for i, (onde, p) in enumerate(pecas_no):
+                    p = recorta(p, limite)
+                    if p and area(p) >= 80:
+                        pcs.append((k_ordem, dict(nome=f"Mini-treliça, chapa do nó z={fmt1(zz)} {nome}, face {face+1}, {onde}",
+                                                  poly=p, eixo=(1.0, 0.0), tipo="chapa"), fr))
+    pcs.sort(key=lambda t: t[0])
     return pcs
 for k, p, fr in mini_pecas():
-    peca("W", "Ponto de carga", p,
-         f"{p['nome']}: corte {fmt1(extensao(p['poly'], p['eixo'])[1] - extensao(p['poly'], p['eixo'])[0])} mm"
-         f"{' e cole sobre a camada anterior' if k else ''}.",
-         "A mini-treliça leva a carga da haste de aço até as duas treliças. Monte as 3 camadas deitada na mesa e encaixe entre os consolos.",
-         "toda" if k else "pontas", frame=fr)
+    comp_ = extensao(p['poly'], p['eixo'])[1] - extensao(p['poly'], p['eixo'])[0]
+    if k == -1:
+        txt, cola = f"{p['nome']}: corte {fmt1(comp_)} mm e coloque sobre o plástico, sem cola.", []
+    else:
+        txt, cola = f"{p['nome']}: corte {fmt1(comp_)} mm" + (" e cole sobre a camada anterior." if k else ", cole onde apoia nas chapas."), ("toda" if k else "pontas")
+    peca("W", "Ponto de carga", p, txt,
+         "A mini-treliça leva a carga da haste de aço até as duas treliças. Monte deitada sobre o plástico (chapas, 3 camadas, chapas) e depois encaixe entre os consolos.",
+         cola, frame=fr)
 evento("tiraesp", "Finalização", "Retire os dois espaçadores de palito.",
        "Eles só seguravam as treliças paralelas durante a colagem. Agora a ponte já está travada pelas transversinas, escoras e diagonais.",
        foco="ponte", dist=1300)

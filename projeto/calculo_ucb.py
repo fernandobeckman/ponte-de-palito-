@@ -70,14 +70,23 @@ P_lig = R_lig / (max(abs(x["N"]) for x in linhas) / P1) / G
 print(f"\nLIGAÇÕES: chapas nas 2 faces, {SOBRE:.0f} mm de sobreposição -> resistência {f(R_lig)} N por ponta de barra")
 print(f" colapso pela cola (barra mais carregada) = {f(P_lig)} kgf  (τ_cola estimado {TAU_COLA_K} MPa [PENDENTE ensaio])")
 
-# transversina central: recebe a carga no meio e reparte para as 2 treliças (vão livre entre consolos)
-VAO_TR = LARG - 2 * (N_CAM * T + 4) - 2 * 3   # interno entre consolos (aprox.)
-b_tr, n_tr = 2 * B, 10
-W = b_tr * (n_tr * T) ** 2 / 6
-P_tr = (FC * W) * 4 / VAO_TR / G               # carga central que leva a transversina à tensão f_c
-tau = lambda P: 1.5 * (P / 2) / (b_tr * n_tr * T)
-P_tr_tau = TAU_COLA_K * (b_tr * n_tr * T) / 1.5 * 2 / G
-print(f"\nTRANSVERSINA CENTRAL (2 palitos × 10 camadas, vão {f(VAO_TR)} mm): flexão -> {f(P_tr)} kgf | cola entre camadas -> {f(P_tr_tau)} kgf")
+# mini-treliça transversal que recebe a haste de aço no meio (vão entre os consolos, altura 70 mm, 3 palitos por barra)
+VAO_M, D_M = 194.0, 70.0
+k_banzo = VAO_M / (4 * D_M)                                   # força no banzo = k_banzo x P
+P_m_banzo_t = (FT * B * T * (N_CAM - 1)) / k_banzo / G        # banzo de baixo (tração, com emenda)
+P_m_banzo_c = (math.pi ** 2 * E * (B * (N_CAM * T) ** 3 / 12) / 46.0 ** 2) / k_banzo / G
+sen_d = 70.0 / math.hypot(50.0, 70.0)
+k_diag = 0.5 / sen_d                                          # força na diagonal = k_diag x P
+P_m_diag = (FT * B * T * N_CAM) / k_diag / G
+R_lig_m = TAU_COLA_K * 2 * B * (3 * B)                        # 3 faixas de chapa nas 2 faces
+P_m_lig = R_lig_m / k_diag / G
+R_consolo = TAU_COLA_K * 30.0 * B                             # cola do consolo na chapa interna (por lado)
+P_consolo = 2 * R_consolo / G
+print(f"\nMINI-TRELIÇA DO PONTO DE CARGA (vão {f(VAO_M)} mm, altura {f(D_M)} mm):")
+print(f" banzo de baixo (tração) -> {f(P_m_banzo_t)} kgf | banzo de cima (flambagem) -> {f(P_m_banzo_c)} kgf")
+print(f" diagonais (tração) -> {f(P_m_diag)} kgf | ligações (3 faixas, 2 faces) -> {f(P_m_lig)} kgf")
+print(f" cola dos consolos nas treliças (30 x 8,4 mm por lado) -> {f(P_consolo)} kgf")
+P_tr = min(P_m_banzo_t, P_m_banzo_c, P_m_diag, P_m_lig); P_tr_tau = P_consolo
 
 P_final = min(P_barra, P_lig, P_tr, P_tr_tau)
 print("\n" + "=" * 104)
