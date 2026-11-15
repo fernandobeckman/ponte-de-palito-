@@ -2,6 +2,21 @@
 
 Projeto de engenharia de uma ponte de palitos de madeira: cálculo da treliça, modelagem 3D, construção, ensaio de carga e site do projeto.
 
+## A ponte (competição UCB 2026/2)
+- Regras da competição: [`docs/requisitos.md`](docs/requisitos.md)
+- Memorial de cálculo: [`projeto/MEMORIAL_UCB.md`](projeto/MEMORIAL_UCB.md). Treliça Pratt de 8 painéis, vão de 800 mm, 1020 × 220 mm, carga de colapso estimada em 102,78739 kgf
+- Manual de corte e gabarito 1:1 (PDF): [`projeto/manual/`](projeto/manual/)
+- Site: pasta [`docs/`](docs/) (GitHub Pages)
+
+Para refazer tudo depois de mudar o projeto:
+```bash
+python3 projeto/calculo_ucb.py > projeto/saida_calculo_ucb.txt   # esforços e carga de colapso
+python3 projeto/gerar_montagem.py                                 # modelo peça por peça e 3D
+python3 projeto/verificar_modelo.py                               # medidas do regulamento e colisões
+python3 projeto/gerar_manual_pdf.py && python3 projeto/gerar_gabarito_pdf.py
+python3 projeto/gerar_memorial_ucb.py && python3 projeto/gerar_pagina.py && python3 projeto/gerar_site.py
+```
+
 ## Ferramentas para o Claude Code
 - **83 agentes** em `.claude/agents/` e **76 skills** em `.claude/skills/`. A lista completa e as fontes estão em [`.claude/CATALOGO.md`](.claude/CATALOGO.md).
 - Regras do projeto para o Claude: [`CLAUDE.md`](CLAUDE.md)
