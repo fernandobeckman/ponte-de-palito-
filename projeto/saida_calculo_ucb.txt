@@ -4,14 +4,14 @@ Esforços para carga total de 1000.00000 N (101.97162 kgf), metade em cada treli
 Reações por treliça: {'b0': [0.0, 250.0], 'b8': [0.0, 250.0]} | equilíbrio = [0.0, 0.0]
 ========================================================================================================
 barra         L (mm)     N/1000 N     N desloc        R (N)  P colapso (kgf)  modo
-b0-b1      100.00000    250.00000    312.50000   2648.52000        864.23641  tração (carga deslocada)
-b1-b2      100.00000    250.00000    312.50000   2648.52000        864.23641  tração (carga deslocada)
-b2-b3      100.00000    500.00000    625.00000   2648.52000        432.11821  tração (carga deslocada)
-b3-b4      100.00000    750.00000    937.50000   2648.52000        288.07880  tração (carga deslocada)
-b4-b5      100.00000    750.00000    937.50000   2648.52000        288.07880  tração (carga deslocada)
-b5-b6      100.00000    500.00000    625.00000   2648.52000        432.11821  tração (carga deslocada)
-b6-b7      100.00000    250.00000    312.50000   2648.52000        864.23641  tração (carga deslocada)
-b7-b8      100.00000    250.00000    312.50000   2648.52000        864.23641  tração (carga deslocada)
+b0-b1      100.00000    250.00000    312.50000   1765.68000        576.15761  tração (emenda: 2 efetivos) (carga deslocada)
+b1-b2      100.00000    250.00000    312.50000   1765.68000        576.15761  tração (emenda: 2 efetivos) (carga deslocada)
+b2-b3      100.00000    500.00000    625.00000   1765.68000        288.07880  tração (emenda: 2 efetivos) (carga deslocada)
+b3-b4      100.00000    750.00000    937.50000   1765.68000        192.05254  tração (emenda: 2 efetivos) (carga deslocada)
+b4-b5      100.00000    750.00000    937.50000   1765.68000        192.05254  tração (emenda: 2 efetivos) (carga deslocada)
+b5-b6      100.00000    500.00000    625.00000   1765.68000        288.07880  tração (emenda: 2 efetivos) (carga deslocada)
+b6-b7      100.00000    250.00000    312.50000   1765.68000        576.15761  tração (emenda: 2 efetivos) (carga deslocada)
+b7-b8      100.00000    250.00000    312.50000   1765.68000        576.15761  tração (emenda: 2 efetivos) (carga deslocada)
 t1-t2      100.00000   -500.00000   -625.00000   1096.82888        178.95267  flambagem (carga deslocada)
 t2-t3      100.00000   -750.00000   -937.50000   1096.82888        119.30178  flambagem (carga deslocada)
 t3-t4      100.00000  -1000.00000   -750.00000   1096.82888        111.84542  flambagem

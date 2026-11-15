@@ -25,10 +25,15 @@ m["E"], m["A"] = E, N_CAM * B * T
 json.dump(m, open(os.path.join(D, "ponte_ucb.json"), "w"), indent=1)
 r = eg.resolver(m)
 
-def cap(N, L):
+BANZOS = {b["id"] for b in m["barras"] if b["i"][0] == b["j"][0]}   # b-b e t-t: banzos contínuos laminados
+
+def cap(N, L, emendada=False):
+    """Resistência da barra de 3 palitos. Barra emendada (maior que um palito ou banzo contínuo com
+    emendas desencontradas): na tração só contam 2 palitos; na compressão o topo das emendas encosta e transmite."""
+    emendada = emendada or L > L_PAL
     if N >= 0:
-        nef = N_CAM if L <= L_PAL else N_CAM - 1
-        return FT * B * T * nef, "tração" + (" (emenda: 2 efetivos)" if L > L_PAL else "")
+        nef = N_CAM - 1 if emendada else N_CAM
+        return FT * B * T * nef, "tração" + (" (emenda: 2 efetivos)" if emendada else "")
     Hh = N_CAM * T
     pe = math.pi ** 2 * E * min(B * Hh ** 3 / 12, Hh * B ** 3 / 12) / L ** 2
     pc = FC * B * Hh
@@ -51,17 +56,17 @@ linhas, pcol = [], []
 for b in r["barras"]:
     Nd = max(desl[0][b["id"]], desl[1][b["id"]], key=abs)
     # cada situação de carga usa a resistência do seu próprio sinal (tração ou compressão)
-    Rc, modo_c = cap(b["N"], b["L_mm"]) if abs(b["N"]) > 1e-9 else (None, "")
+    Rc, modo_c = cap(b["N"], b["L_mm"], b["id"] in BANZOS) if abs(b["N"]) > 1e-9 else (None, "")
     pc_c = Rc / abs(b["N"]) * P1 / G if Rc else float("inf")
     pc_d, Rd, modo_d = float("inf"), None, ""
     for dd in desl:                      # carga deslocada para cada lado, cada uma com o seu sinal
         Nk = dd[b["id"]]
         if abs(Nk) < 1e-9: continue
-        Rk, mk = cap(Nk, b["L_mm"]); pk = Rk / abs(Nk) * P1 / G
+        Rk, mk = cap(Nk, b["L_mm"], b["id"] in BANZOS); pk = Rk / abs(Nk) * P1 / G
         if pk < pc_d: pc_d, Rd, modo_d, Nd = pk, Rk, mk, Nk
     pmin = min(pc_c, pc_d)
     R, modo = (Rc, modo_c) if pc_c <= pc_d else (Rd, modo_d + " (carga deslocada)")
-    if R is None: R, modo = cap(0.0, b["L_mm"])
+    if R is None: R, modo = cap(0.0, b["L_mm"], b["id"] in BANZOS)
     pcol.append((pmin, b["id"], modo))
     linhas.append(dict(id=b["id"], i=b["i"], j=b["j"], L_mm=b["L_mm"], N=b["N"], N_desloc=Nd, R=R, modo=modo, P_kgf=pmin, n=N_CAM))
     print(f"{b['id']:9}{f(b['L_mm']):>11}{f(b['N']):>13}{f(Nd):>13}{f(R):>13}{(f(pmin) if pmin < 1e9 else '—'):>17}  {modo}")

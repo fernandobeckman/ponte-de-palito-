@@ -60,7 +60,7 @@ def extensao(poly, d):
 LPOST = math.hypot(A_PAINEL, H)
 ESQ = ((0.0, 0.0), (A_PAINEL / LPOST, H / LPOST))              # montante inclinado da ponta esquerda (b0 -> t1)
 DIR = ((VAO, 0.0), (-A_PAINEL / LPOST, H / LPOST))             # ponta direita (b8 -> t7)
-INF = ((-BALANCO, 0.0), (1.0, 0.0))                            # banzo inferior
+INF = ((0.0, 0.0), (1.0, 0.0))                                 # banzo inferior (eixo y = 0; peças de -BALANCO a VAO + BALANCO)
 TOPO = ((A_PAINEL, H), (1.0, 0.0))                             # banzo superior reto (t1 -> t7)
 LTOPO = VAO - 2 * A_PAINEL
 

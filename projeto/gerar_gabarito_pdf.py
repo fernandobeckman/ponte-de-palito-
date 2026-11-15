@@ -17,7 +17,7 @@ F1 = [p for p in pecasA if "face de baixo" in p["cap"]]
 PW, PH = landscape(A4)
 M = 10 * mm                                  # margem
 UW = PW - 2 * M                              # largura útil por folha (mm de desenho = mm reais)
-X0, X1, Y0, Y1 = -140.0, 940.0, -25.0, 130.0 # janela do desenho (mm)
+X0, X1, Y0, Y1 = -125.0, 925.0, -25.0, 130.0 # janela do desenho (mm): ponte de -110 a 910 com folga; cabe em 4 folhas
 SOBRE = 10.0                                 # sobreposição entre folhas (mm)
 passo = UW / mm - SOBRE
 folhas = []
