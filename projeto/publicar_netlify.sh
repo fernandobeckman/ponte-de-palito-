@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Publica a pasta docs/ no site ponte-de-palito.netlify.app (deploy por zip na API da Netlify).
+# Publica a pasta docs/ no site ponte-de-palito-ucb.netlify.app (deploy por zip na API da Netlify).
 # A chave da Netlify NÃO fica aqui: o proxy da sessão do Claude injeta a credencial salva no ambiente.
 set -euo pipefail
-SITE_ID="9eb816a3-3b5a-4a4d-b50f-fc9a5954177b"
+SITE_ID="a961f907-4d1f-45ed-8eea-8465da2f0af2"   # conta nova (a antiga ficou sem créditos)
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 ZIP="$(mktemp -d)/site.zip"
 python3 "$RAIZ/projeto/gerar_site.py" >/dev/null
