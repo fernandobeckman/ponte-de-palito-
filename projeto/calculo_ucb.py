@@ -50,10 +50,18 @@ print(f"{'barra':9}{'L (mm)':>11}{'N/1000 N':>13}{'N desloc':>13}{'R (N)':>13}{'
 linhas, pcol = [], []
 for b in r["barras"]:
     Nd = max(desl[0][b["id"]], desl[1][b["id"]], key=abs)
-    R, modo = cap(b["N"] if abs(b["N"]) > 1e-9 else Nd, b["L_mm"])
-    pc_c = R / abs(b["N"]) * P1 / G if abs(b["N"]) > 1e-9 else float("inf")
-    pc_d = R / abs(Nd) * P1 / G if abs(Nd) > 1e-9 else float("inf")
+    # cada situação de carga usa a resistência do seu próprio sinal (tração ou compressão)
+    Rc, modo_c = cap(b["N"], b["L_mm"]) if abs(b["N"]) > 1e-9 else (None, "")
+    pc_c = Rc / abs(b["N"]) * P1 / G if Rc else float("inf")
+    pc_d, Rd, modo_d = float("inf"), None, ""
+    for dd in desl:                      # carga deslocada para cada lado, cada uma com o seu sinal
+        Nk = dd[b["id"]]
+        if abs(Nk) < 1e-9: continue
+        Rk, mk = cap(Nk, b["L_mm"]); pk = Rk / abs(Nk) * P1 / G
+        if pk < pc_d: pc_d, Rd, modo_d, Nd = pk, Rk, mk, Nk
     pmin = min(pc_c, pc_d)
+    R, modo = (Rc, modo_c) if pc_c <= pc_d else (Rd, modo_d + " (carga deslocada)")
+    if R is None: R, modo = cap(0.0, b["L_mm"])
     pcol.append((pmin, b["id"], modo))
     linhas.append(dict(id=b["id"], i=b["i"], j=b["j"], L_mm=b["L_mm"], N=b["N"], N_desloc=Nd, R=R, modo=modo, P_kgf=pmin, n=N_CAM))
     print(f"{b['id']:9}{f(b['L_mm']):>11}{f(b['N']):>13}{f(Nd):>13}{f(R):>13}{(f(pmin) if pmin < 1e9 else '—'):>17}  {modo}")

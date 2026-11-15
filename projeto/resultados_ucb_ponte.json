@@ -8,7 +8,7 @@
    "N": 250.0,
    "N_desloc": 312.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 864.2364110068168,
    "n": 3
   },
@@ -20,7 +20,7 @@
    "N": 250.0,
    "N_desloc": 312.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 864.2364110068168,
    "n": 3
   },
@@ -32,7 +32,7 @@
    "N": 500.0,
    "N_desloc": 625.0,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 432.1182055034084,
    "n": 3
   },
@@ -44,7 +44,7 @@
    "N": 750.0,
    "N_desloc": 937.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 288.078803668939,
    "n": 3
   },
@@ -56,7 +56,7 @@
    "N": 750.0,
    "N_desloc": 937.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 288.078803668939,
    "n": 3
   },
@@ -68,7 +68,7 @@
    "N": 500.0,
    "N_desloc": 625.0,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 432.1182055034084,
    "n": 3
   },
@@ -80,7 +80,7 @@
    "N": 250.0,
    "N_desloc": 312.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 864.2364110068168,
    "n": 3
   },
@@ -92,7 +92,7 @@
    "N": 250.0,
    "N_desloc": 312.5,
    "R": 2648.52,
-   "modo": "tração",
+   "modo": "tração (carga deslocada)",
    "P_kgf": 864.2364110068168,
    "n": 3
   },
@@ -104,7 +104,7 @@
    "N": -500.0,
    "N_desloc": -625.0,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 178.95267008437952,
    "n": 3
   },
@@ -116,7 +116,7 @@
    "N": -750.0,
    "N_desloc": -937.5,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 119.301780056253,
    "n": 3
   },
@@ -152,7 +152,7 @@
    "N": -750.0,
    "N_desloc": -937.5,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 119.301780056253,
    "n": 3
   },
@@ -164,7 +164,7 @@
    "N": -500.0,
    "N_desloc": -625.0,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 178.95267008437952,
    "n": 3
   },
@@ -176,7 +176,7 @@
    "N": -353.553391,
    "N_desloc": -441.941738,
    "R": 548.4144399914449,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 126.5386470219492,
    "n": 3
   },
@@ -188,7 +188,7 @@
    "N": -353.553391,
    "N_desloc": -441.941738,
    "R": 548.4144399914449,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 126.5386470219492,
    "n": 3
   },
@@ -212,7 +212,7 @@
    "N": -250.0,
    "N_desloc": -312.5,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 357.90534016875904,
    "n": 3
   },
@@ -222,7 +222,7 @@
    "j": "t3",
    "L_mm": 100.0,
    "N": -250.0,
-   "N_desloc": 187.5,
+   "N_desloc": -187.5,
    "R": 1096.8288763018627,
    "modo": "flambagem",
    "P_kgf": 447.3816752109488,
@@ -260,7 +260,7 @@
    "N": -250.0,
    "N_desloc": -312.5,
    "R": 1096.8288763018627,
-   "modo": "flambagem",
+   "modo": "flambagem (carga deslocada)",
    "P_kgf": 357.90534016875904,
    "n": 3
   },
@@ -284,7 +284,7 @@
    "N": 353.553391,
    "N_desloc": 441.941738,
    "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
+   "modo": "tração (emenda: 2 efetivos) (carga deslocada)",
    "P_kgf": 407.40495140354193,
    "n": 3
   },
@@ -296,7 +296,7 @@
    "N": 353.553391,
    "N_desloc": 441.941738,
    "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
+   "modo": "tração (emenda: 2 efetivos) (carga deslocada)",
    "P_kgf": 407.40495140354193,
    "n": 3
   },
@@ -307,9 +307,9 @@
    "L_mm": 141.421356,
    "N": 353.553391,
    "N_desloc": -265.165043,
-   "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
-   "P_kgf": 509.256188390191,
+   "R": 548.4144399914449,
+   "modo": "flambagem (carga deslocada)",
+   "P_kgf": 210.89774487751293,
    "n": 3
   },
   {
@@ -318,10 +318,10 @@
    "j": "b4",
    "L_mm": 141.421356,
    "N": 353.553391,
-   "N_desloc": 265.165043,
-   "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
-   "P_kgf": 509.256188390191,
+   "N_desloc": -265.165043,
+   "R": 548.4144399914449,
+   "modo": "flambagem (carga deslocada)",
+   "P_kgf": 210.89774487751293,
    "n": 3
   },
   {
@@ -332,7 +332,7 @@
    "N": 353.553391,
    "N_desloc": 441.941738,
    "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
+   "modo": "tração (emenda: 2 efetivos) (carga deslocada)",
    "P_kgf": 407.40495140354193,
    "n": 3
   },
@@ -344,7 +344,7 @@
    "N": 353.553391,
    "N_desloc": 441.941738,
    "R": 1765.68,
-   "modo": "tração (emenda: 2 efetivos)",
+   "modo": "tração (emenda: 2 efetivos) (carga deslocada)",
    "P_kgf": 407.40495140354193,
    "n": 3
   }
